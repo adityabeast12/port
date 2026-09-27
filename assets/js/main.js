@@ -1,5 +1,5 @@
-import { createScene } from './scene.js';
-import { mountChat } from './chat.js';
+// Bump ?v= in these imports and in index.html on every release so browsers never mix old and new files.
+import { mountChat } from './chat.js?v=20260927';
 
 const root = document.documentElement;
 const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -60,12 +60,14 @@ $('[data-year]').textContent = new Date().getFullYear();
 
 /* ---------------- Core (3D orb) ---------------- */
 const MODES = ['core', 'network', 'signal', 'guarded'];
+// The 3D scene loads on its own, so if three.js or WebGL fails the rest of the page still works.
 let gl = null;
 try {
+  const { createScene } = await import('./scene.js?v=20260927');
   gl = createScene($('#gl'), { reducedMotion: reduced });
   gl.set({ shape: 0, opacity: 1, scale: 0.9, y: 0, snap: true });
 } catch (err) {
-  console.warn('WebGL unavailable.', err);
+  console.warn('3D core unavailable.', err);
   root.classList.add('no-webgl');
 }
 
