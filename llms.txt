@@ -1,0 +1,47 @@
+# Aditya Shukla — AI Engineer & AI Solutions Consultant
+
+> Aditya Shukla is an AI engineer and AI solutions consultant based in Nagpur, India. He builds production-grade agentic AI systems, multi-agent orchestration, LLM and RAG pipelines, voice AI agents and machine learning models for banking and insurance, with guardrails, observability and governance built into every system.
+
+Aditya has 2+ years of experience shipping generative AI to production. He started as a Business Analyst and moved into hands-on engineering across front end, back end and multi-agent orchestration. He owns requirement breakdown, POC development and production rollout, manages the sprint board, leads developers and presents system performance to stakeholders. Client names are confidential.
+
+## Contact
+
+- Email: adityabshukla12@gmail.com
+- LinkedIn: https://www.linkedin.com/in/aditya-shukla-2a86991b4/
+- GitHub: https://github.com/adityabeast12
+- Portfolio: https://adityabeast12.github.io/port/
+- Location: Nagpur, Maharashtra, India
+- Open to: AI engineering and AI consulting work, especially agentic systems in regulated industries such as banking, insurance and fintech
+
+## Selected work
+
+- Agentic banking assistant: a multi-agent assistant for account operations, beneficiary management and transactions. Aditya architected it end to end, and it is live at four banks (three in India, one international). Built with CrewAI, LangChain, FastAPI, guardrails and Langfuse.
+- Multi-agent orchestration platform: an internal chatbot that Aditya grew from simple retrieval into an orchestrator with specialist agents for travel planning, competitor intelligence, prospect analysis and research. Built with CrewAI, AutoGen and LangChain.
+- Real-time voice and video onboarding agent: a 10-state workflow with OTP verification and document capture, plus compliance-grade outbound calling. Built with Gemini Live API, ElevenLabs, LiveKit and Twilio (SIP).
+- Sales copilot for an Indian private-sector bank: lead guidance, objection handling and contextual next-step recommendations, plus RAG-based support over internal knowledge and past cases.
+- Logo and hologram validation for an international trade organisation in the UK, using image embeddings and similarity search, plus a maritime query system.
+- Predictive ML models: churn prediction for a term insurance plan (moving to production), a customer propensity model and an email triage model.
+- Natural-language-to-SQL interfaces for querying structured databases in real time.
+
+## Skills
+
+- AI / ML: LLMs, RAG (retrieval-augmented generation), prompt engineering, multi-agent systems, machine learning, vector databases
+- Frameworks: CrewAI, LangChain, AutoGen
+- Voice AI: Gemini Live API, ElevenLabs, LiveKit, Twilio (SIP and outbound calling)
+- Responsible AI: guardrails, AI governance, observability (Langfuse), model monitoring
+- Engineering: Python, SQL, FastAPI, Streamlit, React
+- Document pipelines: LlamaParse, Docling, multi-parser pipelines
+- Security: Burp Suite (VAPT testing)
+
+## Experience
+
+- 2024 – present: AI Solutions Consultant, Systems & GenAI Applications
+- 2024: Business Analyst (same organisation)
+- Education: B.Tech in Computer Science and Engineering, G.H. Raisoni College of Engineering, Nagpur (CGPA 8.98)
+
+## Approach
+
+1. Decompose: break business problems into requirements, data flows and service boundaries.
+2. Prototype: build working POCs quickly with Streamlit or React on FastAPI.
+3. Orchestrate: connect agents, tools, retrieval and document pipelines into one system.
+4. Govern: add guardrails, tracing and model monitoring from day one, so every flow is transparent, debuggable and auditable.
