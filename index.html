@@ -36,7 +36,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/style.css?v=20260928">
+  <link rel="stylesheet" href="assets/css/style.css?v=20260930">
+  <link rel="stylesheet" href="assets/css/universes.css?v=20260930">
   <script>
     document.documentElement.classList.add('js');
     // Failsafe: if scripts never boot, show the page anyway.
@@ -105,9 +106,9 @@
       <a href="#operator">Operator</a>
     </nav>
     <div class="bar__meta">
-      <span class="bar__status">All systems operational</span>
+      <span class="bar__status" data-t="status">All systems operational</span>
       <span class="bar__clock">IST <span data-clock>--:--:--</span></span>
-      <a href="#contact" class="bar__cta">Open a channel</a>
+      <a href="#contact" class="bar__cta" data-t="bar-cta">Open a channel</a>
     </div>
   </header>
 
@@ -118,16 +119,19 @@
       <div class="hero__stage">
         <canvas id="gl" aria-hidden="true"></canvas>
         <div class="hero__copy">
-          <p class="hero__role"><span class="led"></span> AI Engineer &amp; AI Solutions Consultant · Nagpur, India</p>
+          <p class="hero__role" data-t="hero-role"><span class="led"></span> AI Engineer &amp; AI Solutions Consultant · Nagpur, India</p>
           <!-- The particles spell the name; this heading is the real, readable text (shown if WebGL is unavailable). -->
           <h1 class="hero__name">Aditya Shukla</h1>
-          <p class="hero__line">I build AI agents that run inside banks, and the guardrails that keep them safe.</p>
+          <p class="hero__line" data-t="hero-line">I build AI agents that run inside banks, and the guardrails that keep them safe.</p>
           <div class="hero__actions">
-            <a href="#demo" class="btn btn--primary">Try my agent</a>
+            <a href="#demo" class="btn btn--primary" data-t="hero-btn">Try my agent</a>
             <a href="#deployments" class="btn">View deployments</a>
           </div>
         </div>
-        <p class="hero__hint" aria-hidden="true">Move your cursor through the name · scroll to dissolve it</p>
+        <span class="burst burst--hero1" aria-hidden="true">ZAP!</span>
+        <span class="burst burst--hero2" aria-hidden="true">POW!</span>
+        <div class="spot" aria-hidden="true"></div>
+        <p class="hero__hint" aria-hidden="true" data-t="hero-hint">Move your cursor through the name · scroll to dissolve it</p>
       </div>
     </section>
 
@@ -144,16 +148,17 @@
     <!-- ================= TRY THE AGENT ================= -->
     <section class="section" id="demo">
       <header class="section__head reveal">
-        <p class="kicker">Try it</p>
-        <h2>Talk to my banking agent</h2>
-        <p class="section__note">A simulated version of the assistant I built, which runs at four banks. It runs entirely in your browser and no real bank is connected. Try to break it.</p>
+        <span class="burst burst--section" aria-hidden="true">WHAM!</span>
+        <p class="kicker" data-t="demo-kicker">Try it</p>
+        <h2 data-t="demo-h2">Talk to my banking agent</h2>
+        <p class="section__note" data-t="demo-note">A simulated version of the assistant I built, which runs at four banks. It runs entirely in your browser and no real bank is connected. Try to break it.</p>
       </header>
 
       <div class="demo reveal" data-demo>
         <div class="panel demo__chat">
           <p class="panel__label"><span>01</span> Customer</p>
           <div class="demo__msgs" data-demo-msgs aria-live="polite">
-            <div class="dm dm--bot">Hi! I can check your balance, send money, add beneficiaries or block a lost card. What do you need?</div>
+            <div class="dm dm--bot" data-t="demo-hello">Hi! I can check your balance, send money, add beneficiaries or block a lost card. What do you need?</div>
           </div>
           <div class="demo__chips">
             <button type="button" class="chip" data-demo-chip>Send ₹2,000 to Rahul</button>
@@ -188,9 +193,10 @@
     <!-- ================= DEPLOYMENTS ================= -->
     <section class="section" id="deployments">
       <header class="section__head reveal">
-        <p class="kicker">Deployments</p>
-        <h2>Systems I've shipped</h2>
-        <p class="section__note">Client names are confidential. Open any deployment to see how it's built.</p>
+        <span class="burst burst--section" aria-hidden="true">KA-POW!</span>
+        <p class="kicker" data-t="deployments-kicker">Deployments</p>
+        <h2 data-t="deployments-h2">Systems I've shipped</h2>
+        <p class="section__note" data-t="deployments-note">Client names are confidential. Open any deployment to see how it's built.</p>
       </header>
 
       <div class="deploys reveal">
@@ -308,8 +314,8 @@
     <!-- ================= CAPABILITIES ================= -->
     <section class="section" id="capabilities">
       <header class="section__head reveal">
-        <p class="kicker">Capabilities</p>
-        <h2>Services running</h2>
+        <p class="kicker" data-t="capabilities-kicker">Capabilities</p>
+        <h2 data-t="capabilities-h2">Services running</h2>
       </header>
 
       <div class="services">
@@ -356,9 +362,9 @@
     <section class="section" id="guardrails">
       <div class="split">
         <header class="section__head reveal">
-          <p class="kicker">Guardrails</p>
-          <h2>Policy engine: armed</h2>
-          <p class="section__note">In banking, an agent that is right most of the time isn't good enough. These policies are on in every system I ship, from the first commit.</p>
+          <p class="kicker" data-t="guardrails-kicker">Guardrails</p>
+          <h2 data-t="guardrails-h2">Policy engine: armed</h2>
+          <p class="section__note" data-t="guardrails-note">In banking, an agent that is right most of the time isn't good enough. These policies are on in every system I ship, from the first commit.</p>
         </header>
 
         <ul class="policies reveal">
@@ -374,8 +380,8 @@
     <!-- ================= OPERATOR ================= -->
     <section class="section" id="operator">
       <header class="section__head reveal">
-        <p class="kicker">Operator</p>
-        <h2>About and changelog</h2>
+        <p class="kicker" data-t="operator-kicker">Operator</p>
+        <h2 data-t="operator-h2">About and changelog</h2>
       </header>
 
       <div class="operator">
@@ -415,13 +421,14 @@
 
     <!-- ================= CONTACT ================= -->
     <section class="section contact" id="contact">
+      <span class="burst burst--contact" aria-hidden="true">BOOM!</span>
       <div class="terminal reveal">
         <p class="terminal__bar"><i></i><i></i><i></i><span>channel — aditya.shukla</span></p>
         <div class="terminal__body">
           <p><span class="prompt">$</span> open-channel --to aditya</p>
           <p class="dim">Connecting… operator available.</p>
-          <h2 class="terminal__title">Have a problem that needs an AI agent?</h2>
-          <p class="terminal__sub">Tell me what you're building. I reply to every message personally.</p>
+          <h2 class="terminal__title" data-t="contact-title">Have a problem that needs an AI agent?</h2>
+          <p class="terminal__sub" data-t="contact-sub">Tell me what you're building. I reply to every message personally.</p>
           <div class="terminal__actions">
             <a class="btn btn--primary btn--lg" href="mailto:adityabshukla12@gmail.com">adityabshukla12@gmail.com</a>
             <button class="btn btn--lg" type="button" data-copy="adityabshukla12@gmail.com">Copy email</button>
@@ -441,13 +448,17 @@
     <p>© <span data-year>2026</span></p>
   </footer>
 
+  <!-- Universe click effects (web shots, heat beams) -->
+  <div class="fx-layer" aria-hidden="true"></div>
+
   <!-- Multiverse: switch the whole site between universes -->
   <div class="verse" data-verse>
     <div class="verse__menu" data-verse-menu hidden>
       <p class="verse__title">Choose a universe</p>
       <button type="button" data-universe="console"><i class="sw sw--console"></i><span><b>Console</b><small>Earth-0 · the original</small></span></button>
-      <button type="button" data-universe="web"><i class="sw sw--web"></i><span><b>Web-slinger</b><small>Red, blue and halftone</small></span></button>
-      <button type="button" data-universe="krypton"><i class="sw sw--krypton"></i><span><b>Kryptonian</b><small>Deep blue, cape red, gold</small></span></button>
+      <button type="button" data-universe="web"><i class="sw sw--web"></i><span><b>Web-slinger</b><small>Comic book · webs on click</small></span></button>
+      <button type="button" data-universe="sky"><i class="sw sw--sky"></i><span><b>Sky Guardian</b><small>Daylight hero · heat vision</small></span></button>
+      <button type="button" data-universe="night"><i class="sw sw--night"></i><span><b>Night Vigilante</b><small>Rain, noir, flashlight</small></span></button>
     </div>
     <button type="button" class="verse__ball" data-verse-toggle aria-label="Switch universe" aria-expanded="false">
       <span class="verse__orb"></span><span class="verse__label" data-verse-label>Multiverse</span>
@@ -475,7 +486,7 @@
     </form>
   </aside>
 
-  <script src="assets/vendor/lenis.min.js?v=20260928"></script>
-  <script type="module" src="assets/js/main.js?v=20260928"></script>
+  <script src="assets/vendor/lenis.min.js?v=20260930"></script>
+  <script type="module" src="assets/js/main.js?v=20260930"></script>
 </body>
 </html>
