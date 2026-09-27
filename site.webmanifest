@@ -1,0 +1,11 @@
+{
+  "name": "Aditya Shukla — AI Engineer & AI Consultant",
+  "short_name": "A. Shukla",
+  "description": "Portfolio of Aditya Shukla, AI engineer and AI solutions consultant: agentic AI, RAG, voice AI and ML for banking and insurance.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f1ead9",
+  "theme_color": "#f1ead9",
+  "icons": [{ "src": "assets/img/favicon.svg", "sizes": "any", "type": "image/svg+xml" }]
+}

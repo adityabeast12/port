@@ -2,7 +2,7 @@
 
 Portfolio of Aditya Shukla, AI Solutions Consultant. It is styled as a secret-agent dossier, because he builds AI agents:
 
-- cream paper, black ink, red stamps
+- cream paper, black ink, red stamps, set in Poppins
 - condensed poster type and hard-shadow cards
 - client names shown as redaction bars
 
@@ -36,3 +36,12 @@ python3 -m http.server 8000
 Redaction bars contain filler text only. Never put real client names inside them, because hidden text is still readable in the page source.
 
 The site respects `prefers-reduced-motion`. If a script fails to load, a failsafe removes the loader after 8 seconds.
+
+## Search and AI discoverability
+
+- `index.html` has the title, description, canonical URL, Open Graph and Twitter tags, and schema.org JSON-LD (`Person`, `ProfilePage`, `WebSite`). Together these describe Aditya as an AI engineer and AI solutions consultant.
+- `llms.txt` (with a copy at `llm.txt`) is a plain-text summary for AI assistants and LLM crawlers.
+- `robots.txt` allows every crawler and points to the sitemap. `sitemap.xml` lists the page.
+- `site.webmanifest`, `404.html` and `assets/img/og.jpg` (the link-preview image) are also included.
+
+Crawlers only read `robots.txt` and `llms.txt` at the root of a domain. While the site lives at `adityabeast12.github.io/port/`, those two files are not at the root. Renaming this repository to `adityabeast12.github.io` moves the site to the root domain. If you do that, update every `https://adityabeast12.github.io/port/` URL in `index.html`, `llms.txt`, `robots.txt` and `sitemap.xml`, and the `/port/` links in `404.html`.

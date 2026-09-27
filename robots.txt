@@ -1,0 +1,5 @@
+# Everyone, including AI assistants and search engines, is welcome to read this portfolio.
+User-agent: *
+Allow: /
+
+Sitemap: https://adityabeast12.github.io/port/sitemap.xml
