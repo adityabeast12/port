@@ -129,6 +129,8 @@ const vertex = /* glsl */ `
   uniform float uIntro;
   uniform float uSize;
   uniform float uVel;
+  uniform float uActivity;
+  uniform float uScale;
   uniform vec3  uMouse;
   attribute vec3 aS1;
   attribute vec3 aS2;
@@ -147,7 +149,7 @@ const vertex = /* glsl */ `
     // Stagger the morph a little per particle so shapes dissolve rather than slide.
     float t = uTime * 0.6 + aRand * 6.2831;
     float settled = max(max(w0, w1), max(max(w2, w3), w4));
-    float amp = 0.025 + (1.0 - settled) * 0.9 * aRand;
+    float amp = 0.025 + (1.0 - settled) * 0.9 * aRand + uActivity * 0.07;
     p += vec3(sin(t + p.y * 1.7), cos(t * 0.9 + p.x * 1.3), sin(t * 1.1 + p.z * 1.5)) * amp;
 
     // Waveform: travelling ripples like a voice signal.
@@ -165,9 +167,9 @@ const vertex = /* glsl */ `
     // Mouse repulsion in world space.
     vec2 d = world.xy - uMouse.xy;
     float dist = length(d);
-    float force = smoothstep(1.4, 0.0, dist);
-    world.xy += normalize(d + 0.0001) * force * 0.55;
-    world.z += force * 0.4;
+    float force = smoothstep(1.4 * uScale, 0.0, dist);
+    world.xy += normalize(d + 0.0001) * force * 0.55 * uScale;
+    world.z += force * 0.4 * uScale;
 
     // Scroll velocity stretches the field vertically.
     world.y += uVel * (aRand - 0.5) * 0.6;
@@ -175,12 +177,12 @@ const vertex = /* glsl */ `
     vec4 mv = viewMatrix * world;
     gl_Position = projectionMatrix * mv;
 
-    float size = uSize * (0.55 + aRand * 0.9);
+    float size = uSize * (0.55 + aRand * 0.9) * mix(0.75, 1.0, uScale);
     size *= 1.0 + force * 1.5;
     gl_PointSize = min(size / -mv.z, uSize * 0.28);
 
     vRand = aRand;
-    vAlpha = smoothstep(18.0, 3.0, -mv.z) * (0.35 + 0.65 * uIntro);
+    vAlpha = smoothstep(18.0, 3.0, -mv.z) * (0.35 + 0.65 * uIntro) * (1.0 + uActivity * 0.5);
   }
 `;
 
@@ -246,6 +248,8 @@ export function createScene(canvas, { reducedMotion = false } = {}) {
     uIntro: { value: reducedMotion ? 1 : 0 },
     uSize: { value: (mobile ? 58 : 46) * dpr },
     uVel: { value: 0 },
+    uActivity: { value: 0 },
+    uScale: { value: 1 },
     uOpacity: { value: 1 },
     uMouse: { value: new THREE.Vector3(99, 99, 0) },
     uColA: { value: new THREE.Color('#e9e9ea') },
@@ -282,7 +286,9 @@ export function createScene(canvas, { reducedMotion = false } = {}) {
     morph: 0,        // target shape
     x: 0,            // target horizontal offset as a fraction of the half-viewport
     opacity: 1,      // dim the field behind text-heavy sections
-    y: 0,            // vertical offset used on portrait screens
+    y: 0,            // vertical offset in world units
+    scale: 1,
+    activity: 0,     // 0 idle, 1 "thinking"
     scroll: 0,       // 0..1 page progress
     vel: 0,
   };
@@ -325,6 +331,9 @@ export function createScene(canvas, { reducedMotion = false } = {}) {
     const k = 1 - Math.pow(0.001, dt);
     uniforms.uMorph.value += (state.morph - uniforms.uMorph.value) * k * 0.9;
     uniforms.uVel.value += (state.vel - uniforms.uVel.value) * k;
+    uniforms.uActivity.value += (state.activity - uniforms.uActivity.value) * k * 0.7;
+    uniforms.uScale.value += (state.scale - uniforms.uScale.value) * k * 0.6;
+    group.scale.setScalar(uniforms.uScale.value);
 
     pointer.x += (pointer.tx - pointer.x) * k * 0.8;
     pointer.y += (pointer.ty - pointer.y) * k * 0.8;
@@ -332,16 +341,16 @@ export function createScene(canvas, { reducedMotion = false } = {}) {
     const aspect = camera.aspect;
     const halfW = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * camera.position.z * aspect;
     const offset = aspect > 1.1 ? state.x * halfW : 0;
-    uniforms.uOpacity.value += (state.opacity - uniforms.uOpacity.value) * k * 0.5;
+    uniforms.uOpacity.value += (state.opacity - uniforms.uOpacity.value) * k * 1.2;
     group.position.x += (offset - group.position.x) * k * 0.6;
 
-    if (!reducedMotion) rotY += dt * 0.08;
+    if (!reducedMotion) rotY += dt * (0.08 + uniforms.uActivity.value * 0.9);
     const m = uniforms.uMorph.value;
     // The waveform reads best from a low, near-frontal angle.
     const waveW = Math.max(0, 1 - Math.abs(m - 2));
     group.rotation.y = rotY * (1 - waveW) + pointer.x * 0.25;
     group.rotation.x = pointer.y * -0.15 + waveW * 0.28 + Math.max(0, 1 - Math.abs(m - 4)) * 0.55;
-    const yTarget = (aspect < 1.1 ? state.y : 0) + state.scroll * -0.4;
+    const yTarget = state.y + state.scroll * -0.4;
     group.position.y += (yTarget - group.position.y) * k * 0.6;
 
     // Gather the particles in on first load.
@@ -373,8 +382,25 @@ export function createScene(canvas, { reducedMotion = false } = {}) {
   return {
     state,
     uniforms,
-    // Text sits on top of the field on narrow screens, so keep it quieter there.
-    setShape(i, x = 0, opacity = 1, y = 0) { state.morph = i; state.x = x; state.y = y; state.opacity = opacity * (mobile ? 0.7 : 1); },
+    // Half the visible height of the z=0 plane, in world units.
+    halfHeight() { return Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * camera.position.z; },
+    // Update any of: shape, x, y, opacity, scale, activity.
+    set(o) {
+      if (o.shape !== undefined) state.morph = o.shape;
+      if (o.x !== undefined) state.x = o.x;
+      if (o.y !== undefined) state.y = o.y;
+      if (o.scale !== undefined) state.scale = o.scale;
+      if (o.activity !== undefined) state.activity = o.activity;
+      // Text sits on top of the field on narrow screens, so dim it further there.
+      if (o.opacity !== undefined) state.opacity = o.opacity < 1 && mobile ? o.opacity * 0.7 : o.opacity;
+      // Jump straight to the target instead of easing (used for first placement).
+      if (o.snap) {
+        uniforms.uScale.value = state.scale;
+        group.scale.setScalar(state.scale);
+        group.position.y = state.y;
+        uniforms.uMorph.value = state.morph;
+      }
+    },
     destroy() { cancelAnimationFrame(raf); renderer.dispose(); },
   };
 }
