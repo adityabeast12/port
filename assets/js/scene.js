@@ -457,6 +457,14 @@ export function createScene(canvas, { reducedMotion = false } = {}) {
       uniforms.uColC.value.set(c);
       lineMat.color.set(b);
     },
+    // Glowing (additive) particles vanish on light backgrounds, so light
+    // universes switch to normal blending with darker colours.
+    setBlending(additive) {
+      mat.blending = additive ? THREE.AdditiveBlending : THREE.NormalBlending;
+      lineMat.blending = mat.blending;
+      mat.needsUpdate = true;
+      lineMat.needsUpdate = true;
+    },
     // Half the visible height of the z=0 plane, in world units.
     halfHeight() { return Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * camera.position.z; },
     // Update any of: shape, x, y, opacity, scale, activity.

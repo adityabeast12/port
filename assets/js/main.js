@@ -1,6 +1,7 @@
 // Bump ?v= in these imports and in index.html on every release so browsers never mix old and new files.
-import { mountChat } from './chat.js?v=20260928';
-import { mountDemo } from './agent-demo.js?v=20260928';
+import { mountChat } from './chat.js?v=20260930';
+import { mountDemo } from './agent-demo.js?v=20260930';
+import { UNIVERSES, applyCopy, loadFont, mountEffects, setEffectsUniverse } from './universes.js?v=20260930';
 
 const root = document.documentElement;
 const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -30,23 +31,24 @@ $$('a[href^="#"]').forEach((a) => {
 });
 
 /* ---------------- Multiverse ---------------- */
-const UNIVERSES = {
-  console: { name: 'Console', bg: '#0a0c0b', particles: ['#dcebe2', '#3ee089', '#f5b23d'] },
-  web: { name: 'Web-slinger', bg: '#0b0d1f', particles: ['#f3f4ff', '#ff3b47', '#5b8cff'] },
-  krypton: { name: 'Kryptonian', bg: '#061229', particles: ['#eef4ff', '#f6c343', '#e2383f'] },
-};
+// Universe definitions (copy, fonts, colours, effects) live in universes.js.
 let universe = 'console';
 try { if (UNIVERSES[localStorage.getItem('universe')]) universe = localStorage.getItem('universe'); } catch { /* storage blocked */ }
 
 function paintUniverse(u) {
   universe = u;
+  const U = UNIVERSES[u];
   if (u === 'console') delete root.dataset.universe;
   else root.dataset.universe = u;
-  $('[data-verse-label]').textContent = u === 'console' ? 'Multiverse' : UNIVERSES[u].name;
+  applyCopy(u);
+  setEffectsUniverse(u);
+  $('[data-verse-label]').textContent = u === 'console' ? 'Multiverse' : U.name;
   $$('[data-verse-menu] [data-universe]').forEach((b) => b.setAttribute('aria-current', String(b.dataset.universe === u)));
-  $('meta[name="theme-color"]').setAttribute('content', UNIVERSES[u].bg);
-  gl?.setColors(...UNIVERSES[u].particles);
+  $('meta[name="theme-color"]').setAttribute('content', U.bg);
+  if (gl) { gl.setColors(...U.particles); gl.setBlending(U.additive); }
   try { localStorage.setItem('universe', u); } catch { /* storage blocked */ }
+  // Redraw the particle name in the universe's font once it has loaded.
+  loadFont(u).then(() => { if (universe === u) buildName(true); });
 }
 
 // Jump universes through a portal that opens from the ball.
@@ -55,6 +57,7 @@ function switchUniverse(u) {
   const ball = $('[data-verse-toggle]').getBoundingClientRect();
   const x = ball.left + ball.width / 2;
   const y = ball.top + ball.height / 2;
+  loadFont(u); // start fetching the font before the portal opens
   if (!document.startViewTransition || reduced) { paintUniverse(u); return; }
   const r = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
   const t = document.startViewTransition(() => paintUniverse(u));
@@ -73,17 +76,13 @@ verseToggle.addEventListener('click', (e) => { e.stopPropagation(); setMenu(vers
 $$('[data-universe]', verseMenu).forEach((b) => b.addEventListener('click', () => { setMenu(false); switchUniverse(b.dataset.universe); }));
 document.addEventListener('click', (e) => { if (!verseMenu.hidden && !e.target.closest('[data-verse]')) setMenu(false); });
 document.addEventListener('keydown', (e) => { if (e.key === 'Escape') setMenu(false); });
+mountEffects({ reduced });
 paintUniverse(universe);
 
 /* ---------------- Boot sequence ---------------- */
 async function boot() {
   const el = $('[data-boot]');
-  const lines = [
-    ['loading operator profile', 'aditya.shukla'],
-    ['mounting agents', '4 banks live'],
-    ['arming guardrails', 'ok'],
-    ['connecting tracing', 'ok'],
-  ];
+  const lines = UNIVERSES[universe].boot;
   if (!reduced) {
     for (const [task, result] of lines) {
       el.innerHTML += `<span class="ok">[ ok ]</span> ${task} <span class="dim">… ${result}</span>\n`;
@@ -115,21 +114,27 @@ const heroCopy = $('.hero__copy');
 const heroHint = $('.hero__hint');
 let textLayout = '';
 
-async function buildName() {
+async function buildName(force = false) {
   if (!gl) return;
   const portrait = innerWidth / innerHeight < 1.1;
-  const layout = `${portrait}-${Math.round(innerWidth / 80)}`;
-  if (layout === textLayout) return;
+  const font = UNIVERSES[universe].font;
+  const layout = `${portrait}-${Math.round(innerWidth / 80)}-${font}`;
+  if (layout === textLayout && !force) return;
   textLayout = layout;
-  // Sample the name only once Poppins is ready, or the shape uses a fallback font.
-  await Promise.race([document.fonts?.load('700 100px Poppins'), wait(2500)]).catch(() => {});
-  gl.setText(portrait ? ['ADITYA', 'SHUKLA'] : ['ADITYA SHUKLA'], { width: portrait ? 0.86 : 0.8, lift: portrait ? 0.2 : 0.22 });
+  // Sample the name only once its font is ready, or the shape uses a fallback font.
+  await Promise.race([document.fonts?.load(`700 100px "${font}"`), wait(2500)]).catch(() => {});
+  gl.setText(portrait ? ['ADITYA', 'SHUKLA'] : ['ADITYA SHUKLA'], {
+    width: portrait ? 0.86 : 0.8,
+    lift: portrait ? 0.2 : 0.22,
+    font: `"${font}", Poppins, sans-serif`,
+  });
 }
 
-import('./scene.js?v=20260928')
+import('./scene.js?v=20260930')
   .then(async ({ createScene }) => {
     gl = createScene($('#gl'), { reducedMotion: reduced });
     gl.setColors(...UNIVERSES[universe].particles);
+    gl.setBlending(UNIVERSES[universe].additive);
     await buildName();
     gl.set({ shape: -1, opacity: 1, scale: 1, y: 0, snap: true });
     onHeroScroll();

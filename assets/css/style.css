@@ -458,79 +458,7 @@ main, .foot { position: relative; z-index: 1; }
 .b-contact .primary { background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
 
 /* ---------- Multiverse ---------- */
-/* Each universe only swaps design tokens (and a background), so every section
-   themes itself. The particle colours are switched from main.js. */
-html[data-universe="web"] {
-  --bg: #0b0d1f;
-  --panel: #11142b;
-  --panel-2: #171b38;
-  --line: rgba(170, 190, 255, 0.10);
-  --line-2: rgba(170, 190, 255, 0.20);
-  --fg: #f3f4ff;
-  --fg-2: #aab0d8;
-  --fg-3: #6b70a0;
-  --accent: #ff3b47;
-  --accent-dim: rgba(255, 59, 71, 0.16);
-  --on-accent: #ffffff;
-  --amber: #ffd23f;
-  --amber-dim: rgba(255, 210, 63, 0.14);
-  --blue: #5b8cff;
-}
-html[data-universe="web"] body {
-  background-image:
-    radial-gradient(rgba(255, 59, 71, 0.13) 1.1px, transparent 1.6px),
-    radial-gradient(rgba(91, 140, 255, 0.10) 1.1px, transparent 1.6px);
-  background-size: 14px 14px, 14px 14px;
-  background-position: 0 0, 7px 7px;
-}
-html[data-universe="web"] body::after {
-  content: ""; position: fixed; top: 0; right: 0; width: 460px; height: 460px; z-index: 0; pointer-events: none;
-  background: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%27460%27%20height%3D%27460%27%20viewBox%3D%270%200%20460%20460%27%3E%3Cpath%20d%3D%27M0%200L460%200%20M0%200L448%20102%20M0%200L414%20200%20M0%200L360%20287%20M0%200L287%20360%20M0%200L200%20414%20M0%200L102%20448%20M0%200L0%20460%20M60%200Q54%206%2058%2013Q51%2018%2054%2026Q46%2029%2047%2037Q38%2038%2037%2047Q29%2046%2026%2054Q18%2051%2013%2058Q6%2054%200%2060%20M115%200Q103%2012%20112%2026Q98%2034%20104%2050Q88%2055%2090%2072Q73%2073%2072%2090Q55%2088%2050%20104Q34%2098%2026%20112Q12%20103%200%20115%20M175%200Q157%2018%20171%2039Q149%2052%20158%2076Q133%2084%20137%20109Q111%20111%20109%20137Q84%20133%2076%20158Q52%20149%2039%20171Q18%20157%200%20175%20M240%200Q215%2024%20234%2053Q204%2071%20216%20104Q183%20115%20188%20150Q153%20153%20150%20188Q115%20183%20104%20216Q71%20204%2053%20234Q24%20215%200%20240%20M310%200Q277%2031%20302%2069Q263%2092%20279%20135Q236%20148%20242%20193Q197%20197%20193%20242Q148%20236%20135%20279Q92%20263%2069%20302Q31%20277%200%20310%20M385%200Q344%2039%20375%2086Q327%20114%20347%20167Q293%20184%20301%20240Q245%20245%20240%20301Q184%20293%20167%20347Q114%20327%2086%20375Q39%20344%200%20385%27%20fill%3D%27none%27%20stroke%3D%27rgba%28210%2C220%2C255%2C0.10%29%27%20stroke-width%3D%271.2%27/%3E%3C/svg%3E") no-repeat;
-  transform: scaleX(-1);
-}
-html[data-universe="web"] .panel,
-html[data-universe="web"] .metric,
-html[data-universe="web"] .service,
-html[data-universe="web"] .deploys,
-html[data-universe="web"] .policies,
-html[data-universe="web"] .changelog,
-html[data-universe="web"] .terminal { border-top: 2px solid var(--accent); }
-html[data-universe="web"] .section h2 { text-transform: uppercase; letter-spacing: -0.01em; }
-
-html[data-universe="krypton"] {
-  --bg: #061229;
-  --panel: #0b1a38;
-  --panel-2: #102249;
-  --line: rgba(160, 200, 255, 0.10);
-  --line-2: rgba(160, 200, 255, 0.20);
-  --fg: #eef4ff;
-  --fg-2: #a3b6dc;
-  --fg-3: #6078a6;
-  --accent: #f6c343;
-  --accent-dim: rgba(246, 195, 67, 0.16);
-  --on-accent: #061229;
-  --amber: #ff5a4e;
-  --amber-dim: rgba(255, 90, 78, 0.14);
-  --blue: #6fb6ff;
-}
-html[data-universe="krypton"] body {
-  background-image:
-    radial-gradient(rgba(255, 255, 255, 0.55) 0.6px, transparent 1px),
-    radial-gradient(rgba(255, 255, 255, 0.35) 0.5px, transparent 1px),
-    linear-gradient(180deg, #0c2a60 0%, var(--bg) 55%);
-  background-size: 97px 97px, 61px 61px, 100% 100vh;
-  background-position: 0 0, 30px 40px, 0 0;
-  background-repeat: repeat, repeat, no-repeat;
-}
-html[data-universe="krypton"] .bar { border-bottom: 2px solid #d62a33; }
-html[data-universe="krypton"] .panel,
-html[data-universe="krypton"] .metric,
-html[data-universe="krypton"] .service,
-html[data-universe="krypton"] .deploys,
-html[data-universe="krypton"] .policies,
-html[data-universe="krypton"] .changelog,
-html[data-universe="krypton"] .terminal { border-top: 2px solid rgba(246, 195, 67, 0.55); }
-
+/* Universe themes live in universes.css. */
 /* The portal transition between universes (View Transitions API). */
 ::view-transition-old(root), ::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
 
@@ -570,8 +498,9 @@ html[data-universe="krypton"] .terminal { border-top: 2px solid rgba(246, 195, 6
 .verse__menu small { display: block; font-size: 12px; color: var(--fg-2); }
 .sw { width: 30px; height: 30px; border-radius: 50%; flex: none; border: 1px solid rgba(255, 255, 255, .15); }
 .sw--console { background: radial-gradient(circle at 35% 35%, #3ee089, #0a0c0b 70%); }
-.sw--web { background: conic-gradient(#ff3b47 0 50%, #2d4cc8 50% 100%); }
-.sw--krypton { background: linear-gradient(135deg, #0c2a60 45%, #d62a33 45% 70%, #f6c343 70%); }
+.sw--web { background: conic-gradient(#e8272f 0 50%, #1f4fd8 50% 100%); }
+.sw--sky { background: linear-gradient(180deg, #4aa3ff 0 55%, #e2383f 55% 78%, #f6c343 78%); }
+.sw--night { background: radial-gradient(circle at 60% 35%, #f5c518 0 18%, #15171c 20%); }
 @media (max-width: 600px) {
   .verse { left: 12px; bottom: 12px; }
   .verse__label { display: none; }

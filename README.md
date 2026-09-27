@@ -9,7 +9,13 @@ Portfolio of Aditya Shukla, AI engineer and AI solutions consultant. The site is
 - **Try my agent:** a playable, scripted simulation of the banking assistant (`assets/js/agent-demo.js`). Visitors type requests and watch the pipeline run: guardrails (PII masking, prompt-injection and data-scope blocks), orchestrator, KYC, risk (daily limit, new payees), tools and reply, with a trace. It runs entirely in the browser; no model or bank is involved.
 - **Deployments:** projects as a deployment list with status, environment and stack. Each row expands into a description and an architecture flow.
 - **Capabilities, Guardrails, Operator, Contact:** services, a policy panel, profile plus changelog, and a terminal-style contact panel.
-- **Multiverse ball (bottom-left):** switches the whole site between universes (Console, Web-slinger and Kryptonian) through a portal transition, and recolours the particles. The choice is remembered per browser. Universes only swap CSS tokens (`html[data-universe=…]`), so adding one means one CSS block plus one entry in `UNIVERSES` in `main.js`. They are inspired colour themes only, with no character names or logos.
+- **Multiverse ball (bottom-left):** transforms the whole site through a portal transition. Each universe changes the fonts, surfaces, background, copy, particle colours and interaction:
+  - **Console:** the original dark console.
+  - **Web-slinger:** a comic-book page with a blue halftone, ink-outlined panels, the Bangers font, starburst stickers, a speech-bubble tagline and "Issue #" captions. Clicking shoots a web line that splats where you click.
+  - **Sky Guardian:** daylight, with drifting clouds, sun glare, speed lines, glassy cards with red tops, and the Archivo Black font in skewed hero headings. Clicking fires two heat-vision beams.
+  - **Night Vigilante:** noir, with rain, a city skyline, gold on black and the Bebas Neue font. In the hero, a flashlight follows the cursor.
+
+  The copy for each universe lives in `assets/js/universes.js` (keyed by `data-t` attributes in the HTML). The styles live in `assets/css/universes.css`, and the fonts are self-hosted in `assets/fonts/` (SIL OFL). These are inspired themes only, with no character names or logos. The chosen universe is remembered per browser.
 - **Ask my agent (bottom-right):** an optional chat drawer with pre-written answers from `assets/js/kb.js`.
 
 Client names are confidential and must never appear in the code.
@@ -27,6 +33,7 @@ python3 -m http.server 8000
 - `assets/js/main.js`: boot sequence, smooth scroll (Lenis), hero choreography, multiverse, reveals, counters, active tab
 - `assets/js/scene.js`: the particle field, including the name shape sampled from text. It sizes itself to its canvas and pauses while off screen.
 - `assets/js/agent-demo.js`: the playable agent (the `plan()` parser and the pipeline UI)
+- `assets/js/universes.js` and `assets/css/universes.css`: the multiverse (copy, fonts, click effects, themes)
 - `assets/js/chat.js` and `assets/js/kb.js`: the Ask my agent drawer and its answers
 - `assets/vendor/`: bundled three.js and Lenis
 

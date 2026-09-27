@@ -1,0 +1,291 @@
+/* Universe display fonts, self-hosted (latin subset, SIL Open Font License). */
+@font-face { font-family: "Bangers"; src: url("../fonts/bangers.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "Archivo Black"; src: url("../fonts/archivoblack.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "Bebas Neue"; src: url("../fonts/bebasneue.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+
+/* Universes: each one transforms the whole site (type, surfaces, background,
+   copy via main.js, click/cursor effects via universes.js). Inspired colour
+   and pattern themes only: no character names or logos. */
+
+/* Pieces that only some universes use are hidden by default. */
+.burst, .fx-layer, .spot { display: none; }
+.fx-layer { position: fixed; inset: 0; z-index: 80; pointer-events: none; }
+.fx-layer svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+
+/* Shared: every themed universe uses its own display font and "ok" colour. */
+html[data-universe] :is(.section h2, .terminal__title, .metric__v, .service h3, .profile__name, .changelog h3, .pipe b, .deploy__name b, .hero__line) {
+  font-family: var(--f-display);
+}
+html[data-universe] .pipe li[data-state="ok"] { border-color: var(--ok); background: var(--ok-dim); }
+html[data-universe] .pipe li[data-state="ok"] .pipe__dot { background: var(--ok); box-shadow: 0 0 10px var(--ok); }
+html[data-universe] .t-ok { color: var(--ok); }
+html[data-universe] .status--prod { color: var(--ok); background: var(--ok-dim); }
+
+/* =====================================================================
+   WEB-SLINGER — a comic-book page
+   ===================================================================== */
+html[data-universe="web"] {
+  --bg: #1d3fb3;
+  --panel: #fffdf6;
+  --panel-2: #fff1b8;
+  --line: rgba(17, 17, 17, 0.14);
+  --line-2: #111111;
+  --fg: #111111;
+  --fg-2: #33384d;
+  --fg-3: #686e85;
+  --accent: #e8272f;
+  --accent-dim: rgba(232, 39, 47, 0.14);
+  --on-accent: #ffffff;
+  --amber: #ffcc00;
+  --amber-dim: rgba(255, 204, 0, 0.3);
+  --blue: #1f4fd8;
+  --ok: #1f4fd8;
+  --ok-dim: rgba(31, 79, 216, 0.14);
+  --f-display: "Bangers", "Impact", sans-serif;
+  --radius: 4px;
+}
+html[data-universe="web"] body {
+  background-color: var(--bg);
+  background-image: radial-gradient(rgba(255, 255, 255, 0.16) 1.6px, transparent 2px);
+  background-size: 13px 13px;
+  background-position: 0 0;
+}
+html[data-universe="web"] body::before { background: radial-gradient(ellipse at 50% 30%, transparent 40%, rgba(8, 20, 70, 0.55) 100%); }
+html[data-universe="web"] body::after {
+  content: ""; position: fixed; top: 0; left: 0; width: 520px; height: 520px; z-index: 0; pointer-events: none;
+  background: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%27520%27%20height%3D%27520%27%3E%3Cpath%20d%3D%27M0%200L520%200%20M0%200L507%20116%20M0%200L469%20226%20M0%200L407%20324%20M0%200L324%20407%20M0%200L226%20469%20M0%200L116%20507%20M0%200L0%20520%20M70%200Q63%207%2068%2016Q59%2021%2063%2030Q53%2034%2055%2044Q45%2045%2044%2055Q34%2053%2030%2063Q21%2059%2016%2068Q7%2063%200%2070%20M135%200Q121%2014%20132%2030Q115%2040%20122%2059Q103%2065%20106%2084Q86%2086%2084%20106Q65%20103%2059%20122Q40%20115%2030%20132Q14%20121%200%20135%20M205%200Q183%2021%20200%2046Q174%2061%20185%2089Q156%2098%20160%20128Q130%20130%20128%20160Q98%20156%2089%20185Q61%20174%2046%20200Q21%20183%200%20205%20M280%200Q250%2028%20273%2062Q238%2083%20252%20121Q213%20134%20219%20175Q178%20178%20175%20219Q134%20213%20121%20252Q83%20238%2062%20273Q28%20250%200%20280%20M360%200Q322%2036%20351%2080Q306%20107%20324%20156Q274%20172%20281%20224Q229%20229%20224%20281Q172%20274%20156%20324Q107%20306%2080%20351Q36%20322%200%20360%20M445%200Q398%2045%20434%2099Q378%20132%20401%20193Q339%20213%20348%20277Q283%20283%20277%20348Q213%20339%20193%20401Q132%20378%2099%20434Q45%20398%200%20445%27%20fill%3D%27none%27%20stroke%3D%27rgba%28255%2C255%2C255%2C0.22%29%27%20stroke-width%3D%271.6%27/%3E%3C/svg%3E") no-repeat;
+}
+/* Ink-outlined comic panels with hard shadows, slightly off-kilter. */
+html[data-universe="web"] :is(.panel, .metric, .service, .deploys, .policies, .changelog, .terminal) {
+  border: 3px solid #111; border-radius: 4px; box-shadow: 7px 7px 0 #111;
+}
+html[data-universe="web"] .metric:nth-child(odd), html[data-universe="web"] .service:nth-child(odd) { transform: rotate(-0.8deg); }
+html[data-universe="web"] .metric:nth-child(even), html[data-universe="web"] .service:nth-child(even) { transform: rotate(0.8deg); }
+html[data-universe="web"] .section h2, html[data-universe="web"] .terminal__title {
+  font-size: clamp(38px, 5vw, 64px); letter-spacing: 0.02em; line-height: 1; text-transform: uppercase; font-weight: 400;
+}
+html[data-universe="web"] .section h2 { color: #fff; -webkit-text-stroke: 1.5px #111; text-shadow: 4px 4px 0 #111; }
+html[data-universe="web"] .section__note, html[data-universe="web"] .foot { color: #e6ecff; }
+html[data-universe="web"] .kicker {
+  display: inline-block; background: var(--amber); color: #111; border: 2px solid #111; box-shadow: 3px 3px 0 #111;
+  font-family: var(--f-display); font-size: 16px; letter-spacing: 0.06em; padding: 1px 10px; transform: rotate(-2deg);
+}
+html[data-universe="web"] .kicker::before { content: none; }
+html[data-universe="web"] .section__head { position: relative; }
+html[data-universe="web"] .bar { background: #fffdf6; border-bottom: 3px solid #111; color: #111; }
+html[data-universe="web"] .bar__tabs a { color: #111; font-weight: 600; }
+html[data-universe="web"] .bar__tabs a:hover, html[data-universe="web"] .bar__tabs a.is-active { background: var(--amber); }
+html[data-universe="web"] .bar__status { color: var(--accent); }
+html[data-universe="web"] .bar__cta { border: 2px solid #111; box-shadow: 3px 3px 0 #111; }
+html[data-universe="web"] .btn { border: 3px solid #111; border-radius: 4px; box-shadow: 4px 4px 0 #111; font-family: var(--f-display); font-size: 18px; letter-spacing: 0.05em; font-weight: 400; background: #fff; color: #111; }
+html[data-universe="web"] .btn--primary { background: var(--accent); color: #fff; }
+html[data-universe="web"] .btn:hover { transform: translate(2px, 2px); box-shadow: 2px 2px 0 #111; }
+html[data-universe="web"] .metric__v { font-size: clamp(40px, 4vw, 54px); font-weight: 400; color: var(--accent); -webkit-text-stroke: 1px #111; }
+html[data-universe="web"] .service h3, html[data-universe="web"] .changelog h3, html[data-universe="web"] .profile__name { font-size: 24px; font-weight: 400; letter-spacing: 0.03em; }
+html[data-universe="web"] .deploys__cols { background: var(--amber); color: #111; border-bottom: 3px solid #111; }
+html[data-universe="web"] .deploy__name b { font-size: 19px; font-weight: 400; letter-spacing: 0.04em; }
+html[data-universe="web"] .status { border: 2px solid #111; }
+html[data-universe="web"] .chip { border: 2px solid #111; background: #fff; color: #111; box-shadow: 2px 2px 0 #111; }
+html[data-universe="web"] .chip:hover { background: var(--amber); }
+html[data-universe="web"] .dm { border: 2px solid #111; }
+html[data-universe="web"] .dm--bot { background: #fff; }
+html[data-universe="web"] .demo__trace, html[data-universe="web"] .demo__form input { background: #fff; border: 2px solid #111; }
+html[data-universe="web"] .pipe li { border: 2px solid #111; background: #fff; }
+html[data-universe="web"] .pipe b { font-size: 14px; font-weight: 400; letter-spacing: 0.04em; }
+html[data-universe="web"] .flow li { border: 2px solid #111; }
+/* Hero: caption box and speech bubble */
+html[data-universe="web"] .hero__role {
+  left: 50%; right: auto; transform: translateX(-50%) rotate(-1.5deg); width: max-content; max-width: calc(100% - 32px);
+  background: var(--amber); color: #111; border: 2px solid #111; box-shadow: 3px 3px 0 #111; padding: 4px 12px; font-weight: 500;
+}
+html[data-universe="web"] .hero__role .led { display: none; }
+html[data-universe="web"] .hero__line {
+  background: #fff; color: #111; border: 3px solid #111; border-radius: 22px; padding: 14px 22px;
+  font-size: clamp(20px, 2.2vw, 28px); letter-spacing: 0.03em; font-weight: 400; max-width: 26ch; width: max-content;
+  box-shadow: 5px 5px 0 #111; left: 50%; right: auto; transform: translateX(-50%);
+}
+html[data-universe="web"] .hero__line::after {
+  content: ""; position: absolute; left: 28%; bottom: -18px; width: 26px; height: 20px; background: #fff;
+  border-right: 3px solid #111; border-bottom: 3px solid #111; transform: skewX(-35deg); border-bottom-right-radius: 4px;
+}
+html[data-universe="web"] .hero__actions { top: calc(57% + 150px); }
+html[data-universe="web"] .hero__hint { color: #dfe6ff; }
+/* Starburst stickers */
+html[data-universe="web"] .burst {
+  display: grid; place-items: center; position: absolute; z-index: 3;
+  width: 128px; height: 108px; padding-top: 4px;
+  background: var(--amber); color: var(--accent);
+  font-family: var(--f-display); font-size: 30px; letter-spacing: 0.03em; white-space: nowrap;
+  -webkit-text-stroke: 1.2px #111;
+  clip-path: polygon(50% 0, 61% 26%, 90% 8%, 76% 38%, 100% 50%, 76% 62%, 92% 92%, 61% 74%, 50% 100%, 39% 74%, 8% 92%, 24% 62%, 0 50%, 24% 38%, 10% 8%, 39% 26%);
+  filter: drop-shadow(4px 4px 0 #111);
+  animation: burst-pop 2.4s ease-in-out infinite;
+}
+@keyframes burst-pop { 50% { transform: scale(1.08) rotate(var(--r, -10deg)); } }
+html[data-universe="web"] .burst--hero1 { left: 7%; top: 24%; --r: -12deg; transform: rotate(-12deg); }
+html[data-universe="web"] .burst--hero2 { right: 7%; top: 62%; --r: 10deg; transform: rotate(10deg); color: var(--blue); }
+html[data-universe="web"] .burst--section { left: calc(100% + 40px); top: 10px; --r: 8deg; transform: rotate(8deg); width: 132px; height: 104px; font-size: 22px; }
+html[data-universe="web"] .contact { position: relative; }
+html[data-universe="web"] .burst--contact { right: var(--gutter); top: 60px; --r: -8deg; transform: rotate(-8deg); }
+html[data-universe="web"] .fx-layer { display: block; }
+@media (max-width: 1000px) {
+  html[data-universe="web"] .burst--section, html[data-universe="web"] .burst--hero2 { display: none; }
+  html[data-universe="web"] .burst--hero1 { left: 4%; top: 30%; width: 96px; height: 82px; font-size: 22px; }
+  html[data-universe="web"] .burst--contact { width: 96px; height: 82px; font-size: 22px; top: 24px; }
+}
+html[data-universe="web"] .agent-fab, html[data-universe="web"] .verse__ball { border: 2px solid #111; background: #fff; color: #111; box-shadow: 3px 3px 0 #111; }
+html[data-universe="web"] .toggle { border-color: #111; }
+
+/* =====================================================================
+   SKY GUARDIAN — daylight hero
+   ===================================================================== */
+html[data-universe="sky"] {
+  --bg: #3f97f2;
+  --panel: rgba(255, 255, 255, 0.9);
+  --panel-2: #ffffff;
+  --line: rgba(10, 40, 100, 0.12);
+  --line-2: rgba(10, 40, 100, 0.2);
+  --fg: #0b1e45;
+  --fg-2: #33507f;
+  --fg-3: #6a80aa;
+  --accent: #d81f2a;
+  --accent-dim: rgba(216, 31, 42, 0.12);
+  --on-accent: #ffffff;
+  --amber: #e5a300;
+  --amber-dim: rgba(245, 183, 0, 0.18);
+  --blue: #1747b8;
+  --ok: #1747b8;
+  --ok-dim: rgba(23, 71, 184, 0.12);
+  --f-display: "Archivo Black", "Arial Black", sans-serif;
+  --radius: 16px;
+}
+html[data-universe="sky"] body {
+  background: linear-gradient(180deg, #2c86ea 0%, #5aaaf7 55%, #79bdfb 100%) fixed;
+}
+html[data-universe="sky"] body::before {
+  background:
+    radial-gradient(circle at 88% 6%, rgba(255, 244, 200, 0.95) 0 60px, rgba(255, 230, 150, 0.35) 140px, transparent 330px);
+}
+/* Drifting clouds */
+html[data-universe="sky"] body::after {
+  content: ""; position: fixed; inset: -10% -50% auto -50%; height: 120%; z-index: 0; pointer-events: none;
+  background:
+    radial-gradient(ellipse 180px 60px at 10% 20%, rgba(255,255,255,.85), transparent 70%),
+    radial-gradient(ellipse 140px 50px at 14% 17%, rgba(255,255,255,.9), transparent 70%),
+    radial-gradient(ellipse 220px 70px at 45% 70%, rgba(255,255,255,.55), transparent 70%),
+    radial-gradient(ellipse 160px 55px at 70% 35%, rgba(255,255,255,.7), transparent 70%),
+    radial-gradient(ellipse 120px 40px at 74% 32%, rgba(255,255,255,.8), transparent 70%),
+    radial-gradient(ellipse 200px 60px at 92% 85%, rgba(255,255,255,.5), transparent 70%);
+  animation: clouds 90s linear infinite;
+}
+@keyframes clouds { to { transform: translateX(33%); } }
+html[data-universe="sky"] :is(.panel, .metric, .service, .deploys, .policies, .changelog, .terminal) {
+  border: 1px solid rgba(255, 255, 255, 0.9); border-top: 5px solid var(--accent);
+  box-shadow: 0 18px 40px rgba(8, 40, 110, 0.25);
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+}
+html[data-universe="sky"] .section h2, html[data-universe="sky"] .terminal__title { font-weight: 400; letter-spacing: -0.01em; text-transform: uppercase; }
+html[data-universe="sky"] .section h2 {
+  color: #fff; font-size: clamp(32px, 4.4vw, 56px); display: inline-block; transform: skewX(-8deg);
+  text-shadow: 3px 3px 0 #0b1e45, 6px 6px 0 rgba(216, 31, 42, 0.8);
+}
+html[data-universe="sky"] .section__note, html[data-universe="sky"] .foot { color: #f1f7ff; }
+html[data-universe="sky"] .kicker { color: #fff4c2; font-weight: 700; }
+html[data-universe="sky"] .kicker::before { content: "★ "; color: var(--amber); }
+html[data-universe="sky"] .bar { background: rgba(255, 255, 255, 0.88); border-bottom: 4px solid var(--accent); box-shadow: 0 4px 0 var(--amber); color: var(--fg); }
+html[data-universe="sky"] .bar__tabs a { color: var(--fg-2); }
+html[data-universe="sky"] .bar__tabs a.is-active, html[data-universe="sky"] .bar__tabs a:hover { color: var(--accent); background: rgba(216, 31, 42, 0.08); }
+html[data-universe="sky"] .bar__status { color: var(--blue); }
+html[data-universe="sky"] .btn { border-radius: 999px; }
+html[data-universe="sky"] .btn--primary { border: 2px solid var(--amber); box-shadow: 0 6px 18px rgba(216, 31, 42, 0.35); }
+html[data-universe="sky"] .metric__v { color: var(--blue); font-weight: 400; }
+html[data-universe="sky"] .service h3, html[data-universe="sky"] .changelog h3, html[data-universe="sky"] .profile__name, html[data-universe="sky"] .deploy__name b { font-weight: 400; }
+html[data-universe="sky"] .demo__trace, html[data-universe="sky"] .demo__form input, html[data-universe="sky"] .pipe li { background: #fff; }
+html[data-universe="sky"] .dm--user { background: var(--blue); }
+html[data-universe="sky"] .hero__role { color: #fff; font-weight: 600; text-shadow: 0 1px 2px rgba(0,0,0,.25); }
+html[data-universe="sky"] .hero__line {
+  color: #fff; font-size: clamp(20px, 2.4vw, 32px); font-weight: 400; line-height: 1.2; max-width: 22ch;
+  transform: skewX(-6deg); text-shadow: 2px 2px 0 #0b1e45, 4px 4px 0 rgba(216, 31, 42, 0.7);
+}
+html[data-universe="sky"] .hero__actions { top: calc(57% + 130px); }
+@media (max-width: 600px) { html[data-universe="sky"] .hero__line { font-size: 22px; } html[data-universe="sky"] .hero__actions { top: calc(60% + 130px); } }
+html[data-universe="sky"] .hero__hint { color: #eaf4ff; }
+/* Speed lines streaking across the hero */
+html[data-universe="sky"] .hero__stage::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none; opacity: 0.5;
+  background: repeating-linear-gradient(180deg, transparent 0 34px, rgba(255, 255, 255, 0.35) 34px 35px, transparent 35px 71px);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 30%, #000 70%, transparent);
+          mask-image: linear-gradient(90deg, transparent, #000 30%, #000 70%, transparent);
+  animation: speed 1.4s linear infinite;
+}
+@keyframes speed { from { background-position: 0 0; } to { background-position: 0 71px; } }
+html[data-universe="sky"] .fx-layer { display: block; }
+html[data-universe="sky"] .agent-fab, html[data-universe="sky"] .verse__ball { background: #fff; color: var(--fg); }
+
+/* =====================================================================
+   NIGHT VIGILANTE — rain, noir, a flashlight in the dark
+   ===================================================================== */
+html[data-universe="night"] {
+  --bg: #07080a;
+  --panel: #101216;
+  --panel-2: #171a1f;
+  --line: rgba(255, 255, 255, 0.05);
+  --line-2: rgba(255, 255, 255, 0.11);
+  --fg: #e4e4e4;
+  --fg-2: #9a9ca3;
+  --fg-3: #5d6068;
+  --accent: #f5c518;
+  --accent-dim: rgba(245, 197, 24, 0.13);
+  --on-accent: #07080a;
+  --amber: #ff8a00;
+  --amber-dim: rgba(255, 138, 0, 0.14);
+  --blue: #7aa2c8;
+  --ok: #f5c518;
+  --ok-dim: rgba(245, 197, 24, 0.13);
+  --f-display: "Bebas Neue", "Oswald", "Arial Narrow", sans-serif;
+  --radius: 3px;
+}
+html[data-universe="night"] body { background: #07080a; }
+/* Rain */
+html[data-universe="night"] body::after {
+  content: ""; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background:
+    repeating-linear-gradient(104deg, transparent 0 22px, rgba(190, 205, 230, 0.07) 22px 23px, transparent 23px 57px),
+    repeating-linear-gradient(98deg, transparent 0 41px, rgba(190, 205, 230, 0.05) 41px 42px, transparent 42px 90px);
+  background-size: 100% 180px, 100% 260px;
+  animation: rain .5s linear infinite;
+}
+@keyframes rain { to { background-position: -40px 180px, -50px 260px; } }
+/* City skyline along the bottom of the hero */
+html[data-universe="night"] .hero__stage::before {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 30%; z-index: 1; pointer-events: none;
+  background: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%271600%27%20height%3D%27260%27%20viewBox%3D%270%200%201600%20260%27%20preserveAspectRatio%3D%27none%27%3E%3Cg%20fill%3D%27%230d0f13%27%3E%3Crect%20x%3D%270%27%20y%3D%27162%27%20width%3D%2781%27%20height%3D%2798%27/%3E%3Crect%20x%3D%2782%27%20y%3D%27178%27%20width%3D%2744%27%20height%3D%2782%27/%3E%3Crect%20x%3D%27126%27%20y%3D%27143%27%20width%3D%2755%27%20height%3D%27117%27/%3E%3Crect%20x%3D%27187%27%20y%3D%27126%27%20width%3D%2757%27%20height%3D%27134%27/%3E%3Crect%20x%3D%27250%27%20y%3D%27174%27%20width%3D%2763%27%20height%3D%2786%27/%3E%3Crect%20x%3D%27317%27%20y%3D%2742%27%20width%3D%2747%27%20height%3D%27218%27/%3E%3Crect%20x%3D%27368%27%20y%3D%27120%27%20width%3D%2794%27%20height%3D%27140%27/%3E%3Crect%20x%3D%27463%27%20y%3D%27180%27%20width%3D%2771%27%20height%3D%2780%27/%3E%3Crect%20x%3D%27534%27%20y%3D%2769%27%20width%3D%2755%27%20height%3D%27191%27/%3E%3Crect%20x%3D%27594%27%20y%3D%2758%27%20width%3D%2749%27%20height%3D%27202%27/%3E%3Crect%20x%3D%27649%27%20y%3D%27131%27%20width%3D%2751%27%20height%3D%27129%27/%3E%3Crect%20x%3D%27705%27%20y%3D%27112%27%20width%3D%2789%27%20height%3D%27148%27/%3E%3Crect%20x%3D%27797%27%20y%3D%27157%27%20width%3D%2785%27%20height%3D%27103%27/%3E%3Crect%20x%3D%27885%27%20y%3D%27180%27%20width%3D%27103%27%20height%3D%2780%27/%3E%3Crect%20x%3D%27992%27%20y%3D%27165%27%20width%3D%2775%27%20height%3D%2795%27/%3E%3Crect%20x%3D%271068%27%20y%3D%27179%27%20width%3D%2759%27%20height%3D%2781%27/%3E%3Crect%20x%3D%271132%27%20y%3D%27197%27%20width%3D%2769%27%20height%3D%2763%27/%3E%3Crect%20x%3D%271204%27%20y%3D%27106%27%20width%3D%27108%27%20height%3D%27154%27/%3E%3Crect%20x%3D%271317%27%20y%3D%2784%27%20width%3D%2746%27%20height%3D%27176%27/%3E%3Crect%20x%3D%271363%27%20y%3D%27183%27%20width%3D%2764%27%20height%3D%2777%27/%3E%3Crect%20x%3D%271427%27%20y%3D%2747%27%20width%3D%2783%27%20height%3D%27213%27/%3E%3Crect%20x%3D%271510%27%20y%3D%2755%27%20width%3D%2740%27%20height%3D%27205%27/%3E%3Crect%20x%3D%271552%27%20y%3D%27182%27%20width%3D%2743%27%20height%3D%2778%27/%3E%3Crect%20x%3D%271596%27%20y%3D%27112%27%20width%3D%2772%27%20height%3D%27148%27/%3E%3C/g%3E%3Cg%20fill%3D%27rgba%28245%2C197%2C24%2C0.55%29%27%3E%3Crect%20x%3D%2712%27%20y%3D%27181%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%2718%27%20y%3D%27218%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%2713%27%20y%3D%27236%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%27101%27%20y%3D%27192%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%2795%27%20y%3D%27193%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%27105%27%20y%3D%27215%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%27135%27%20y%3D%27226%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%27169%27%20y%3D%27203%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%27135%27%20y%3D%27181%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%27134%27%20y%3D%27224%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%27202%27%20y%3D%27205%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%27200%27%20y%3D%27209%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%27212%27%20y%3D%27207%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%27292%27%20y%3D%27224%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%27268%27%20y%3D%27207%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%27262%27%20y%3D%27219%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%27301%27%20y%3D%27188%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%27338%27%20y%3D%27226%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%27448%27%20y%3D%27188%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%27420%27%20y%3D%27168%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%27405%27%20y%3D%27231%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%27488%27%20y%3D%27223%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%27500%27%20y%3D%27211%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%27515%27%20y%3D%27218%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%27487%27%20y%3D%27228%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%27550%27%20y%3D%27166%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%27549%27%20y%3D%27204%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%27566%27%20y%3D%2789%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%27620%27%20y%3D%27155%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%27622%27%20y%3D%27220%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%27631%27%20y%3D%27216%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%27629%27%20y%3D%2785%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%27659%27%20y%3D%27148%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%27674%27%20y%3D%27223%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%27683%27%20y%3D%27177%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%27817%27%20y%3D%27230%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%27810%27%20y%3D%27194%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%27839%27%20y%3D%27183%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%27834%27%20y%3D%27217%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%27948%27%20y%3D%27215%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%271053%27%20y%3D%27210%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%271043%27%20y%3D%27228%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%271020%27%20y%3D%27223%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%271083%27%20y%3D%27203%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%271175%27%20y%3D%27218%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%271154%27%20y%3D%27225%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%271138%27%20y%3D%27216%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%271282%27%20y%3D%27156%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%271226%27%20y%3D%27204%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%271275%27%20y%3D%27237%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%271289%27%20y%3D%27199%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%271335%27%20y%3D%27195%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%271335%27%20y%3D%27194%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%271326%27%20y%3D%27217%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%271343%27%20y%3D%27196%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%271397%27%20y%3D%27203%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%271533%27%20y%3D%2790%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%271577%27%20y%3D%27216%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%271625%27%20y%3D%27182%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%271609%27%20y%3D%27136%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%271656%27%20y%3D%27184%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%271631%27%20y%3D%27183%27%20width%3D%274%27%20height%3D%276%27/%3E%3C/g%3E%3C/svg%3E") bottom / 100% 100% no-repeat;
+  opacity: .95;
+}
+html[data-universe="night"] .hero__copy, html[data-universe="night"] .hero__hint { z-index: 2; }
+html[data-universe="night"] :is(.panel, .metric, .service, .deploys, .policies, .changelog, .terminal) {
+  border: 1px solid #22252c; border-top: 1px solid rgba(245, 197, 24, 0.5);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 20px 40px rgba(0, 0, 0, 0.6);
+  background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.025), transparent 40%);
+}
+html[data-universe="night"] .section h2, html[data-universe="night"] .terminal__title {
+  font-weight: 400; text-transform: uppercase; letter-spacing: 0.05em; font-size: clamp(40px, 5.2vw, 72px); line-height: 0.95;
+}
+html[data-universe="night"] .kicker { color: var(--accent); letter-spacing: 0.25em; }
+html[data-universe="night"] .kicker::before { content: "▍"; color: var(--accent); }
+html[data-universe="night"] .bar { background: rgba(7, 8, 10, 0.9); border-bottom: 1px solid rgba(245, 197, 24, 0.35); }
+html[data-universe="night"] .bar__status { color: var(--accent); }
+html[data-universe="night"] .btn { border-radius: 2px; text-transform: uppercase; letter-spacing: 0.12em; font-size: 13px; }
+html[data-universe="night"] .btn--primary { box-shadow: 0 0 24px rgba(245, 197, 24, 0.35); }
+html[data-universe="night"] .metric__v { font-weight: 400; font-size: clamp(40px, 4vw, 56px); letter-spacing: 0.04em; }
+html[data-universe="night"] .service h3, html[data-universe="night"] .changelog h3, html[data-universe="night"] .profile__name, html[data-universe="night"] .deploy__name b { font-weight: 400; letter-spacing: 0.06em; font-size: 22px; }
+html[data-universe="night"] .pipe b { font-weight: 400; letter-spacing: 0.08em; font-size: 14px; }
+html[data-universe="night"] .hero__line { font-size: clamp(22px, 2.4vw, 32px); font-weight: 400; letter-spacing: 0.06em; text-transform: uppercase; max-width: 34ch; line-height: 1.15; }
+html[data-universe="night"] .hero__actions { top: calc(57% + 110px); }
+/* The flashlight: everything is dark except around the cursor. */
+@media (hover: hover) and (pointer: fine) {
+  html[data-universe="night"] .spot {
+    display: block; position: absolute; inset: 0; z-index: 3; pointer-events: none;
+    background: radial-gradient(circle at var(--mx, 50%) var(--my, 40%), transparent 0 200px, rgba(0, 0, 0, 0.42) 520px);
+  }
+}
