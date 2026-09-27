@@ -14,7 +14,7 @@
   <meta property="og:site_name" content="Aditya Shukla">
   <meta property="og:url" content="https://adityabeast12.github.io/port/">
   <meta property="og:title" content="Aditya Shukla — AI Engineer &amp; AI Consultant">
-  <meta property="og:description" content="The operations console of an AI engineer and consultant who builds agents that run inside banks: agentic AI, RAG, voice AI and ML.">
+  <meta property="og:description" content="The operations console of an AI engineer and consultant who builds agents for banks: agentic AI, RAG, voice AI and ML.">
   <meta property="og:image" content="https://adityabeast12.github.io/port/assets/img/og.jpg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
@@ -24,7 +24,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@Adityabeast12">
   <meta name="twitter:title" content="Aditya Shukla — AI Engineer &amp; AI Consultant">
-  <meta name="twitter:description" content="Agentic AI, RAG, voice AI and ML running inside banks, with guardrails built in.">
+  <meta name="twitter:description" content="Agentic AI, RAG, voice AI and ML for banking, with guardrails built in.">
   <meta name="twitter:image" content="https://adityabeast12.github.io/port/assets/img/og.jpg">
   <link rel="me" href="https://www.linkedin.com/in/aditya-shukla-2a86991b4/">
   <link rel="me" href="https://github.com/adityabeast12">
@@ -36,8 +36,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/style.css?v=20260930">
-  <link rel="stylesheet" href="assets/css/universes.css?v=20260930">
+  <link rel="stylesheet" href="assets/css/style.css?v=20261002">
+  <link rel="stylesheet" href="assets/css/universes.css?v=20261002">
   <script>
     document.documentElement.classList.add('js');
     // Failsafe: if scripts never boot, show the page anyway.
@@ -65,7 +65,7 @@
           { "@type": "Occupation", "name": "AI Engineer", "occupationLocation": { "@type": "Country", "name": "India" }, "skills": "Agentic AI, multi-agent systems, LLM, RAG, voice AI, machine learning" },
           { "@type": "Occupation", "name": "AI Solutions Consultant", "occupationLocation": { "@type": "Country", "name": "India" }, "skills": "AI strategy, POC development, responsible AI, AI governance" }
         ],
-        "knowsAbout": ["Artificial intelligence", "Agentic AI", "AI agents", "Multi-agent systems", "Large language models", "Retrieval-augmented generation", "Generative AI", "Voice AI", "Machine learning", "Responsible AI", "AI governance", "CrewAI", "LangChain", "AutoGen", "FastAPI", "Python", "Langfuse", "AI in banking"],
+        "knowsAbout": ["Artificial intelligence", "Agentic AI", "AI agents", "Multi-agent systems", "Large language models", "Retrieval-augmented generation", "Generative AI", "Voice AI", "Machine learning", "Responsible AI", "AI governance", "LlamaIndex", "AutoGen", "CrewAI", "LangChain", "vLLM", "Local LLMs", "FastAPI", "Python", "Langfuse", "AI in banking"],
         "sameAs": ["https://www.linkedin.com/in/aditya-shukla-2a86991b4/", "https://github.com/adityabeast12", "https://twitter.com/Adityabeast12"]
       },
       {
@@ -117,12 +117,21 @@
     <!-- ================= HERO: the name, made of particles ================= -->
     <section class="hero" id="overview">
       <div class="hero__stage">
+        <!-- Night Vigilante only: searchlights, a signal in the clouds, fog and lightning -->
+        <div class="noir" aria-hidden="true">
+          <span class="noir__signal"></span>
+          <span class="noir__beam noir__beam--1"></span>
+          <span class="noir__beam noir__beam--2"></span>
+          <span class="noir__fog noir__fog--1"></span>
+          <span class="noir__fog noir__fog--2"></span>
+          <span class="noir__flash"></span>
+        </div>
         <canvas id="gl" aria-hidden="true"></canvas>
         <div class="hero__copy">
           <p class="hero__role" data-t="hero-role"><span class="led"></span> AI Engineer &amp; AI Solutions Consultant · Nagpur, India</p>
           <!-- The particles spell the name; this heading is the real, readable text (shown if WebGL is unavailable). -->
           <h1 class="hero__name">Aditya Shukla</h1>
-          <p class="hero__line" data-t="hero-line">I build AI agents that run inside banks, and the guardrails that keep them safe.</p>
+          <p class="hero__line" data-t="hero-line">I build AI agents for banks, and the guardrails that keep them safe.</p>
           <div class="hero__actions">
             <a href="#demo" class="btn btn--primary" data-t="hero-btn">Try my agent</a>
             <a href="#deployments" class="btn">View deployments</a>
@@ -135,10 +144,16 @@
       </div>
     </section>
 
+    <!-- Night Vigilante only: police tape between the hero and the page -->
+    <div class="tape" aria-hidden="true"><div class="tape__track">
+      <span>Restricted area</span><i>✦</i><span>Guardrails active</span><i>✦</i><span>Do not cross</span><i>✦</i><span>Restricted area</span><i>✦</i><span>Guardrails active</span><i>✦</i><span>Do not cross</span><i>✦</i>
+      <span>Restricted area</span><i>✦</i><span>Guardrails active</span><i>✦</i><span>Do not cross</span><i>✦</i><span>Restricted area</span><i>✦</i><span>Guardrails active</span><i>✦</i><span>Do not cross</span><i>✦</i>
+    </div></div>
+
     <!-- ================= METRICS ================= -->
     <section class="section section--tight" aria-label="At a glance">
       <div class="metrics reveal">
-        <div class="metric"><p class="metric__k">Banks live</p><p class="metric__v"><span data-count="4">4</span></p><p class="metric__n">3 India · 1 international</p></div>
+        <div class="metric"><p class="metric__k">RAG in production</p><p class="metric__v">Multi-bank</p><p class="metric__n">knowledge assistant live across banks</p></div>
         <div class="metric"><p class="metric__k">In production</p><p class="metric__v"><span data-count="2">2</span>+ yrs</p><p class="metric__n">GenAI in BFSI and insurance</p></div>
         <div class="metric"><p class="metric__k">ML models</p><p class="metric__v"><span data-count="3">3</span></p><p class="metric__n">churn · propensity · triage</p></div>
         <div class="metric"><p class="metric__k">Onboarding flow</p><p class="metric__v"><span data-count="10">10</span> states</p><p class="metric__n">real-time voice and video</p></div>
@@ -151,7 +166,7 @@
         <span class="burst burst--section" aria-hidden="true">WHAM!</span>
         <p class="kicker" data-t="demo-kicker">Try it</p>
         <h2 data-t="demo-h2">Talk to my banking agent</h2>
-        <p class="section__note" data-t="demo-note">A simulated version of the assistant I built, which runs at four banks. It runs entirely in your browser and no real bank is connected. Try to break it.</p>
+        <p class="section__note" data-t="demo-note">A simulated version of the banking assistant I architected, now moving to production at a bank. It runs entirely in your browser and no real bank is connected. Try to break it.</p>
       </header>
 
       <div class="demo reveal" data-demo>
@@ -207,14 +222,29 @@
         <details class="deploy" open>
           <summary>
             <span class="deploy__name"><b>banking-assistant</b><small>Agentic banking assistant</small></span>
-            <span class="status status--prod">Production</span>
-            <span class="deploy__env">4 banks · IN ×3 · INTL ×1</span>
-            <span class="deploy__stack">CrewAI · LangChain · FastAPI</span>
+            <span class="status status--roll">Rolling out</span>
+            <span class="deploy__env">1 bank · pre-production</span>
+            <span class="deploy__stack">LlamaIndex · AutoGen · vLLM</span>
           </summary>
           <div class="deploy__body">
-            <p>A multi-agent assistant that handles account operations, beneficiary management and transactions through conversation. I architected it end to end. It is live at four banks and has contributed directly to my organisation's revenue growth.</p>
+            <p>A multi-agent assistant that handles account operations, beneficiary management and transactions through conversation. I architected it end to end. It runs on local LLMs served with vLLM, so customer data never leaves the bank, and it is now moving to production at a bank.</p>
             <ol class="flow" aria-label="Architecture">
-              <li>User</li><li class="flow__g">Guardrails</li><li class="flow__o">Orchestrator</li><li>KYC agent</li><li>Risk agent</li><li>Core banking tools</li><li class="flow__t">Langfuse trace</li>
+              <li>User</li><li class="flow__g">Guardrails</li><li class="flow__o">Orchestrator</li><li>KYC agent</li><li>Risk agent</li><li>Core banking tools</li><li>Local LLM (vLLM)</li><li class="flow__t">Langfuse trace</li>
+            </ol>
+          </div>
+        </details>
+
+        <details class="deploy">
+          <summary>
+            <span class="deploy__name"><b>bank-rag-assistant</b><small>Knowledge assistant (RAG)</small></span>
+            <span class="status status--prod">Production</span>
+            <span class="deploy__env">Live at multiple banks</span>
+            <span class="deploy__stack">LLM · RAG · FastAPI</span>
+          </summary>
+          <div class="deploy__body">
+            <p>A retrieval-augmented assistant that answers questions from each bank's own documents, policies and FAQs, with the source behind every answer. It is live in production at multiple banks.</p>
+            <ol class="flow" aria-label="Architecture">
+              <li>Question</li><li class="flow__g">Guardrails</li><li>Retriever</li><li>Bank documents</li><li class="flow__o">LLM answer + sources</li><li class="flow__t">Langfuse trace</li>
             </ol>
           </div>
         </details>
@@ -323,13 +353,13 @@
           <p class="service__top"><span class="status status--prod">Healthy</span><span class="service__id">svc/agents</span></p>
           <h3>Multi-agent systems</h3>
           <p>Orchestrators that plan work and hand it to specialist agents with their own tools.</p>
-          <p class="service__deps">CrewAI · LangChain · AutoGen</p>
+          <p class="service__deps">AutoGen · LlamaIndex · CrewAI · LangChain</p>
         </article>
         <article class="service reveal">
           <p class="service__top"><span class="status status--prod">Healthy</span><span class="service__id">svc/rag</span></p>
           <h3>RAG and document pipelines</h3>
           <p>Retrieval over messy PDFs, knowledge bases and past cases, with multi-parser ingestion.</p>
-          <p class="service__deps">LlamaParse · Docling · vector DBs</p>
+          <p class="service__deps">LlamaIndex · LlamaParse · Docling · vector DBs</p>
         </article>
         <article class="service reveal">
           <p class="service__top"><span class="status status--prod">Healthy</span><span class="service__id">svc/voice</span></p>
@@ -486,7 +516,7 @@
     </form>
   </aside>
 
-  <script src="assets/vendor/lenis.min.js?v=20260930"></script>
-  <script type="module" src="assets/js/main.js?v=20260930"></script>
+  <script src="assets/vendor/lenis.min.js?v=20261002"></script>
+  <script type="module" src="assets/js/main.js?v=20261002"></script>
 </body>
 </html>

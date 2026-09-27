@@ -6,14 +6,14 @@ Portfolio of Aditya Shukla, AI engineer and AI solutions consultant. The site is
 
 - **Hero:** thousands of WebGL particles (three.js) fly in and form **ADITYA SHUKLA**, on two lines on phones. The cursor pushes them around. Scrolling through the hero dissolves the name into the core sphere, then into the agent network. The real `<h1>` stays in the page for screen readers and search engines, and becomes visible if WebGL fails.
 - **Metrics:** real CV numbers only.
-- **Try my agent:** a playable, scripted simulation of the banking assistant (`assets/js/agent-demo.js`). Visitors type requests and watch the pipeline run: guardrails (PII masking, prompt-injection and data-scope blocks), orchestrator, KYC, risk (daily limit, new payees), tools and reply, with a trace. It runs entirely in the browser; no model or bank is involved.
+- **Try my agent:** a playable, scripted simulation of the agentic banking assistant (AutoGen, LlamaIndex, FastAPI, local LLMs on vLLM and Langfuse; moving to production at one bank) (`assets/js/agent-demo.js`). Visitors type requests and watch the pipeline run: guardrails (PII masking, prompt-injection and data-scope blocks), orchestrator, KYC, risk (daily limit, new payees), tools and reply, with a trace. It runs entirely in the browser; no model or bank is involved.
 - **Deployments:** projects as a deployment list with status, environment and stack. Each row expands into a description and an architecture flow.
 - **Capabilities, Guardrails, Operator, Contact:** services, a policy panel, profile plus changelog, and a terminal-style contact panel.
 - **Multiverse ball (bottom-left):** transforms the whole site through a portal transition. Each universe changes the fonts, surfaces, background, copy, particle colours and interaction:
   - **Console:** the original dark console.
   - **Web-slinger:** a comic-book page with a blue halftone, ink-outlined panels, the Bangers font, starburst stickers, a speech-bubble tagline and "Issue #" captions. Clicking shoots a web line that splats where you click.
   - **Sky Guardian:** daylight, with drifting clouds, sun glare, speed lines, glassy cards with red tops, and the Archivo Black font in skewed hero headings. Clicking fires two heat-vision beams.
-  - **Night Vigilante:** noir, with rain, a city skyline, gold on black and the Bebas Neue font. In the hero, a flashlight follows the cursor.
+  - **Night Vigilante:** noir, with rain, fog, lightning, sweeping searchlights, a glowing signal in the clouds and a city skyline. The hero is dark and a flashlight reveals the name: it follows the cursor or finger and sweeps on its own when idle. Clicking fires a grapple line. It also has police tape, gold metallic headings, HUD corner brackets on panels, deployments as numbered case files, and red "Classified" and "Evidence" stamps.
 
   The copy for each universe lives in `assets/js/universes.js` (keyed by `data-t` attributes in the HTML). The styles live in `assets/css/universes.css`, and the fonts are self-hosted in `assets/fonts/` (SIL OFL). These are inspired themes only, with no character names or logos. The chosen universe is remembered per browser.
 - **Ask my agent (bottom-right):** an optional chat drawer with pre-written answers from `assets/js/kb.js`.

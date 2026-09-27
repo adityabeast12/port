@@ -43,7 +43,7 @@ export function mountChat({ reduced = false, onAsk } = {}) {
   const toBottom = () => { scroller.scrollTop = scroller.scrollHeight; };
 
   const BLOCKS = {
-    stats: () => list([['4 banks', 'running my agentic assistant'], ['2+ years', 'shipping GenAI to production'], ['3 ML models', 'with business impact'], ['10 states', 'in a real-time onboarding flow']]),
+    stats: () => list([['Multi-bank', 'RAG assistant live in production'], ['2+ years', 'shipping GenAI to production'], ['3 ML models', 'with business impact'], ['10 states', 'in a real-time onboarding flow']]),
     projects: () => {
       const el = h('<div class="b-list"></div>');
       PROJECTS.forEach((p) => {
@@ -70,7 +70,8 @@ export function mountChat({ reduced = false, onAsk } = {}) {
     sql: () => h('<pre class="b-trace"><span class="t-tag">SELECT</span> branch, COUNT(*)\n<span class="t-tag">FROM</span> accounts\n<span class="t-tag">GROUP BY</span> branch\n<span class="t-tag">ORDER BY</span> 2 <span class="t-tag">DESC LIMIT</span> 5;</pre>'),
     stack: () => list([
       ['AI / ML', 'LLMs, RAG, multi-agent systems, ML, vector DBs'],
-      ['Frameworks', 'CrewAI, LangChain, AutoGen'],
+      ['Frameworks', 'AutoGen, LlamaIndex, CrewAI, LangChain'],
+      ['Local LLMs', 'Self-hosted models served with vLLM'],
       ['Voice AI', 'Gemini Live, ElevenLabs, LiveKit, Twilio'],
       ['Responsible AI', 'Guardrails, governance, Langfuse, monitoring'],
       ['Engineering', 'Python, SQL, FastAPI, Streamlit, React'],
