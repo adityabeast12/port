@@ -1,5 +1,5 @@
 // Bump ?v= in these imports and in index.html on every release so browsers never mix old and new files.
-import { mountChat } from './chat.js?v=20260927';
+import { mountChat } from './chat.js?v=20260927b';
 
 const root = document.documentElement;
 const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -60,16 +60,20 @@ $('[data-year]').textContent = new Date().getFullYear();
 
 /* ---------------- Core (3D orb) ---------------- */
 const MODES = ['core', 'network', 'signal', 'guarded'];
-// The 3D scene loads on its own, so if three.js or WebGL fails the rest of the page still works.
+// The 3D scene (three.js, ~690 KB) loads in the background: the page never
+// waits for it, and if it fails everything else still works.
 let gl = null;
-try {
-  const { createScene } = await import('./scene.js?v=20260927');
-  gl = createScene($('#gl'), { reducedMotion: reduced });
-  gl.set({ shape: 0, opacity: 1, scale: 0.9, y: 0, snap: true });
-} catch (err) {
-  console.warn('3D core unavailable.', err);
-  root.classList.add('no-webgl');
-}
+import('./scene.js?v=20260927b')
+  .then(({ createScene }) => {
+    gl = createScene($('#gl'), { reducedMotion: reduced });
+    gl.set({ shape: mode, opacity: 1, scale: mode === 2 ? 0.75 : 0.9, y: 0, snap: true });
+    // Only render the orb while its panel is on screen.
+    new IntersectionObserver(([e]) => gl.setVisible(e.isIntersecting)).observe($('.core'));
+  })
+  .catch((err) => {
+    console.warn('3D core unavailable.', err);
+    root.classList.add('no-webgl');
+  });
 
 const modeLabel = $('[data-mode]');
 const modeButtons = $$('.core__modes button');
@@ -87,11 +91,6 @@ function setMode(i) {
 modeButtons.forEach((b) => b.addEventListener('click', () => { userPicked = true; setMode(Number(b.dataset.shape)); }));
 // Cycle modes on its own until the visitor picks one.
 if (!reduced) setInterval(() => { if (!userPicked && !document.hidden) setMode((mode + 1) % MODES.length); }, 4500);
-
-// Only render the orb while its panel is on screen.
-if (gl) {
-  new IntersectionObserver(([e]) => gl.setVisible(e.isIntersecting)).observe($('.core'));
-}
 
 /* ---------------- Reveal, counters, policies ---------------- */
 const io = new IntersectionObserver((entries) => {

@@ -1,6 +1,6 @@
 // "Ask my agent": an optional chat drawer. Answers are pre-written in kb.js
 // and routed by keyword score; nothing is generated.
-import { TOPICS, PROJECTS, WELCOME, FALLBACK } from './kb.js?v=20260927';
+import { TOPICS, PROJECTS, WELCOME, FALLBACK } from './kb.js?v=20260927b';
 
 const $ = (s, el = document) => el.querySelector(s);
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
