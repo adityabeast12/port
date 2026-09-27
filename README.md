@@ -1,22 +1,19 @@
-# Aditya Shukla — The Agent Files
+# Aditya Shukla — Mission Control
 
-Portfolio of Aditya Shukla, AI Solutions Consultant. It is styled as a secret-agent dossier, because he builds AI agents:
-
-- cream paper, black ink, red stamps, set in Poppins
-- condensed poster type and hard-shadow cards
-- client names shown as redaction bars
+Portfolio of Aditya Shukla, AI engineer and AI solutions consultant. The site is styled as the operations console for his AI agents: dark graphite with an engineering grid, signal green for healthy systems, Poppins for text and JetBrains Mono for readouts.
 
 ## Sections
 
-1. **Hero:** outlined and filled name, a taped "subject" polaroid, a sticker and a stamp.
-2. **Origin:** a pinned, four-page story. A WebGL particle orb (three.js) morphs with each page: core, agent network, waveform, guarded core.
-3. **The only rule:** a scroll-revealed statement.
-4. **Special skills:** a horizontal scroll on desktop, stacked on phones.
-5. **The case files:** seven projects with redacted client fields.
-6. **The record:** stats and a personnel-file timeline.
-7. **Contact.**
+- **Status bar:** operational light, section tabs, a live IST clock and a contact button.
+- **Overview:** an intro panel, and the **core**, a WebGL particle orb (three.js) that cycles between core, network, signal and guarded modes. Visitors can pick a mode. Below them sit metric tiles (real CV numbers only) and a live agent trace that streams an example banking request.
+- **Deployments:** projects as a deployment list with status, environment and stack. Each row expands, using a native `<details>` element, into a description and an architecture flow.
+- **Capabilities:** skills as "services running".
+- **Guardrails:** responsible-AI practices as a policy panel whose toggles arm on scroll.
+- **Operator:** profile plus a career changelog (v0.1 B.Tech → v1.0 Business Analyst → v2.0 AI Solutions Consultant).
+- **Contact:** a terminal-style "open a channel" panel.
+- **Ask my agent:** an optional chat drawer with pre-written answers from `assets/js/kb.js`.
 
-A small **Ask my agent** button opens an optional chat drawer. Its answers are pre-written in `assets/js/kb.js`; nothing is generated.
+Client names are confidential and must never appear in the code.
 
 It is a static site with no build step:
 
@@ -26,16 +23,14 @@ python3 -m http.server 8000
 
 ## Files
 
-- `index.html`: all page content
+- `index.html`: all content, SEO meta tags and JSON-LD
 - `assets/css/style.css`: styles
-- `assets/js/main.js`: loader, smooth scroll (Lenis), scroll animations (GSAP ScrollTrigger), origin pin
-- `assets/js/scene.js`: particle orb
+- `assets/js/main.js`: boot sequence, smooth scroll (Lenis), orb modes, reveals, counters, live trace, active tab
+- `assets/js/scene.js`: the particle orb. It sizes itself to its canvas and pauses rendering while off screen.
 - `assets/js/chat.js` and `assets/js/kb.js`: the Ask my agent drawer and its answers
-- `assets/vendor/`: bundled three.js, GSAP + ScrollTrigger, Lenis
+- `assets/vendor/`: bundled three.js and Lenis
 
-Redaction bars contain filler text only. Never put real client names inside them, because hidden text is still readable in the page source.
-
-The site respects `prefers-reduced-motion`. If a script fails to load, a failsafe removes the loader after 8 seconds.
+The site respects `prefers-reduced-motion`. If scripts fail to load, a failsafe removes the boot screen after 7 seconds.
 
 ## Search and AI discoverability
 

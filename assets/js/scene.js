@@ -252,9 +252,9 @@ export function createScene(canvas, { reducedMotion = false } = {}) {
     uScale: { value: 1 },
     uOpacity: { value: 1 },
     uMouse: { value: new THREE.Vector3(99, 99, 0) },
-    uColA: { value: new THREE.Color('#e9e9ea') },
-    uColB: { value: new THREE.Color('#ff6a2b') },
-    uColC: { value: new THREE.Color('#ffb48f') },
+    uColA: { value: new THREE.Color('#dcebe2') },
+    uColB: { value: new THREE.Color('#3ee089') },
+    uColC: { value: new THREE.Color('#f5b23d') },
   };
 
   const mat = new THREE.ShaderMaterial({
@@ -275,7 +275,7 @@ export function createScene(canvas, { reducedMotion = false } = {}) {
   for (const [a, b] of net.edges) linePos.push(...net.nodes[a], ...net.nodes[b]);
   const lineGeo = new THREE.BufferGeometry();
   lineGeo.setAttribute('position', new THREE.Float32BufferAttribute(linePos, 3));
-  const lineMat = new THREE.LineBasicMaterial({ color: 0xff6a2b, transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending });
+  const lineMat = new THREE.LineBasicMaterial({ color: 0x3ee089, transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending });
   const lines = new THREE.LineSegments(lineGeo, lineMat);
   group.add(lines);
 
@@ -294,24 +294,29 @@ export function createScene(canvas, { reducedMotion = false } = {}) {
   };
   const pointer = { x: 0, y: 0, tx: 0, ty: 0, active: false };
 
+  // Size and pointer are measured against the canvas itself, so the scene
+  // works both full-screen and inside a smaller panel.
   function onPointer(e) {
-    pointer.tx = (e.clientX / window.innerWidth) * 2 - 1;
-    pointer.ty = -(e.clientY / window.innerHeight) * 2 + 1;
-    pointer.active = true;
+    const r = canvas.getBoundingClientRect();
+    const inside = e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom;
+    const c = (v) => Math.max(-1.5, Math.min(1.5, v));
+    pointer.tx = c(((e.clientX - r.left) / r.width) * 2 - 1);
+    pointer.ty = c(-((e.clientY - r.top) / r.height) * 2 + 1);
+    pointer.active = inside;
   }
   window.addEventListener('pointermove', onPointer, { passive: true });
   document.addEventListener('pointerleave', () => { pointer.active = false; });
 
   function resize() {
-    const w = window.innerWidth, h = window.innerHeight;
+    const w = Math.max(1, canvas.clientWidth), h = Math.max(1, canvas.clientHeight);
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
-    // Keep the composition framed on portrait screens.
+    // Keep the composition framed on portrait shapes.
     camera.position.z = w / h < 1 ? 8 + (1 - w / h) * 6 : 8;
     camera.updateProjectionMatrix();
   }
   resize();
-  window.addEventListener('resize', resize);
+  new ResizeObserver(resize).observe(canvas);
 
   const clock = new THREE.Clock();
   const tmp = new THREE.Vector3();
