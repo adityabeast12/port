@@ -2,21 +2,29 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, interactive-widget=resizes-content">
-  <title>Aditya Shukla — AI Solutions Consultant</title>
-  <meta name="description" content="Chat with Aditya Shukla's portfolio. He builds production-grade agentic AI, LLM/RAG pipelines, voice agents and ML models for banking and insurance, with guardrails built in.">
-  <meta name="theme-color" content="#0a0a0b">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aditya Shukla — The Agent Files</title>
+  <meta name="description" content="Aditya Shukla, AI Solutions Consultant. He builds agentic AI, RAG pipelines, voice agents and ML models that run inside banks, with guardrails built in.">
+  <meta name="theme-color" content="#f1ead9">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Ask Aditya — AI Solutions Consultant">
-  <meta property="og:description" content="A portfolio you can talk to. Agentic AI, ML and responsible AI systems, shipped to production at banks in India and abroad.">
+  <meta property="og:title" content="Aditya Shukla — The Agent Files">
+  <meta property="og:description" content="The case files of an AI Solutions Consultant who builds agents that banks trust with real money.">
   <meta property="og:image" content="https://adityabeast12.github.io/port/assets/img/og.jpg">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
   <link rel="alternate icon" href="favicon.ico">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Permanent+Marker&family=Space+Grotesk:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/style.css">
+  <script>
+    document.documentElement.classList.add('js');
+    // Failsafe: if scripts never boot, drop the loader so the page is still readable.
+    setTimeout(function () {
+      var r = document.documentElement;
+      if (!r.classList.contains('is-ready')) { r.classList.add('boot-failed'); r.classList.remove('js'); }
+    }, 8000);
+  </script>
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -32,57 +40,376 @@
   </script>
 </head>
 <body>
-  <canvas id="gl" aria-hidden="true"></canvas>
 
-  <div class="app">
-    <header class="top">
-      <button class="top__who" type="button" data-reset aria-label="Start a new chat">
-        <img src="assets/img/aditya.webp" alt="" width="36" height="36">
-        <span>
-          <strong>Aditya Shukla</strong>
-          <small><span class="dot"></span> AI Solutions Consultant</small>
-        </span>
-      </button>
-      <nav class="top__links" aria-label="Links">
-        <a href="https://www.linkedin.com/in/aditya-shukla-2a86991b4/" target="_blank" rel="noopener">LinkedIn</a>
-        <a href="https://github.com/adityabeast12" target="_blank" rel="noopener">GitHub</a>
-        <a href="mailto:adityabshukla12@gmail.com" class="top__cta">Email me</a>
-      </nav>
-    </header>
-
-    <main class="chat" id="chat" data-scroll>
-      <div class="chat__inner">
-        <section class="welcome" data-welcome>
-          <div class="welcome__orb" aria-hidden="true"></div>
-          <h1 class="welcome__title">Hi, I'm Aditya.</h1>
-          <p class="welcome__sub">I build AI agents that banks trust. This portfolio is a chat, so ask me about my work, my stack or how I build safe AI.</p>
-          <div class="suggest" data-suggest></div>
-        </section>
-
-        <div class="log" data-log role="log" aria-live="polite" aria-label="Conversation"></div>
-
-        <noscript>
-          <div class="noscript">
-            <h2>Aditya Shukla — AI Solutions Consultant</h2>
-            <p>I build production-grade AI agent systems, LLM/RAG pipelines and ML models for banking and insurance. My agentic banking assistant is live at four banks, three in India and one international. I have also built real-time voice onboarding agents, a multi-agent orchestration platform, a sales copilot, image-similarity validation for an international trade organisation in the UK, and churn, propensity and email-triage models.</p>
-            <p>Contact: <a href="mailto:adityabshukla12@gmail.com">adityabshukla12@gmail.com</a></p>
-          </div>
-        </noscript>
-      </div>
-    </main>
-
-    <footer class="composer">
-      <form class="composer__form" data-form autocomplete="off">
-        <label class="sr-only" for="q">Ask a question</label>
-        <input id="q" name="q" type="text" placeholder="Ask me about my work" maxlength="300" enterkeyhint="send" data-input>
-        <button type="submit" class="composer__send" aria-label="Send" data-send disabled>
-          <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </button>
-      </form>
-      <p class="composer__note">Answers are written by me, not generated. For anything else, <a href="mailto:adityabshukla12@gmail.com">email me</a>.</p>
-    </footer>
+  <!-- Loader -->
+  <div class="loader" aria-hidden="true">
+    <p class="loader__label">Decrypting file</p>
+    <p class="loader__count"><span data-count>0</span>%</p>
   </div>
 
+  <header class="nav">
+    <a href="#top" class="nav__logo"><span class="nav__mark"></span>A.SHUKLA</a>
+    <nav class="nav__links" aria-label="Primary">
+      <a href="#origin">Origin</a>
+      <a href="#skills">Skills</a>
+      <a href="#cases">Case files</a>
+      <a href="#record">Record</a>
+    </nav>
+    <a href="#contact" class="nav__hire">Hire me</a>
+  </header>
+
+  <main id="top">
+
+    <!-- ============ HERO ============ -->
+    <section class="hero paper">
+      <p class="hero__file">
+        <span class="tag">File #001</span>
+        AI Solutions Consultant · Nagpur, India · Est. 2024
+      </p>
+
+      <h1 class="hero__name" aria-label="Aditya Shukla">
+        <span class="hero__first">ADITYA</span>
+        <span class="hero__last">SHUKLA</span>
+      </h1>
+
+      <p class="hero__tagline">
+        I build <mark>AI agents</mark> that banks trust with real money,
+        and the guardrails that keep them honest.
+      </p>
+
+      <div class="sticker sticker--yellow hero__sticker">Licensed<br>to deploy</div>
+      <div class="stamp hero__stamp">Cleared for<br>production</div>
+
+      <figure class="polaroid hero__photo">
+        <span class="tape"></span>
+        <img src="assets/img/aditya.webp" width="640" height="640" alt="Aditya Shukla">
+        <figcaption>Subject: A. Shukla</figcaption>
+      </figure>
+
+      <a href="#origin" class="hero__scroll">Scroll to open the file<span></span></a>
+    </section>
+
+    <!-- ============ RIBBON ============ -->
+    <div class="ribbon" aria-hidden="true">
+      <div class="ribbon__track">
+        <span>Multi-agent systems</span><i>✦</i><span>RAG pipelines</span><i>✦</i><span>Voice AI</span><i>✦</i><span>Guardrails</span><i>✦</i><span>ML in production</span><i>✦</i>
+        <span>Multi-agent systems</span><i>✦</i><span>RAG pipelines</span><i>✦</i><span>Voice AI</span><i>✦</i><span>Guardrails</span><i>✦</i><span>ML in production</span><i>✦</i>
+      </div>
+    </div>
+
+    <!-- ============ ORIGIN (pinned, dark, 3D) ============ -->
+    <section class="origin" id="origin">
+      <div class="origin__pin">
+        <canvas id="gl" aria-hidden="true"></canvas>
+        <p class="origin__label">The origin story</p>
+
+        <div class="origin__panels">
+          <article class="panel is-active">
+            <span class="panel__page">Page 1</span>
+            <p>It started with a Business Analyst writing specs for AI features that somebody else would build.</p>
+          </article>
+          <article class="panel">
+            <span class="panel__page">Page 2</span>
+            <p>He got impatient. He picked up Python, FastAPI and LangChain and started building them himself.</p>
+          </article>
+          <article class="panel">
+            <span class="panel__page">Page 3</span>
+            <p>Now he architects multi-agent systems that run inside banks, handling real accounts and real money.</p>
+          </article>
+          <article class="panel">
+            <span class="panel__page">Page 4</span>
+            <p>One rule never changed: no agent ships without guardrails.</p>
+          </article>
+        </div>
+
+        <p class="origin__count"><span data-page>01</span> / 04</p>
+      </div>
+    </section>
+
+    <!-- ============ RULE ============ -->
+    <section class="rule paper">
+      <p class="note">— The only rule —</p>
+      <h2 class="rule__text">An agent is only as good as its <em>guardrails</em>.</h2>
+      <p class="note note--small">— Every bank I've worked with, eventually</p>
+    </section>
+
+    <!-- ============ SKILLS (horizontal) ============ -->
+    <section class="skills paper" id="skills">
+      <div class="skills__pin">
+        <div class="skills__intro">
+          <h2 class="display">Special<br>skills</h2>
+          <p class="note">← Scroll, the file keeps going</p>
+        </div>
+
+        <div class="skills__track">
+          <article class="skill">
+            <span class="skill__num">01</span>
+            <div class="skill__art art-orch" aria-hidden="true">
+              <svg viewBox="0 0 200 120"><g class="spokes"><line x1="100" y1="60" x2="40" y2="24"/><line x1="100" y1="60" x2="40" y2="96"/><line x1="100" y1="60" x2="160" y2="24"/><line x1="100" y1="60" x2="160" y2="96"/><line x1="100" y1="60" x2="100" y2="12"/></g><circle cx="100" cy="60" r="14" class="core"/><circle cx="40" cy="24" r="8"/><circle cx="40" cy="96" r="8"/><circle cx="160" cy="24" r="8"/><circle cx="160" cy="96" r="8"/><circle cx="100" cy="12" r="6"/></svg>
+            </div>
+            <h3>Multi-agent systems</h3>
+            <p>Orchestrators that plan and hand work to specialist agents.</p>
+            <ul class="labels"><li>CrewAI</li><li>LangChain</li><li>AutoGen</li></ul>
+          </article>
+
+          <article class="skill">
+            <span class="skill__num">02</span>
+            <div class="skill__art art-rag" aria-hidden="true">
+              <div class="docs"><i></i><i></i><i></i></div><span class="arrow">→</span><div class="answer">answer<br><small>+ sources</small></div>
+            </div>
+            <h3>RAG and documents</h3>
+            <p>Retrieval over messy PDFs, knowledge bases and past cases.</p>
+            <ul class="labels"><li>LlamaParse</li><li>Docling</li><li>Vector DBs</li></ul>
+          </article>
+
+          <article class="skill">
+            <span class="skill__num">03</span>
+            <div class="skill__art art-voice" aria-hidden="true">
+              <div class="bars"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+            </div>
+            <h3>Voice AI</h3>
+            <p>Real-time voice and video agents that answer the phone.</p>
+            <ul class="labels"><li>Gemini Live</li><li>ElevenLabs</li><li>LiveKit</li><li>Twilio</li></ul>
+          </article>
+
+          <article class="skill">
+            <span class="skill__num">04</span>
+            <div class="skill__art art-ml" aria-hidden="true">
+              <svg viewBox="0 0 200 120" preserveAspectRatio="none"><path d="M0 104 C 40 98, 60 30, 100 34 S 170 16, 200 12" class="curve"/><path d="M0 112 C 50 110, 80 80, 120 74 S 180 54, 200 50" class="curve curve--2"/></svg>
+            </div>
+            <h3>Machine learning</h3>
+            <p>Churn, propensity and triage models with real business impact.</p>
+            <ul class="labels"><li>Python</li><li>SQL</li><li>Monitoring</li></ul>
+          </article>
+
+          <article class="skill">
+            <span class="skill__num">05</span>
+            <div class="skill__art art-guard" aria-hidden="true">
+              <div class="shield">✓</div>
+            </div>
+            <h3>Responsible AI</h3>
+            <p>Guardrails, tracing and governance from the first commit.</p>
+            <ul class="labels"><li>Guardrails</li><li>Langfuse</li><li>Burp Suite</li></ul>
+          </article>
+
+          <article class="skill">
+            <span class="skill__num">06</span>
+            <div class="skill__art art-proto" aria-hidden="true">
+              <div class="win"><b></b><i></i><i></i><i></i></div>
+            </div>
+            <h3>Rapid prototyping</h3>
+            <p>From business problem to working POC in days, not months.</p>
+            <ul class="labels"><li>FastAPI</li><li>Streamlit</li><li>React</li></ul>
+          </article>
+
+          <div class="skills__end">
+            <h2 class="display">That's<br>the kit.</h2>
+            <p class="note">Short, like I promised.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ CASE FILES ============ -->
+    <section class="cases paper" id="cases">
+      <p class="note center">— Field reports —</p>
+      <h2 class="display center">The case files</h2>
+      <p class="cases__intro">Client names are redacted. The work is real.</p>
+
+      <div class="cases__grid">
+
+        <article class="case case--wide">
+          <span class="case__tab">Case 001</span>
+          <div class="case__art art-bank" aria-hidden="true">
+            <svg viewBox="0 0 320 150"><g class="spokes"><line x1="160" y1="75" x2="60" y2="32"/><line x1="160" y1="75" x2="60" y2="118"/><line x1="160" y1="75" x2="260" y2="32"/><line x1="160" y1="75" x2="260" y2="118"/></g><circle cx="160" cy="75" r="16" class="core"/><circle cx="160" cy="75" r="26" class="pulse"/><g class="nodes"><rect x="34" y="18" width="52" height="28"/><rect x="34" y="104" width="52" height="28"/><rect x="234" y="18" width="52" height="28"/><rect x="234" y="104" width="52" height="28"/></g><g class="lbl"><text x="60" y="33">BANK</text><text x="60" y="119">BANK</text><text x="260" y="33">BANK</text><text x="260" y="119">BANK</text></g></svg>
+          </div>
+          <div class="case__body">
+            <span class="stamp stamp--small case__stamp">Deployed · 4 banks</span>
+            <h3>Agentic banking assistant <span>↗</span></h3>
+            <p>A multi-agent assistant that handles account operations, beneficiaries and transfers through conversation, with guardrails on every step. I architected it end to end.</p>
+            <dl class="case__facts">
+              <div><dt>Client</dt><dd><span class="redact" title="Withheld" aria-label="Client withheld">xxxxxxxxxx</span> · three Indian banks, one international</dd></div>
+              <div><dt>Status</dt><dd>Live at 4 banks</dd></div>
+            </dl>
+            <ul class="labels"><li>CrewAI</li><li>LangChain</li><li>FastAPI</li><li>Langfuse</li></ul>
+          </div>
+        </article>
+
+        <article class="case">
+          <span class="case__tab">Case 002</span>
+          <div class="case__art art-voice2" aria-hidden="true">
+            <ol class="states"><li>01</li><li>02</li><li>03</li><li>04</li><li>05</li><li>06</li><li>07</li><li>08</li><li>09</li><li>10</li></ol>
+          </div>
+          <div class="case__body">
+            <h3>Voice and video onboarding</h3>
+            <p>A live onboarding agent that runs a 10-state workflow with OTP verification and document capture, plus compliance-grade outbound calling over SIP.</p>
+            <ul class="labels"><li>Gemini Live</li><li>ElevenLabs</li><li>LiveKit</li><li>Twilio SIP</li></ul>
+          </div>
+        </article>
+
+        <article class="case">
+          <span class="case__tab">Case 003</span>
+          <div class="case__art art-orbit" aria-hidden="true">
+            <svg viewBox="0 0 320 150"><circle cx="160" cy="75" r="12" class="core"/><g class="orbit"><circle cx="160" cy="75" r="48" class="ring"/><circle cx="208" cy="75" r="7"/><circle cx="112" cy="75" r="7"/><circle cx="160" cy="27" r="7"/><circle cx="160" cy="123" r="7"/></g></svg>
+          </div>
+          <div class="case__body">
+            <h3>Multi-agent platform</h3>
+            <p>Grew an internal retrieval chatbot into an orchestrator with specialist agents for travel planning, competitor intelligence, prospect analysis and research.</p>
+            <ul class="labels"><li>CrewAI</li><li>AutoGen</li><li>RAG</li></ul>
+          </div>
+        </article>
+
+        <article class="case">
+          <span class="case__tab">Case 004</span>
+          <div class="case__art art-chat" aria-hidden="true">
+            <p class="q">Customer says the rate is too high.</p>
+            <p class="a">Offer the loyalty rebate. Similar cases converted.</p>
+          </div>
+          <div class="case__body">
+            <h3>Sales copilot</h3>
+            <p>Lead guidance, objection handling and next-step recommendations for the sales team at an Indian private bank, plus RAG support tools over past cases.</p>
+            <dl class="case__facts"><div><dt>Client</dt><dd><span class="redact" title="Withheld" aria-label="Client withheld">xxxxxxxxxx</span> · Indian private bank</dd></div></dl>
+            <ul class="labels"><li>LLM</li><li>RAG</li><li>SQL</li></ul>
+          </div>
+        </article>
+
+        <article class="case">
+          <span class="case__tab">Case 005</span>
+          <div class="case__art art-holo" aria-hidden="true">
+            <div class="grid"><i></i><i></i><i></i><i></i><i class="hit"></i><i></i><i></i><i></i><i></i><i></i></div>
+            <span class="score">match 0.97</span>
+          </div>
+          <div class="case__body">
+            <h3>Logo and hologram validation</h3>
+            <p>Checks logos and holograms against known originals with image embeddings and similarity search, plus a maritime query system.</p>
+            <dl class="case__facts"><div><dt>Client</dt><dd><span class="redact" title="Withheld" aria-label="Client withheld">xxxxxxxxxx</span> · trade organisation, UK</dd></div></dl>
+            <ul class="labels"><li>Embeddings</li><li>Similarity search</li></ul>
+          </div>
+        </article>
+
+        <article class="case">
+          <span class="case__tab">Case 006</span>
+          <div class="case__art art-ml2" aria-hidden="true">
+            <svg viewBox="0 0 320 150" preserveAspectRatio="none"><path d="M0 38H320M0 75H320M0 112H320" class="grid-l"/><path d="M0 135 C 60 125, 90 35, 160 42 S 260 18, 320 16" class="curve"/></svg>
+          </div>
+          <div class="case__body">
+            <h3>Predictive ML models</h3>
+            <p>Churn prediction for a term insurance plan (moving to production), a customer propensity model and an email triage model that routes requests.</p>
+            <ul class="labels"><li>Python</li><li>SQL</li><li>ML</li></ul>
+          </div>
+        </article>
+
+        <article class="case">
+          <span class="case__tab">Case 007</span>
+          <div class="case__art art-sql" aria-hidden="true">
+            <p class="nl">“Top 5 branches by new accounts?”</p>
+            <p class="sql"><b>SELECT</b> branch, COUNT(*) <b>FROM</b> accounts <b>GROUP BY</b> 1 <b>ORDER BY</b> 2 <b>DESC LIMIT</b> 5;</p>
+          </div>
+          <div class="case__body">
+            <h3>Talk to your data</h3>
+            <p>Natural-language interfaces that let business users query structured databases in real time, without writing SQL.</p>
+            <ul class="labels"><li>LLM</li><li>SQL</li><li>FastAPI</li></ul>
+          </div>
+        </article>
+
+        <article class="case case--next">
+          <p class="marker">Next case…</p>
+          <p class="note note--small">Could be yours. <a href="#contact">Brief me.</a></p>
+        </article>
+      </div>
+    </section>
+
+    <!-- ============ RECORD ============ -->
+    <section class="record paper" id="record">
+      <div class="record__grid">
+        <div>
+          <p class="note">— Service record —</p>
+          <h2 class="display">The<br>record</h2>
+          <div class="record__stats">
+            <div><b>4</b><span>banks live</span></div>
+            <div><b>2+</b><span>years in production AI</span></div>
+            <div><b>3</b><span>ML models shipped</span></div>
+            <div><b>8.98</b><span>B.Tech CGPA</span></div>
+          </div>
+        </div>
+
+        <div class="dossier">
+          <span class="dossier__clip" aria-hidden="true"></span>
+          <p class="dossier__head">Personnel file · A. Shukla</p>
+          <ol class="timeline">
+            <li>
+              <span class="timeline__when">2024 – now</span>
+              <h3>AI Solutions Consultant</h3>
+              <p>Systems &amp; GenAI Applications. I architect and ship agentic assistants, voice agents and ML models for banks and insurers, run the sprint board, lead developers and present results to stakeholders.</p>
+            </li>
+            <li>
+              <span class="timeline__when">2024</span>
+              <h3>Business Analyst</h3>
+              <p>I turned stakeholder needs into specs, then moved into hands-on engineering across front end, back end and orchestration.</p>
+            </li>
+            <li>
+              <span class="timeline__when">Education</span>
+              <h3>B.Tech, Computer Science</h3>
+              <p>G.H. Raisoni College of Engineering, Nagpur. CGPA 8.98.</p>
+            </li>
+          </ol>
+          <span class="stamp stamp--small dossier__stamp">Verified</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ CONTACT ============ -->
+    <div class="ribbon ribbon--dark" aria-hidden="true">
+      <div class="ribbon__track">
+        <span>Got a mission?</span><i>✦</i><span>Agents need briefing</span><i>✦</i><span>No bank left unautomated</span><i>✦</i><span>Guardrails included</span><i>✦</i>
+        <span>Got a mission?</span><i>✦</i><span>Agents need briefing</span><i>✦</i><span>No bank left unautomated</span><i>✦</i><span>Guardrails included</span><i>✦</i>
+      </div>
+    </div>
+
+    <section class="contact" id="contact">
+      <h2 class="contact__title"><span class="solid">Let's</span><span class="outline">build it</span></h2>
+      <a class="btn-big" href="mailto:adityabshukla12@gmail.com">Brief me on your mission</a>
+      <ul class="contact__links">
+        <li><a href="https://www.linkedin.com/in/aditya-shukla-2a86991b4/" target="_blank" rel="noopener">LinkedIn ↗</a></li>
+        <li><a href="https://github.com/adityabeast12" target="_blank" rel="noopener">GitHub ↗</a></li>
+        <li><a href="https://twitter.com/Adityabeast12" target="_blank" rel="noopener">X ↗</a></li>
+        <li><a href="mailto:adityabshukla12@gmail.com">adityabshukla12@gmail.com</a></li>
+      </ul>
+      <footer class="footer">
+        <p><strong>Aditya Shukla</strong> — AI Solutions Consultant, Nagpur, India. Agentic AI, RAG, voice agents and ML for banking and insurance.</p>
+        <p>© <span data-year>2026</span> · This file will self-destruct never.</p>
+      </footer>
+    </section>
+  </main>
+
+  <!-- ============ ASK MY AGENT (optional chat) ============ -->
+  <button class="agent-fab" type="button" data-agent-open aria-label="Ask my agent">
+    <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="9" cy="10.5" r="1.2" fill="currentColor"/><circle cx="15" cy="10.5" r="1.2" fill="currentColor"/></svg>
+    <span class="agent-fab__label">Ask my agent</span>
+  </button>
+
+  <aside class="agent" data-agent aria-label="Ask my agent" hidden>
+    <header class="agent__head">
+      <div>
+        <strong>Ask my agent</strong>
+        <small>Pre-written answers, not generated</small>
+      </div>
+      <button type="button" class="agent__close" data-agent-close aria-label="Close">✕</button>
+    </header>
+    <div class="agent__log" data-scroll>
+      <div class="log" data-log role="log" aria-live="polite"></div>
+      <div class="suggest" data-suggest></div>
+    </div>
+    <form class="agent__form" data-form autocomplete="off">
+      <label class="sr-only" for="q">Ask a question</label>
+      <input id="q" type="text" placeholder="Ask about my work" maxlength="300" enterkeyhint="send" data-input>
+      <button type="submit" data-send disabled aria-label="Send">→</button>
+    </form>
+  </aside>
+
+  <script src="assets/vendor/gsap.min.js"></script>
+  <script src="assets/vendor/ScrollTrigger.min.js"></script>
+  <script src="assets/vendor/lenis.min.js"></script>
   <script type="module" src="assets/js/main.js"></script>
 </body>
 </html>

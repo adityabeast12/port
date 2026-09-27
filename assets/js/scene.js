@@ -317,6 +317,7 @@ export function createScene(canvas, { reducedMotion = false } = {}) {
   const tmp = new THREE.Vector3();
   let raf = 0;
   let running = true;
+  let visible = true; // false while the canvas is scrolled off screen
   let rotY = 0;
   let introT = reducedMotion ? 1 : 0;
 
@@ -375,7 +376,7 @@ export function createScene(canvas, { reducedMotion = false } = {}) {
   frame();
 
   document.addEventListener('visibilitychange', () => {
-    running = !document.hidden;
+    running = !document.hidden && visible;
     if (running) clock.getDelta();
   });
 
@@ -400,6 +401,12 @@ export function createScene(canvas, { reducedMotion = false } = {}) {
         group.position.y = state.y;
         uniforms.uMorph.value = state.morph;
       }
+    },
+    // Pause rendering while the canvas is off screen.
+    setVisible(v) {
+      visible = v;
+      running = v && !document.hidden;
+      if (running) clock.getDelta();
     },
     destroy() { cancelAnimationFrame(raf); renderer.dispose(); },
   };
