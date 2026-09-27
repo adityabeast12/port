@@ -43,7 +43,7 @@ export function mountChat({ reduced = false, onAsk } = {}) {
   const toBottom = () => { scroller.scrollTop = scroller.scrollHeight; };
 
   const BLOCKS = {
-    stats: () => list([['Multi-bank', 'RAG assistant live in production'], ['2+ years', 'shipping GenAI to production'], ['3 ML models', 'with business impact'], ['10 states', 'in a real-time onboarding flow']]),
+    stats: () => list([['4 banks', 'running my RAG assistant in production'], ['2+ years', 'shipping GenAI to production'], ['3 ML models', 'with business impact'], ['10 states', 'in a real-time onboarding flow']]),
     projects: () => {
       const el = h('<div class="b-list"></div>');
       PROJECTS.forEach((p) => {

@@ -9,7 +9,7 @@ export const UNIVERSES = {
     particles: ['#dcebe2', '#3ee089', '#f5b23d'],
     additive: true,
     font: 'Poppins',
-    boot: [['loading operator profile', 'aditya.shukla'], ['mounting agents', 'rag live · agent rolling out'], ['arming guardrails', 'ok'], ['connecting tracing', 'ok']],
+    boot: [['loading operator profile', 'aditya.shukla'], ['mounting agents', '4 banks live'], ['arming guardrails', 'ok'], ['connecting tracing', 'ok']],
     copy: {}, // the page's own text
   },
 

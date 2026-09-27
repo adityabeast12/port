@@ -36,8 +36,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/style.css?v=20261002">
-  <link rel="stylesheet" href="assets/css/universes.css?v=20261002">
+  <link rel="stylesheet" href="assets/css/style.css?v=20261003">
+  <link rel="stylesheet" href="assets/css/universes.css?v=20261003">
   <script>
     document.documentElement.classList.add('js');
     // Failsafe: if scripts never boot, show the page anyway.
@@ -65,7 +65,7 @@
           { "@type": "Occupation", "name": "AI Engineer", "occupationLocation": { "@type": "Country", "name": "India" }, "skills": "Agentic AI, multi-agent systems, LLM, RAG, voice AI, machine learning" },
           { "@type": "Occupation", "name": "AI Solutions Consultant", "occupationLocation": { "@type": "Country", "name": "India" }, "skills": "AI strategy, POC development, responsible AI, AI governance" }
         ],
-        "knowsAbout": ["Artificial intelligence", "Agentic AI", "AI agents", "Multi-agent systems", "Large language models", "Retrieval-augmented generation", "Generative AI", "Voice AI", "Machine learning", "Responsible AI", "AI governance", "LlamaIndex", "AutoGen", "CrewAI", "LangChain", "vLLM", "Local LLMs", "FastAPI", "Python", "Langfuse", "AI in banking"],
+        "knowsAbout": ["Artificial intelligence", "Agentic AI", "AI agents", "Multi-agent systems", "Large language models", "Retrieval-augmented generation", "Generative AI", "Voice AI", "Machine learning", "Responsible AI", "AI governance", "LlamaIndex", "ChromaDB", "SQLAlchemy", "AutoGen", "CrewAI", "LangChain", "vLLM", "Local LLMs", "FastAPI", "Python", "Langfuse", "AI in banking"],
         "sameAs": ["https://www.linkedin.com/in/aditya-shukla-2a86991b4/", "https://github.com/adityabeast12", "https://twitter.com/Adityabeast12"]
       },
       {
@@ -153,7 +153,7 @@
     <!-- ================= METRICS ================= -->
     <section class="section section--tight" aria-label="At a glance">
       <div class="metrics reveal">
-        <div class="metric"><p class="metric__k">RAG in production</p><p class="metric__v">Multi-bank</p><p class="metric__n">knowledge assistant live across banks</p></div>
+        <div class="metric"><p class="metric__k">Banks live</p><p class="metric__v"><span data-count="4">4</span></p><p class="metric__n">RAG assistant · 3 India · 1 international</p></div>
         <div class="metric"><p class="metric__k">In production</p><p class="metric__v"><span data-count="2">2</span>+ yrs</p><p class="metric__n">GenAI in BFSI and insurance</p></div>
         <div class="metric"><p class="metric__k">ML models</p><p class="metric__v"><span data-count="3">3</span></p><p class="metric__n">churn · propensity · triage</p></div>
         <div class="metric"><p class="metric__k">Onboarding flow</p><p class="metric__v"><span data-count="10">10</span> states</p><p class="metric__n">real-time voice and video</p></div>
@@ -238,13 +238,13 @@
           <summary>
             <span class="deploy__name"><b>bank-rag-assistant</b><small>Knowledge assistant (RAG)</small></span>
             <span class="status status--prod">Production</span>
-            <span class="deploy__env">Live at multiple banks</span>
-            <span class="deploy__stack">LLM · RAG · FastAPI</span>
+            <span class="deploy__env">4 banks · IN ×3 · INTL ×1</span>
+            <span class="deploy__stack">LlamaIndex · ChromaDB · FastAPI</span>
           </summary>
           <div class="deploy__body">
-            <p>A retrieval-augmented assistant that answers questions from each bank's own documents, policies and FAQs, with the source behind every answer. It is live in production at multiple banks.</p>
+            <p>A retrieval-augmented assistant that answers questions from each bank's own documents, policies and FAQs, with the source behind every answer. Built with LlamaIndex and ChromaDB for retrieval, a FastAPI and SQLAlchemy backend, and Langfuse tracing. It is live in production at four banks: three in India and one international.</p>
             <ol class="flow" aria-label="Architecture">
-              <li>Question</li><li class="flow__g">Guardrails</li><li>Retriever</li><li>Bank documents</li><li class="flow__o">LLM answer + sources</li><li class="flow__t">Langfuse trace</li>
+              <li>Question</li><li class="flow__g">Guardrails</li><li>LlamaIndex retriever</li><li>ChromaDB</li><li class="flow__o">LLM answer + sources</li><li class="flow__t">Langfuse trace</li>
             </ol>
           </div>
         </details>
@@ -516,7 +516,7 @@
     </form>
   </aside>
 
-  <script src="assets/vendor/lenis.min.js?v=20261002"></script>
-  <script type="module" src="assets/js/main.js?v=20261002"></script>
+  <script src="assets/vendor/lenis.min.js?v=20261003"></script>
+  <script type="module" src="assets/js/main.js?v=20261003"></script>
 </body>
 </html>
