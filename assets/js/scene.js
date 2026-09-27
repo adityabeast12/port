@@ -248,9 +248,9 @@ export function createScene(canvas, { reducedMotion = false } = {}) {
     uVel: { value: 0 },
     uOpacity: { value: 1 },
     uMouse: { value: new THREE.Vector3(99, 99, 0) },
-    uColA: { value: new THREE.Color('#ede6da') },
-    uColB: { value: new THREE.Color('#ff5a1f') },
-    uColC: { value: new THREE.Color('#8f86ff') },
+    uColA: { value: new THREE.Color('#e9e9ea') },
+    uColB: { value: new THREE.Color('#ff6a2b') },
+    uColC: { value: new THREE.Color('#ffb48f') },
   };
 
   const mat = new THREE.ShaderMaterial({
@@ -271,7 +271,7 @@ export function createScene(canvas, { reducedMotion = false } = {}) {
   for (const [a, b] of net.edges) linePos.push(...net.nodes[a], ...net.nodes[b]);
   const lineGeo = new THREE.BufferGeometry();
   lineGeo.setAttribute('position', new THREE.Float32BufferAttribute(linePos, 3));
-  const lineMat = new THREE.LineBasicMaterial({ color: 0xff5a1f, transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending });
+  const lineMat = new THREE.LineBasicMaterial({ color: 0xff6a2b, transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending });
   const lines = new THREE.LineSegments(lineGeo, lineMat);
   group.add(lines);
 
@@ -282,6 +282,7 @@ export function createScene(canvas, { reducedMotion = false } = {}) {
     morph: 0,        // target shape
     x: 0,            // target horizontal offset as a fraction of the half-viewport
     opacity: 1,      // dim the field behind text-heavy sections
+    y: 0,            // vertical offset used on portrait screens
     scroll: 0,       // 0..1 page progress
     vel: 0,
   };
@@ -311,6 +312,7 @@ export function createScene(canvas, { reducedMotion = false } = {}) {
   let raf = 0;
   let running = true;
   let rotY = 0;
+  let introT = reducedMotion ? 1 : 0;
 
   function frame() {
     raf = requestAnimationFrame(frame);
@@ -339,9 +341,16 @@ export function createScene(canvas, { reducedMotion = false } = {}) {
     const waveW = Math.max(0, 1 - Math.abs(m - 2));
     group.rotation.y = rotY * (1 - waveW) + pointer.x * 0.25;
     group.rotation.x = pointer.y * -0.15 + waveW * 0.28 + Math.max(0, 1 - Math.abs(m - 4)) * 0.55;
-    group.position.y = state.scroll * -0.4;
+    const yTarget = (aspect < 1.1 ? state.y : 0) + state.scroll * -0.4;
+    group.position.y += (yTarget - group.position.y) * k * 0.6;
 
-    lineMat.opacity = Math.max(0, 1 - Math.abs(m - 1)) * 0.22;
+    // Gather the particles in on first load.
+    if (introT < 1) {
+      introT = Math.min(1, introT + dt * 0.45);
+      uniforms.uIntro.value = 1 - Math.pow(1 - introT, 3);
+    }
+
+    lineMat.opacity = Math.max(0, 1 - Math.abs(m - 1)) * 0.22 * uniforms.uOpacity.value;
 
     // Project pointer onto the z=0 plane in world space.
     if (pointer.active) {
@@ -365,7 +374,7 @@ export function createScene(canvas, { reducedMotion = false } = {}) {
     state,
     uniforms,
     // Text sits on top of the field on narrow screens, so keep it quieter there.
-    setShape(i, x = 0, opacity = 1) { state.morph = i; state.x = x; state.opacity = opacity * (mobile ? 0.6 : 1); },
+    setShape(i, x = 0, opacity = 1, y = 0) { state.morph = i; state.x = x; state.y = y; state.opacity = opacity * (mobile ? 0.7 : 1); },
     destroy() { cancelAnimationFrame(raf); renderer.dispose(); },
   };
 }
