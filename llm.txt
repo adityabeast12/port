@@ -16,7 +16,7 @@ Aditya has 2+ years of experience shipping generative AI to production. He start
 ## Selected work
 
 - Agentic banking assistant: a multi-agent assistant for account operations, beneficiary management and transactions. Aditya architected it end to end, and it is moving to production at a bank. Built with AutoGen, LlamaIndex and FastAPI on local LLMs served with vLLM, with guardrails and Langfuse tracing.
-- Banking knowledge assistant (RAG): answers questions from each bank's own documents and policies, with sources. Live in production at multiple banks.
+- Banking knowledge assistant (RAG): answers questions from each bank's own documents and policies, with sources. Built with LlamaIndex, ChromaDB, FastAPI, SQLAlchemy and Langfuse. Live in production at four banks (three in India, one international).
 - Multi-agent orchestration platform: an internal chatbot that Aditya grew from simple retrieval into an orchestrator with specialist agents for travel planning, competitor intelligence, prospect analysis and research. Built with CrewAI, AutoGen and LangChain.
 - Real-time voice and video onboarding agent: a 10-state workflow with OTP verification and document capture, plus compliance-grade outbound calling. Built with Gemini Live API, ElevenLabs, LiveKit and Twilio (SIP).
 - Sales copilot for an Indian private-sector bank: lead guidance, objection handling and contextual next-step recommendations, plus RAG-based support over internal knowledge and past cases.
