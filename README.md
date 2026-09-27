@@ -1,17 +1,16 @@
-# Aditya Shukla — Mission Control
+# Aditya Shukla — Portfolio
 
 Portfolio of Aditya Shukla, AI engineer and AI solutions consultant. The site is styled as the operations console for his AI agents: dark graphite with an engineering grid, signal green for healthy systems, Poppins for text and JetBrains Mono for readouts.
 
 ## Sections
 
-- **Status bar:** operational light, section tabs, a live IST clock and a contact button.
-- **Overview:** an intro panel, and the **core**, a WebGL particle orb (three.js) that cycles between core, network, signal and guarded modes. Visitors can pick a mode. Below them sit metric tiles (real CV numbers only) and a live agent trace that streams an example banking request.
-- **Deployments:** projects as a deployment list with status, environment and stack. Each row expands, using a native `<details>` element, into a description and an architecture flow.
-- **Capabilities:** skills as "services running".
-- **Guardrails:** responsible-AI practices as a policy panel whose toggles arm on scroll.
-- **Operator:** profile plus a career changelog (v0.1 B.Tech → v1.0 Business Analyst → v2.0 AI Solutions Consultant).
-- **Contact:** a terminal-style "open a channel" panel.
-- **Ask my agent:** an optional chat drawer with pre-written answers from `assets/js/kb.js`.
+- **Hero:** thousands of WebGL particles (three.js) fly in and form **ADITYA SHUKLA**, on two lines on phones. The cursor pushes them around. Scrolling through the hero dissolves the name into the core sphere, then into the agent network. The real `<h1>` stays in the page for screen readers and search engines, and becomes visible if WebGL fails.
+- **Metrics:** real CV numbers only.
+- **Try my agent:** a playable, scripted simulation of the banking assistant (`assets/js/agent-demo.js`). Visitors type requests and watch the pipeline run: guardrails (PII masking, prompt-injection and data-scope blocks), orchestrator, KYC, risk (daily limit, new payees), tools and reply, with a trace. It runs entirely in the browser; no model or bank is involved.
+- **Deployments:** projects as a deployment list with status, environment and stack. Each row expands into a description and an architecture flow.
+- **Capabilities, Guardrails, Operator, Contact:** services, a policy panel, profile plus changelog, and a terminal-style contact panel.
+- **Multiverse ball (bottom-left):** switches the whole site between universes (Console, Web-slinger and Kryptonian) through a portal transition, and recolours the particles. The choice is remembered per browser. Universes only swap CSS tokens (`html[data-universe=…]`), so adding one means one CSS block plus one entry in `UNIVERSES` in `main.js`. They are inspired colour themes only, with no character names or logos.
+- **Ask my agent (bottom-right):** an optional chat drawer with pre-written answers from `assets/js/kb.js`.
 
 Client names are confidential and must never appear in the code.
 
@@ -25,12 +24,13 @@ python3 -m http.server 8000
 
 - `index.html`: all content, SEO meta tags and JSON-LD
 - `assets/css/style.css`: styles
-- `assets/js/main.js`: boot sequence, smooth scroll (Lenis), orb modes, reveals, counters, live trace, active tab
-- `assets/js/scene.js`: the particle orb. It sizes itself to its canvas and pauses rendering while off screen.
+- `assets/js/main.js`: boot sequence, smooth scroll (Lenis), hero choreography, multiverse, reveals, counters, active tab
+- `assets/js/scene.js`: the particle field, including the name shape sampled from text. It sizes itself to its canvas and pauses while off screen.
+- `assets/js/agent-demo.js`: the playable agent (the `plan()` parser and the pipeline UI)
 - `assets/js/chat.js` and `assets/js/kb.js`: the Ask my agent drawer and its answers
 - `assets/vendor/`: bundled three.js and Lenis
 
-The site respects `prefers-reduced-motion`. If scripts fail to load, a failsafe removes the boot screen after 7 seconds.
+The site respects `prefers-reduced-motion`. If scripts fail to load, a failsafe removes the boot screen after 7 seconds. Bump the `?v=` tags in `index.html` and the JS imports on every release, so browsers never mix old and new files.
 
 ## Search and AI discoverability
 

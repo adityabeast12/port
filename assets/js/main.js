@@ -1,12 +1,15 @@
 // Bump ?v= in these imports and in index.html on every release so browsers never mix old and new files.
-import { mountChat } from './chat.js?v=20260927b';
+import { mountChat } from './chat.js?v=20260928';
+import { mountDemo } from './agent-demo.js?v=20260928';
 
 const root = document.documentElement;
 const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const $ = (s, el = document) => el.querySelector(s);
 const $$ = (s, el = document) => [...el.querySelectorAll(s)];
 const wait = (ms) => new Promise((r) => setTimeout(r, reduced ? 0 : ms));
-const esc = (s) => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+const smooth = (a, b, v) => { const t = clamp((v - a) / (b - a)); return t * t * (3 - 2 * t); };
+let gl = null; // the particle scene, once three.js has loaded
 
 /* ---------------- Smooth scroll ---------------- */
 let lenis = null;
@@ -26,6 +29,52 @@ $$('a[href^="#"]').forEach((a) => {
   });
 });
 
+/* ---------------- Multiverse ---------------- */
+const UNIVERSES = {
+  console: { name: 'Console', bg: '#0a0c0b', particles: ['#dcebe2', '#3ee089', '#f5b23d'] },
+  web: { name: 'Web-slinger', bg: '#0b0d1f', particles: ['#f3f4ff', '#ff3b47', '#5b8cff'] },
+  krypton: { name: 'Kryptonian', bg: '#061229', particles: ['#eef4ff', '#f6c343', '#e2383f'] },
+};
+let universe = 'console';
+try { if (UNIVERSES[localStorage.getItem('universe')]) universe = localStorage.getItem('universe'); } catch { /* storage blocked */ }
+
+function paintUniverse(u) {
+  universe = u;
+  if (u === 'console') delete root.dataset.universe;
+  else root.dataset.universe = u;
+  $('[data-verse-label]').textContent = u === 'console' ? 'Multiverse' : UNIVERSES[u].name;
+  $$('[data-verse-menu] [data-universe]').forEach((b) => b.setAttribute('aria-current', String(b.dataset.universe === u)));
+  $('meta[name="theme-color"]').setAttribute('content', UNIVERSES[u].bg);
+  gl?.setColors(...UNIVERSES[u].particles);
+  try { localStorage.setItem('universe', u); } catch { /* storage blocked */ }
+}
+
+// Jump universes through a portal that opens from the ball.
+function switchUniverse(u) {
+  if (u === universe) return;
+  const ball = $('[data-verse-toggle]').getBoundingClientRect();
+  const x = ball.left + ball.width / 2;
+  const y = ball.top + ball.height / 2;
+  if (!document.startViewTransition || reduced) { paintUniverse(u); return; }
+  const r = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
+  const t = document.startViewTransition(() => paintUniverse(u));
+  t.ready.then(() => {
+    root.animate(
+      { clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${r}px at ${x}px ${y}px)`] },
+      { duration: 750, easing: 'cubic-bezier(0.22, 1, 0.36, 1)', pseudoElement: '::view-transition-new(root)' },
+    );
+  }).catch(() => {});
+}
+
+const verseMenu = $('[data-verse-menu]');
+const verseToggle = $('[data-verse-toggle]');
+const setMenu = (open) => { verseMenu.hidden = !open; verseToggle.setAttribute('aria-expanded', String(open)); };
+verseToggle.addEventListener('click', (e) => { e.stopPropagation(); setMenu(verseMenu.hidden); });
+$$('[data-universe]', verseMenu).forEach((b) => b.addEventListener('click', () => { setMenu(false); switchUniverse(b.dataset.universe); }));
+document.addEventListener('click', (e) => { if (!verseMenu.hidden && !e.target.closest('[data-verse]')) setMenu(false); });
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') setMenu(false); });
+paintUniverse(universe);
+
 /* ---------------- Boot sequence ---------------- */
 async function boot() {
   const el = $('[data-boot]');
@@ -38,9 +87,9 @@ async function boot() {
   if (!reduced) {
     for (const [task, result] of lines) {
       el.innerHTML += `<span class="ok">[ ok ]</span> ${task} <span class="dim">… ${result}</span>\n`;
-      await wait(170);
+      await wait(150);
     }
-    await wait(200);
+    await wait(150);
     const b = $('.boot');
     b.style.transition = 'opacity .45s ease';
     b.style.opacity = '0';
@@ -58,39 +107,60 @@ tick();
 setInterval(tick, 1000);
 $('[data-year]').textContent = new Date().getFullYear();
 
-/* ---------------- Core (3D orb) ---------------- */
-const MODES = ['core', 'network', 'signal', 'guarded'];
-// The 3D scene (three.js, ~690 KB) loads in the background: the page never
-// waits for it, and if it fails everything else still works.
-let gl = null;
-import('./scene.js?v=20260927b')
-  .then(({ createScene }) => {
+/* ---------------- Hero: the name made of particles ---------------- */
+// three.js (~690 KB) loads in the background: the page never waits for it,
+// and if it fails the heading is shown as plain text instead.
+const hero = $('.hero');
+const heroCopy = $('.hero__copy');
+const heroHint = $('.hero__hint');
+let textLayout = '';
+
+async function buildName() {
+  if (!gl) return;
+  const portrait = innerWidth / innerHeight < 1.1;
+  const layout = `${portrait}-${Math.round(innerWidth / 80)}`;
+  if (layout === textLayout) return;
+  textLayout = layout;
+  // Sample the name only once Poppins is ready, or the shape uses a fallback font.
+  await Promise.race([document.fonts?.load('700 100px Poppins'), wait(2500)]).catch(() => {});
+  gl.setText(portrait ? ['ADITYA', 'SHUKLA'] : ['ADITYA SHUKLA'], { width: portrait ? 0.86 : 0.8, lift: portrait ? 0.2 : 0.22 });
+}
+
+import('./scene.js?v=20260928')
+  .then(async ({ createScene }) => {
     gl = createScene($('#gl'), { reducedMotion: reduced });
-    gl.set({ shape: mode, opacity: 1, scale: mode === 2 ? 0.75 : 0.9, y: 0, snap: true });
-    // Only render the orb while its panel is on screen.
-    new IntersectionObserver(([e]) => gl.setVisible(e.isIntersecting)).observe($('.core'));
+    gl.setColors(...UNIVERSES[universe].particles);
+    await buildName();
+    gl.set({ shape: -1, opacity: 1, scale: 1, y: 0, snap: true });
+    onHeroScroll();
+    new IntersectionObserver(([e]) => gl.setVisible(e.isIntersecting)).observe(hero);
+    let t;
+    addEventListener('resize', () => { clearTimeout(t); t = setTimeout(buildName, 250); });
   })
   .catch((err) => {
-    console.warn('3D core unavailable.', err);
+    console.warn('3D hero unavailable.', err);
     root.classList.add('no-webgl');
   });
 
-const modeLabel = $('[data-mode]');
-const modeButtons = $$('.core__modes button');
-let mode = 0;
-let userPicked = false;
-function setMode(i) {
-  mode = i;
-  modeLabel.textContent = MODES[i];
-  modeButtons.forEach((b) => b.classList.toggle('is-on', Number(b.dataset.shape) === i));
+// Scrolling through the hero dissolves the name into the core sphere,
+// then into the agent network.
+function onHeroScroll() {
+  const total = hero.offsetHeight - innerHeight;
+  const p = clamp(-hero.getBoundingClientRect().top / total);
+  const fade = 1 - smooth(0.03, 0.2, p);
+  heroCopy.style.opacity = fade;
+  heroCopy.style.transform = `translateY(${(1 - fade) * -30}px)`;
+  heroHint.style.opacity = fade;
   if (!gl) return;
-  // The waveform and guard rings read better slightly larger.
-  gl.set({ shape: i, scale: i === 2 ? 0.75 : 0.9, activity: 1 });
-  setTimeout(() => gl.set({ activity: 0 }), 450);
+  const morph = p < 0.08 ? -1 : p < 0.5 ? -1 + smooth(0.08, 0.5, p) : smooth(0.5, 0.88, p);
+  gl.set({ shape: morph, scale: 1 - 0.15 * smooth(0.08, 0.5, p), opacity: 1 - 0.5 * smooth(0.85, 1, p) });
 }
-modeButtons.forEach((b) => b.addEventListener('click', () => { userPicked = true; setMode(Number(b.dataset.shape)); }));
-// Cycle modes on its own until the visitor picks one.
-if (!reduced) setInterval(() => { if (!userPicked && !document.hidden) setMode((mode + 1) % MODES.length); }, 4500);
+let heroTicking = false;
+addEventListener('scroll', () => {
+  if (heroTicking) return;
+  heroTicking = true;
+  requestAnimationFrame(() => { onHeroScroll(); heroTicking = false; });
+}, { passive: true });
 
 /* ---------------- Reveal, counters, policies ---------------- */
 const io = new IntersectionObserver((entries) => {
@@ -103,7 +173,7 @@ const io = new IntersectionObserver((entries) => {
     if (el.classList.contains('policies')) armPolicies(el);
   });
 }, { rootMargin: '0px 0px -10% 0px' });
-$$('.reveal').forEach((el, i) => {
+$$('.reveal').forEach((el) => {
   // Stagger items that sit side by side.
   const sibs = [...el.parentElement.children].filter((c) => c.classList.contains('reveal'));
   el.style.transitionDelay = Math.min(sibs.indexOf(el) * 70, 350) + 'ms';
@@ -123,59 +193,21 @@ function countUp(el) {
   requestAnimationFrame(step);
 }
 
-// The toggles switch on one by one when the panel comes into view.
+// The guardrail toggles switch on when the panel comes into view.
 async function armPolicies(list) {
-  if (reduced) { list.classList.add('is-armed'); return; }
   await wait(250);
   list.classList.add('is-armed');
 }
 
 /* ---------------- Active tab ---------------- */
 const tabs = $$('.bar__tabs a');
-const sections = tabs.map((t) => $(t.getAttribute('href')));
 const tabIO = new IntersectionObserver((entries) => {
   entries.forEach((e) => {
     if (!e.isIntersecting) return;
     tabs.forEach((t) => t.classList.toggle('is-active', t.getAttribute('href') === '#' + e.target.id));
   });
 }, { rootMargin: '-45% 0px -50% 0px' });
-sections.forEach((s) => s && tabIO.observe(s));
-
-/* ---------------- Live trace ---------------- */
-const TRACE = [
-  ['user', 'POST /chat  "Add my brother as a beneficiary and send ₹5,000"'],
-  ['orchestrator', 'intent → beneficiary.add, transfer.initiate'],
-  ['guardrail', 'pii.redact ✓  policy.scope ✓'],
-  ['kyc_agent', 'OTP challenge sent'],
-  ['kyc_agent', 'OTP verified ✓'],
-  ['tool', 'core_banking.add_beneficiary → 200'],
-  ['risk_agent', 'amount within daily limit ✓'],
-  ['assistant', '"Beneficiary added. Confirm the ₹5,000 transfer?"'],
-];
-function traceLine([who, msg], ms) {
-  const time = `<span class="t-time">+${String(ms).padStart(4, ' ')}ms</span>`;
-  if (who === 'user' || who === 'assistant') return `${time}  <span class="t-user">${esc(msg)}</span>`;
-  const tag = `<span class="t-tag">${who.padEnd(13, ' ')}</span>`;
-  return `${time}  ${tag}${esc(msg).replace(/✓/g, '<span class="t-tag">✓</span>')}`;
-}
-async function runTrace() {
-  const el = $('[data-trace]');
-  const full = () => TRACE.map((l, i) => traceLine(l, i * 230 + 12)).join('\n');
-  if (reduced) { el.innerHTML = full(); return; }
-  for (;;) {
-    let out = '';
-    for (let i = 0; i < TRACE.length; i++) {
-      out += traceLine(TRACE[i], i * 230 + 12) + '\n';
-      el.innerHTML = out + '<span class="caret"></span>';
-      await wait(i === 0 ? 700 : 480);
-    }
-    el.innerHTML = out + '<span class="t-time">trace complete · 1.8s · langfuse</span>';
-    await wait(4000);
-  }
-}
-new IntersectionObserver(([e], obs) => {
-  if (e.isIntersecting) { obs.disconnect(); runTrace(); }
-}).observe($('[data-trace]'));
+tabs.map((t) => $(t.getAttribute('href'))).forEach((s) => s && tabIO.observe(s));
 
 /* ---------------- Copy email ---------------- */
 $$('[data-copy]').forEach((b) => b.addEventListener('click', async () => {
@@ -184,5 +216,6 @@ $$('[data-copy]').forEach((b) => b.addEventListener('click', async () => {
 }));
 
 /* ---------------- Go ---------------- */
+mountDemo($('[data-demo]'), { reduced });
 mountChat({ reduced });
 boot();
