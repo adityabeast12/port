@@ -8,7 +8,7 @@
    and pattern themes only: no character names or logos. */
 
 /* Pieces that only some universes use are hidden by default. */
-.burst, .fx-layer, .spot, .noir, .tape { display: none; }
+.burst, .fx-layer, .spot, .noir, .tape, .skyfx, .cape { display: none; }
 .fx-layer { position: fixed; inset: 0; z-index: 80; pointer-events: none; }
 .fx-layer svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
 
@@ -137,90 +137,180 @@ html[data-universe="web"] .agent-fab, html[data-universe="web"] .verse__ball { b
 html[data-universe="web"] .toggle { border-color: #111; }
 
 /* =====================================================================
-   SKY GUARDIAN — daylight hero
+   SKY GUARDIAN: sunrise above a sea of clouds
    ===================================================================== */
 html[data-universe="sky"] {
-  --bg: #3f97f2;
-  --panel: rgba(255, 255, 255, 0.9);
+  --bg: #0d3a8c;
+  --panel: rgba(255, 255, 255, 0.93);
   --panel-2: #ffffff;
   --line: rgba(10, 40, 100, 0.12);
   --line-2: rgba(10, 40, 100, 0.2);
   --fg: #0b1e45;
-  --fg-2: #33507f;
+  --fg-2: #34507e;
   --fg-3: #6a80aa;
-  --accent: #d81f2a;
-  --accent-dim: rgba(216, 31, 42, 0.12);
+  --accent: #d8202b;
+  --accent-dim: rgba(216, 32, 43, 0.12);
   --on-accent: #ffffff;
-  --amber: #e5a300;
+  --amber: #e9a400;
   --amber-dim: rgba(245, 183, 0, 0.18);
   --blue: #1747b8;
   --ok: #1747b8;
   --ok-dim: rgba(23, 71, 184, 0.12);
+  --gold: #ffcf4a;
   --f-display: "Archivo Black", "Arial Black", sans-serif;
-  --radius: 16px;
+  --radius: 14px;
 }
+/* The page descends from high altitude into golden hour as you scroll. */
 html[data-universe="sky"] body {
-  background: linear-gradient(180deg, #2c86ea 0%, #5aaaf7 55%, #79bdfb 100%) fixed;
+  background: linear-gradient(180deg, #0a2a6e 0%, #1f5fc4 22%, #3f8ae0 48%, #7fb0ec 70%, #f2b879 90%, #f09a62 100%);
 }
 html[data-universe="sky"] body::before {
-  background:
-    radial-gradient(circle at 88% 6%, rgba(255, 244, 200, 0.95) 0 60px, rgba(255, 230, 150, 0.35) 140px, transparent 330px);
+  background: radial-gradient(ellipse 70% 40% at 50% 100%, rgba(255, 190, 120, 0.25), transparent 70%);
 }
-/* Drifting clouds */
-html[data-universe="sky"] body::after {
-  content: ""; position: fixed; inset: -10% -50% auto -50%; height: 120%; z-index: 0; pointer-events: none;
-  background:
-    radial-gradient(ellipse 180px 60px at 10% 20%, rgba(255,255,255,.85), transparent 70%),
-    radial-gradient(ellipse 140px 50px at 14% 17%, rgba(255,255,255,.9), transparent 70%),
-    radial-gradient(ellipse 220px 70px at 45% 70%, rgba(255,255,255,.55), transparent 70%),
-    radial-gradient(ellipse 160px 55px at 70% 35%, rgba(255,255,255,.7), transparent 70%),
-    radial-gradient(ellipse 120px 40px at 74% 32%, rgba(255,255,255,.8), transparent 70%),
-    radial-gradient(ellipse 200px 60px at 92% 85%, rgba(255,255,255,.5), transparent 70%);
-  animation: clouds 90s linear infinite;
+
+/* ---------- Hero ---------- */
+html[data-universe="sky"] .hero__stage {
+  background: linear-gradient(180deg, #051233 0%, #0c2c6e 30%, #2a67c7 58%, #7fa8e6 74%, #ffc98a 86%, #ff9e5e 100%);
 }
-@keyframes clouds { to { transform: translateX(33%); } }
+html[data-universe="sky"] .skyfx { display: block; position: absolute; inset: 0; z-index: 1; pointer-events: none; overflow: hidden; }
+html[data-universe="sky"] .hero__copy, html[data-universe="sky"] .hero__hint { z-index: 3; }
+/* The name glows in the dark upper sky, above the sun and clouds. */
+html[data-universe="sky"] #gl { z-index: 2; }
+html[data-universe="sky"] .skyfx__sun {
+  position: absolute; left: 50%; bottom: 14%; width: 520px; height: 520px; margin-left: -260px; border-radius: 50%;
+  background: radial-gradient(circle, #fffbe8 0 12%, #ffe39a 20%, rgba(255, 190, 90, 0.55) 34%, rgba(255, 150, 80, 0.18) 52%, transparent 70%);
+  animation: sunrise 7s ease-in-out infinite alternate;
+}
+@keyframes sunrise { from { transform: translateY(24px) scale(0.97); } to { transform: translateY(0) scale(1.03); } }
+html[data-universe="sky"] .skyfx__flare {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(circle at 40% 55%, rgba(255, 240, 200, 0.14) 0 18px, transparent 20px),
+    radial-gradient(circle at 32% 48%, rgba(255, 210, 160, 0.09) 0 34px, transparent 37px),
+    radial-gradient(circle at 58% 58%, rgba(180, 220, 255, 0.12) 0 10px, transparent 12px),
+    radial-gradient(circle at 71% 44%, rgba(255, 230, 190, 0.07) 0 46px, transparent 50px);
+}
+html[data-universe="sky"] .skyfx__flare::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 38%; height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(255, 244, 214, 0.55) 45%, rgba(255, 255, 255, 0.9) 50%, rgba(255, 244, 214, 0.55) 55%, transparent);
+}
+html[data-universe="sky"] .skyfx__clouds { position: absolute; left: 0; right: 0; bottom: 0; background-repeat: repeat-x; }
+html[data-universe="sky"] .skyfx__clouds--back {
+  height: 300px; bottom: 11%; opacity: 0.7;
+  background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%271800%27%20height%3D%27320%27%20viewBox%3D%270%200%201800%20320%27%3E%3Cdefs%3E%3ClinearGradient%20id%3D%27g%27%20gradientUnits%3D%27userSpaceOnUse%27%20x1%3D%270%27%20y1%3D%27-20%27%20x2%3D%270%27%20y2%3D%27320%27%3E%3Cstop%20offset%3D%270%27%20stop-color%3D%27%23ffffff%27/%3E%3Cstop%20offset%3D%27.45%27%20stop-color%3D%27%23e9eef8%27/%3E%3Cstop%20offset%3D%271%27%20stop-color%3D%27%23f6c9a0%27/%3E%3C/linearGradient%3E%3C/defs%3E%3Cg%20fill%3D%27url%28%23g%29%27%3E%3Ccircle%20cx%3D%27804%27%20cy%3D%27196%27%20r%3D%2779%27/%3E%3Ccircle%20cx%3D%27831%27%20cy%3D%27167%27%20r%3D%2776%27/%3E%3Ccircle%20cx%3D%27263%27%20cy%3D%27171%27%20r%3D%2776%27/%3E%3Ccircle%20cx%3D%271492%27%20cy%3D%27133%27%20r%3D%2747%27/%3E%3Ccircle%20cx%3D%2773%27%20cy%3D%27184%27%20r%3D%2797%27/%3E%3Ccircle%20cx%3D%27-25%27%20cy%3D%27211%27%20r%3D%27109%27/%3E%3Ccircle%20cx%3D%271211%27%20cy%3D%27136%27%20r%3D%2783%27/%3E%3Ccircle%20cx%3D%27-80%27%20cy%3D%27126%27%20r%3D%2777%27/%3E%3Ccircle%20cx%3D%27274%27%20cy%3D%27115%27%20r%3D%2757%27/%3E%3Ccircle%20cx%3D%27827%27%20cy%3D%27186%27%20r%3D%2771%27/%3E%3Ccircle%20cx%3D%27939%27%20cy%3D%27164%27%20r%3D%2785%27/%3E%3Ccircle%20cx%3D%271228%27%20cy%3D%27141%27%20r%3D%2772%27/%3E%3Ccircle%20cx%3D%271905%27%20cy%3D%27201%27%20r%3D%27110%27/%3E%3Ccircle%20cx%3D%271320%27%20cy%3D%27133%27%20r%3D%2762%27/%3E%3Ccircle%20cx%3D%27474%27%20cy%3D%27169%27%20r%3D%2745%27/%3E%3Ccircle%20cx%3D%27699%27%20cy%3D%27161%27%20r%3D%2799%27/%3E%3Ccircle%20cx%3D%271825%27%20cy%3D%27130%27%20r%3D%2799%27/%3E%3Ccircle%20cx%3D%27314%27%20cy%3D%27169%27%20r%3D%27104%27/%3E%3Ccircle%20cx%3D%271870%27%20cy%3D%27123%27%20r%3D%2768%27/%3E%3Ccircle%20cx%3D%271161%27%20cy%3D%27149%27%20r%3D%2794%27/%3E%3Ccircle%20cx%3D%2766%27%20cy%3D%27192%27%20r%3D%2763%27/%3E%3Ccircle%20cx%3D%271421%27%20cy%3D%27129%27%20r%3D%2748%27/%3E%3Ccircle%20cx%3D%2794%27%20cy%3D%27171%27%20r%3D%2744%27/%3E%3Ccircle%20cx%3D%27249%27%20cy%3D%27157%27%20r%3D%2779%27/%3E%3Ccircle%20cx%3D%27275%27%20cy%3D%27137%27%20r%3D%2791%27/%3E%3Ccircle%20cx%3D%271190%27%20cy%3D%27143%27%20r%3D%2748%27/%3E%3Ccircle%20cx%3D%27320%27%20cy%3D%27191%27%20r%3D%2759%27/%3E%3Ccircle%20cx%3D%271513%27%20cy%3D%27185%27%20r%3D%2761%27/%3E%3Ccircle%20cx%3D%27316%27%20cy%3D%27185%27%20r%3D%2768%27/%3E%3Ccircle%20cx%3D%271187%27%20cy%3D%27188%27%20r%3D%2747%27/%3E%3Ccircle%20cx%3D%27321%27%20cy%3D%27175%27%20r%3D%2758%27/%3E%3Ccircle%20cx%3D%27554%27%20cy%3D%27120%27%20r%3D%2761%27/%3E%3Ccircle%20cx%3D%2772%27%20cy%3D%27142%27%20r%3D%2781%27/%3E%3Ccircle%20cx%3D%271105%27%20cy%3D%27153%27%20r%3D%2766%27/%3E%3Ccircle%20cx%3D%271827%27%20cy%3D%27166%27%20r%3D%2774%27/%3E%3Ccircle%20cx%3D%271640%27%20cy%3D%27123%27%20r%3D%2753%27/%3E%3Ccircle%20cx%3D%271725%27%20cy%3D%27149%27%20r%3D%2797%27/%3E%3Ccircle%20cx%3D%27273%27%20cy%3D%27202%27%20r%3D%2792%27/%3E%3Ccircle%20cx%3D%27287%27%20cy%3D%27203%27%20r%3D%27107%27/%3E%3Ccircle%20cx%3D%271109%27%20cy%3D%27126%27%20r%3D%2770%27/%3E%3Ccircle%20cx%3D%27-32%27%20cy%3D%27152%27%20r%3D%27107%27/%3E%3Ccircle%20cx%3D%271313%27%20cy%3D%27179%27%20r%3D%2758%27/%3E%3Ccircle%20cx%3D%271095%27%20cy%3D%27128%27%20r%3D%2761%27/%3E%3Ccircle%20cx%3D%271345%27%20cy%3D%27126%27%20r%3D%2745%27/%3E%3Ccircle%20cx%3D%271020%27%20cy%3D%27179%27%20r%3D%27100%27/%3E%3Ccircle%20cx%3D%27456%27%20cy%3D%27148%27%20r%3D%27104%27/%3E%3Ccircle%20cx%3D%27-77%27%20cy%3D%27149%27%20r%3D%2759%27/%3E%3Ccircle%20cx%3D%2712%27%20cy%3D%27140%27%20r%3D%2752%27/%3E%3Ccircle%20cx%3D%271046%27%20cy%3D%27139%27%20r%3D%2749%27/%3E%3Ccircle%20cx%3D%271690%27%20cy%3D%27186%27%20r%3D%27109%27/%3E%3Ccircle%20cx%3D%271286%27%20cy%3D%27134%27%20r%3D%2781%27/%3E%3Ccircle%20cx%3D%27-39%27%20cy%3D%27179%27%20r%3D%2741%27/%3E%3Ccircle%20cx%3D%271873%27%20cy%3D%27184%27%20r%3D%2797%27/%3E%3Ccircle%20cx%3D%271775%27%20cy%3D%27211%27%20r%3D%27109%27/%3E%3Ccircle%20cx%3D%271720%27%20cy%3D%27126%27%20r%3D%2777%27/%3E%3Ccircle%20cx%3D%271866%27%20cy%3D%27192%27%20r%3D%2763%27/%3E%3Ccircle%20cx%3D%271894%27%20cy%3D%27171%27%20r%3D%2744%27/%3E%3Ccircle%20cx%3D%271872%27%20cy%3D%27142%27%20r%3D%2781%27/%3E%3Ccircle%20cx%3D%271768%27%20cy%3D%27152%27%20r%3D%27107%27/%3E%3Ccircle%20cx%3D%271723%27%20cy%3D%27149%27%20r%3D%2759%27/%3E%3Ccircle%20cx%3D%271812%27%20cy%3D%27140%27%20r%3D%2752%27/%3E%3Ccircle%20cx%3D%271761%27%20cy%3D%27179%27%20r%3D%2741%27/%3E%3Ccircle%20cx%3D%27105%27%20cy%3D%27201%27%20r%3D%27110%27/%3E%3Ccircle%20cx%3D%2725%27%20cy%3D%27130%27%20r%3D%2799%27/%3E%3Ccircle%20cx%3D%2770%27%20cy%3D%27123%27%20r%3D%2768%27/%3E%3Ccircle%20cx%3D%2727%27%20cy%3D%27166%27%20r%3D%2774%27/%3E%3Ccircle%20cx%3D%27-75%27%20cy%3D%27149%27%20r%3D%2797%27/%3E%3Crect%20x%3D%270%27%20y%3D%27122%27%20width%3D%271800%27%20height%3D%27320%27/%3E%3C/g%3E%3C/svg%3E"); background-size: 1800px 300px;
+  animation: drift 120s linear infinite;
+}
+html[data-universe="sky"] .skyfx__clouds--front {
+  height: 260px; bottom: -40px;
+  background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%271500%27%20height%3D%27280%27%20viewBox%3D%270%200%201500%20280%27%3E%3Cdefs%3E%3ClinearGradient%20id%3D%27g%27%20gradientUnits%3D%27userSpaceOnUse%27%20x1%3D%270%27%20y1%3D%27-50%27%20x2%3D%270%27%20y2%3D%27280%27%3E%3Cstop%20offset%3D%270%27%20stop-color%3D%27%23ffffff%27/%3E%3Cstop%20offset%3D%27.45%27%20stop-color%3D%27%23fff1e2%27/%3E%3Cstop%20offset%3D%271%27%20stop-color%3D%27%23f6c9a0%27/%3E%3C/linearGradient%3E%3C/defs%3E%3Cg%20fill%3D%27url%28%23g%29%27%3E%3Ccircle%20cx%3D%271104%27%20cy%3D%27132%27%20r%3D%27127%27/%3E%3Ccircle%20cx%3D%27990%27%20cy%3D%27167%27%20r%3D%2789%27/%3E%3Ccircle%20cx%3D%27431%27%20cy%3D%27137%27%20r%3D%27130%27/%3E%3Ccircle%20cx%3D%27831%27%20cy%3D%27187%27%20r%3D%27109%27/%3E%3Ccircle%20cx%3D%271167%27%20cy%3D%27178%27%20r%3D%27106%27/%3E%3Ccircle%20cx%3D%271480%27%20cy%3D%27159%27%20r%3D%2778%27/%3E%3Ccircle%20cx%3D%271455%27%20cy%3D%27157%27%20r%3D%27120%27/%3E%3Ccircle%20cx%3D%271261%27%20cy%3D%27168%27%20r%3D%27119%27/%3E%3Ccircle%20cx%3D%27970%27%20cy%3D%27153%27%20r%3D%2781%27/%3E%3Ccircle%20cx%3D%27942%27%20cy%3D%27147%27%20r%3D%2756%27/%3E%3Ccircle%20cx%3D%271618%27%20cy%3D%27179%27%20r%3D%27120%27/%3E%3Ccircle%20cx%3D%27554%27%20cy%3D%27164%27%20r%3D%27109%27/%3E%3Ccircle%20cx%3D%27645%27%20cy%3D%27133%27%20r%3D%27117%27/%3E%3Ccircle%20cx%3D%271190%27%20cy%3D%27143%27%20r%3D%2752%27/%3E%3Ccircle%20cx%3D%27716%27%20cy%3D%27156%27%20r%3D%2768%27/%3E%3Ccircle%20cx%3D%27745%27%20cy%3D%27184%27%20r%3D%2799%27/%3E%3Ccircle%20cx%3D%27320%27%20cy%3D%27121%27%20r%3D%2751%27/%3E%3Ccircle%20cx%3D%271064%27%20cy%3D%27118%27%20r%3D%2766%27/%3E%3Ccircle%20cx%3D%271464%27%20cy%3D%27152%27%20r%3D%27103%27/%3E%3Ccircle%20cx%3D%271439%27%20cy%3D%27157%27%20r%3D%2776%27/%3E%3Ccircle%20cx%3D%27219%27%20cy%3D%27170%27%20r%3D%2784%27/%3E%3Ccircle%20cx%3D%271479%27%20cy%3D%27155%27%20r%3D%27120%27/%3E%3Ccircle%20cx%3D%27896%27%20cy%3D%27120%27%20r%3D%2775%27/%3E%3Ccircle%20cx%3D%27744%27%20cy%3D%27186%27%20r%3D%27117%27/%3E%3Ccircle%20cx%3D%271122%27%20cy%3D%27150%27%20r%3D%27126%27/%3E%3Ccircle%20cx%3D%27168%27%20cy%3D%27134%27%20r%3D%2786%27/%3E%3Ccircle%20cx%3D%27247%27%20cy%3D%27157%27%20r%3D%2783%27/%3E%3Ccircle%20cx%3D%27739%27%20cy%3D%27169%27%20r%3D%2775%27/%3E%3Ccircle%20cx%3D%271598%27%20cy%3D%27120%27%20r%3D%2786%27/%3E%3Ccircle%20cx%3D%27-75%27%20cy%3D%27131%27%20r%3D%27120%27/%3E%3Ccircle%20cx%3D%271117%27%20cy%3D%27140%27%20r%3D%2796%27/%3E%3Ccircle%20cx%3D%271263%27%20cy%3D%27110%27%20r%3D%2752%27/%3E%3Ccircle%20cx%3D%27671%27%20cy%3D%27159%27%20r%3D%2752%27/%3E%3Ccircle%20cx%3D%27288%27%20cy%3D%27108%27%20r%3D%2761%27/%3E%3Ccircle%20cx%3D%27977%27%20cy%3D%27158%27%20r%3D%2786%27/%3E%3Ccircle%20cx%3D%271023%27%20cy%3D%27193%27%20r%3D%27115%27/%3E%3Ccircle%20cx%3D%271075%27%20cy%3D%27140%27%20r%3D%2766%27/%3E%3Ccircle%20cx%3D%27184%27%20cy%3D%27133%27%20r%3D%2751%27/%3E%3Ccircle%20cx%3D%271127%27%20cy%3D%27125%27%20r%3D%2764%27/%3E%3Ccircle%20cx%3D%27479%27%20cy%3D%27159%27%20r%3D%27106%27/%3E%3Ccircle%20cx%3D%27951%27%20cy%3D%27152%27%20r%3D%27110%27/%3E%3Ccircle%20cx%3D%271264%27%20cy%3D%27135%27%20r%3D%27122%27/%3E%3Ccircle%20cx%3D%271511%27%20cy%3D%27132%27%20r%3D%27108%27/%3E%3Ccircle%20cx%3D%27668%27%20cy%3D%27184%27%20r%3D%27100%27/%3E%3Ccircle%20cx%3D%27533%27%20cy%3D%27180%27%20r%3D%2796%27/%3E%3Ccircle%20cx%3D%271272%27%20cy%3D%27163%27%20r%3D%27126%27/%3E%3Ccircle%20cx%3D%271425%27%20cy%3D%27131%27%20r%3D%27120%27/%3E%3Ccircle%20cx%3D%27-20%27%20cy%3D%27159%27%20r%3D%2778%27/%3E%3Ccircle%20cx%3D%27-45%27%20cy%3D%27157%27%20r%3D%27120%27/%3E%3Ccircle%20cx%3D%27118%27%20cy%3D%27179%27%20r%3D%27120%27/%3E%3Ccircle%20cx%3D%27-36%27%20cy%3D%27152%27%20r%3D%27103%27/%3E%3Ccircle%20cx%3D%27-61%27%20cy%3D%27157%27%20r%3D%2776%27/%3E%3Ccircle%20cx%3D%27-21%27%20cy%3D%27155%27%20r%3D%27120%27/%3E%3Ccircle%20cx%3D%2798%27%20cy%3D%27120%27%20r%3D%2786%27/%3E%3Ccircle%20cx%3D%2711%27%20cy%3D%27132%27%20r%3D%27108%27/%3E%3Crect%20x%3D%270%27%20y%3D%27170%27%20width%3D%271500%27%20height%3D%27280%27/%3E%3C/g%3E%3C/svg%3E"); background-size: 1500px 260px;
+  animation: drift 55s linear infinite reverse;
+}
+@keyframes drift { from { background-position: 0 0; } to { background-position: -1500px 0; } }
+/* A hero flying across the sunrise: a bright head with a red and blue trail. */
+html[data-universe="sky"] .skyfx__flyby {
+  position: absolute; left: -30%; top: 64%; width: 240px; height: 6px; border-radius: 6px;
+  background: linear-gradient(90deg, transparent, rgba(40, 90, 220, 0.8) 35%, rgba(230, 40, 50, 0.95) 75%, #fff 97%);
+  box-shadow: 0 0 14px rgba(255, 255, 255, 0.8);
+  transform: rotate(-12deg);
+  animation: flyby 9s cubic-bezier(.5, 0, .5, 1) infinite 1.5s;
+  opacity: 0;
+}
+@keyframes flyby {
+  0% { left: -30%; top: 70%; opacity: 0; }
+  4% { opacity: 1; }
+  22% { left: 115%; top: 40%; opacity: 1; }
+  23%, 100% { left: 115%; top: 40%; opacity: 0; }
+}
+html[data-universe="sky"] .skyfx__alt {
+  position: absolute; right: var(--gutter); top: 82px;
+  font-family: var(--f-mono); font-size: 12px; color: #0b1e45; letter-spacing: .08em; text-transform: uppercase;
+  background: rgba(255, 255, 255, 0.75); border: 1px solid rgba(255, 255, 255, 0.9); border-radius: 999px; padding: 5px 12px;
+}
+html[data-universe="sky"] .skyfx__alt b { font-weight: 600; color: var(--accent); }
+html[data-universe="sky"] .hero__role { color: #cfe0ff; font-weight: 500; }
+html[data-universe="sky"] .hero__role .led { background: var(--gold); box-shadow: 0 0 0 3px rgba(255, 207, 74, .2), 0 0 12px var(--gold); }
+html[data-universe="sky"] .hero__line {
+  color: #fff; font-size: clamp(22px, 2.6vw, 34px); font-weight: 400; line-height: 1.15; max-width: 24ch; font-style: italic;
+  text-shadow: 0 2px 0 #0b2a6b, 0 4px 0 #0b2a6b, 0 6px 14px rgba(5, 18, 51, 0.55);
+}
+html[data-universe="sky"] .hero__actions { top: calc(57% + 132px); }
+html[data-universe="sky"] .hero__hint { color: #1c2f5c; font-weight: 500; bottom: 70px; }
+
+/* ---------- Cape banner ---------- */
+html[data-universe="sky"] .cape {
+  display: block; position: relative; z-index: 5; overflow: hidden;
+  margin: -30px 0 36px; transform: rotate(1.5deg) scale(1.04);
+  border-top: 3px solid var(--gold); border-bottom: 3px solid var(--gold);
+  box-shadow: 0 14px 34px rgba(80, 10, 10, 0.45);
+  /* folds in the fabric ripple as the banner flows */
+  background: repeating-linear-gradient(90deg, #b3121c 0 60px, #e2232e 90px, #b3121c 140px);
+  background-size: 140px 100%;
+  animation: cape 2.2s linear infinite;
+}
+@keyframes cape { to { background-position: 140px 0; } }
+html[data-universe="sky"] .cape__track {
+  display: flex; align-items: center; gap: 22px; width: max-content; padding: 10px 0;
+  font-family: var(--f-display); font-size: 24px; letter-spacing: 0.08em; text-transform: uppercase; font-style: italic;
+  color: #fff; text-shadow: 0 2px 0 #7a0a10;
+  animation: marquee 30s linear infinite;
+}
+html[data-universe="sky"] .cape__track i { font-style: normal; color: var(--gold); font-size: 0.8em; }
+@keyframes marquee { to { transform: translateX(-50%); } }
+
+/* ---------- Page ---------- */
+html[data-universe="sky"] .bar {
+  background: linear-gradient(180deg, #d8202b, #b3121c); color: #fff;
+  border-bottom: 3px solid var(--gold); box-shadow: 0 6px 20px rgba(120, 10, 20, 0.35);
+}
+html[data-universe="sky"] .bar__name, html[data-universe="sky"] .bar__clock { color: #fff; }
+html[data-universe="sky"] .bar__path { color: #ffc6c9; }
+html[data-universe="sky"] .bar__tabs a { color: #ffe3e4; }
+html[data-universe="sky"] .bar__tabs a:hover, html[data-universe="sky"] .bar__tabs a.is-active { color: #0b1e45; background: var(--gold); }
+html[data-universe="sky"] .bar__status { color: var(--gold); }
+html[data-universe="sky"] .bar__cta { background: var(--gold); color: #0b1e45; }
+html[data-universe="sky"] .bar .led { background: var(--gold); box-shadow: 0 0 10px var(--gold); }
+
+html[data-universe="sky"] .section h2, html[data-universe="sky"] .terminal__title {
+  font-weight: 400; letter-spacing: -0.005em; text-transform: uppercase; font-style: italic;
+}
+/* Heroic 3D lettering: white face, deep-blue extrusion, a red edge. */
+html[data-universe="sky"] .section h2 {
+  color: #fff; font-size: clamp(34px, 4.6vw, 60px); line-height: 1.02;
+  text-shadow: 1px 1px 0 #0b2a6b, 2px 2px 0 #0b2a6b, 3px 3px 0 #0b2a6b, 4px 4px 0 #0b2a6b, 5px 5px 0 #0b2a6b, 7px 7px 0 var(--accent), 10px 12px 18px rgba(5, 18, 51, 0.4);
+}
+html[data-universe="sky"] .section__note, html[data-universe="sky"] .foot { color: #f4f8ff; text-shadow: 0 1px 2px rgba(5, 18, 51, 0.5); }
+html[data-universe="sky"] .kicker {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--accent); color: #fff; border: 2px solid var(--gold); border-radius: 999px;
+  padding: 3px 12px; font-weight: 600; letter-spacing: 0.1em; box-shadow: 0 4px 12px rgba(120, 10, 20, 0.3);
+}
+html[data-universe="sky"] .kicker::before { content: "★"; color: var(--gold); }
+
+/* Cards: bright panels with a red crown and a gold rim */
 html[data-universe="sky"] :is(.panel, .metric, .service, .deploys, .policies, .changelog, .terminal) {
-  border: 1px solid rgba(255, 255, 255, 0.9); border-top: 5px solid var(--accent);
-  box-shadow: 0 18px 40px rgba(8, 40, 110, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.95); border-top: 5px solid var(--accent);
+  box-shadow: inset 0 1px 0 var(--gold), 0 20px 44px rgba(6, 30, 90, 0.28);
   backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
 }
-html[data-universe="sky"] .section h2, html[data-universe="sky"] .terminal__title { font-weight: 400; letter-spacing: -0.01em; text-transform: uppercase; }
-html[data-universe="sky"] .section h2 {
-  color: #fff; font-size: clamp(32px, 4.4vw, 56px); display: inline-block; transform: skewX(-8deg);
-  text-shadow: 3px 3px 0 #0b1e45, 6px 6px 0 rgba(216, 31, 42, 0.8);
-}
-html[data-universe="sky"] .section__note, html[data-universe="sky"] .foot { color: #f1f7ff; }
-html[data-universe="sky"] .kicker { color: #fff4c2; font-weight: 700; }
-html[data-universe="sky"] .kicker::before { content: "★ "; color: var(--amber); }
-html[data-universe="sky"] .bar { background: rgba(255, 255, 255, 0.88); border-bottom: 4px solid var(--accent); box-shadow: 0 4px 0 var(--amber); color: var(--fg); }
-html[data-universe="sky"] .bar__tabs a { color: var(--fg-2); }
-html[data-universe="sky"] .bar__tabs a.is-active, html[data-universe="sky"] .bar__tabs a:hover { color: var(--accent); background: rgba(216, 31, 42, 0.08); }
-html[data-universe="sky"] .bar__status { color: var(--blue); }
-html[data-universe="sky"] .btn { border-radius: 999px; }
-html[data-universe="sky"] .btn--primary { border: 2px solid var(--amber); box-shadow: 0 6px 18px rgba(216, 31, 42, 0.35); }
-html[data-universe="sky"] .metric__v { color: var(--blue); font-weight: 400; }
-html[data-universe="sky"] .service h3, html[data-universe="sky"] .changelog h3, html[data-universe="sky"] .profile__name, html[data-universe="sky"] .deploy__name b { font-weight: 400; }
+html[data-universe="sky"] :is(.service, .metric):hover { transform: translateY(-6px); box-shadow: inset 0 1px 0 var(--gold), 0 28px 50px rgba(6, 30, 90, 0.35); }
+html[data-universe="sky"] .metric__v { color: var(--accent); font-weight: 400; font-style: italic; text-shadow: 2px 2px 0 rgba(11, 42, 107, 0.15); }
+html[data-universe="sky"] .service h3, html[data-universe="sky"] .changelog h3, html[data-universe="sky"] .profile__name, html[data-universe="sky"] .deploy__name b { font-weight: 400; font-style: italic; }
+html[data-universe="sky"] .deploys { counter-reset: rescue; }
+html[data-universe="sky"] .deploy { counter-increment: rescue; }
+html[data-universe="sky"] .deploy__name b::before { content: "★ RESCUE 0" counter(rescue) " · "; color: var(--accent); }
+html[data-universe="sky"] .deploys__cols { background: #0b2a6b; color: #fff; }
+html[data-universe="sky"] .btn { border-radius: 999px; font-style: italic; text-transform: uppercase; letter-spacing: 0.04em; font-weight: 700; }
+html[data-universe="sky"] .btn--primary { background: linear-gradient(180deg, #e8303a, #b3121c); border: 2px solid var(--gold); box-shadow: 0 8px 22px rgba(216, 32, 43, 0.4); }
 html[data-universe="sky"] .demo__trace, html[data-universe="sky"] .demo__form input, html[data-universe="sky"] .pipe li { background: #fff; }
 html[data-universe="sky"] .dm--user { background: var(--blue); }
-html[data-universe="sky"] .hero__role { color: #fff; font-weight: 600; text-shadow: 0 1px 2px rgba(0,0,0,.25); }
-html[data-universe="sky"] .hero__line {
-  color: #fff; font-size: clamp(20px, 2.4vw, 32px); font-weight: 400; line-height: 1.2; max-width: 22ch;
-  transform: skewX(-6deg); text-shadow: 2px 2px 0 #0b1e45, 4px 4px 0 rgba(216, 31, 42, 0.7);
-}
-html[data-universe="sky"] .hero__actions { top: calc(57% + 130px); }
-@media (max-width: 600px) { html[data-universe="sky"] .hero__line { font-size: 22px; } html[data-universe="sky"] .hero__actions { top: calc(60% + 130px); } }
-html[data-universe="sky"] .hero__hint { color: #eaf4ff; }
-/* Speed lines streaking across the hero */
-html[data-universe="sky"] .hero__stage::before {
-  content: ""; position: absolute; inset: 0; pointer-events: none; opacity: 0.5;
-  background: repeating-linear-gradient(180deg, transparent 0 34px, rgba(255, 255, 255, 0.35) 34px 35px, transparent 35px 71px);
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 30%, #000 70%, transparent);
-          mask-image: linear-gradient(90deg, transparent, #000 30%, #000 70%, transparent);
-  animation: speed 1.4s linear infinite;
-}
-@keyframes speed { from { background-position: 0 0; } to { background-position: 0 71px; } }
 html[data-universe="sky"] .fx-layer { display: block; }
 html[data-universe="sky"] .agent-fab, html[data-universe="sky"] .verse__ball { background: #fff; color: var(--fg); }
+@media (max-width: 600px) {
+  html[data-universe="sky"] .hero__line { font-size: 23px; }
+  html[data-universe="sky"] .hero__actions { top: calc(60% + 140px); }
+  html[data-universe="sky"] .skyfx__sun { width: 360px; height: 360px; margin-left: -180px; }
+  html[data-universe="sky"] .skyfx__alt { display: none; }
+}
 
 /* =====================================================================
    NIGHT VIGILANTE — rain, noir, a flashlight in the dark

@@ -1,7 +1,7 @@
 // Bump ?v= in these imports and in index.html on every release so browsers never mix old and new files.
-import { mountChat } from './chat.js?v=20261003';
-import { mountDemo } from './agent-demo.js?v=20261003';
-import { UNIVERSES, applyCopy, loadFont, mountEffects, setEffectsUniverse } from './universes.js?v=20261003';
+import { mountChat } from './chat.js?v=20261007';
+import { mountDemo } from './agent-demo.js?v=20261007';
+import { UNIVERSES, applyCopy, loadFont, mountEffects, setEffectsUniverse } from './universes.js?v=20261007';
 
 const root = document.documentElement;
 const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -130,7 +130,7 @@ async function buildName(force = false) {
   });
 }
 
-import('./scene.js?v=20261003')
+import('./scene.js?v=20261007')
   .then(async ({ createScene }) => {
     gl = createScene($('#gl'), { reducedMotion: reduced });
     gl.setColors(...UNIVERSES[universe].particles);
