@@ -49,15 +49,16 @@ export const UNIVERSES = {
   sky: {
     name: 'Sky Guardian',
     bg: '#2c86ea',
-    particles: ['#0b1e45', '#d81f2a', '#e5a300'],
-    additive: false,
+    particles: ['#fff6d6', '#ffcf4a', '#ff6a55'],
+    additive: true, // the name is made of sunlight against the high, dark sky
     font: 'Archivo Black',
     boot: [['cape', 'pressed'], ['x-ray on the data', 'clean'], ['flight systems', 'go'], ['guardrails', 'armed']],
     copy: {
       status: 'Skies clear · all systems go',
       'bar-cta': 'Call for help',
+      'hero-role': '<span class="led"></span> AI Engineer &amp; Solutions Consultant · Nagpur, India',
       'hero-line': 'Faster than a failing request. Stronger than a prompt injection.',
-      'hero-hint': 'Click anywhere for heat vision · scroll to take flight',
+      'hero-hint': 'Click anywhere for heat vision · scroll to descend through the clouds',
       'demo-kicker': 'Test of strength',
       'demo-h2': 'Try to trick my agent',
       'demo-note': 'Built to be incorruptible. This simulation runs in your browser with no real bank connected. Try your worst.',
@@ -196,6 +197,19 @@ function heatVision(x, y) {
   layer().appendChild(svg);
   requestAnimationFrame(() => { svg.style.opacity = 0; });
   setTimeout(() => svg.remove(), 800);
+  // A scorch mark that glows and cools after the beams stop.
+  const mark = svgEl('svg', {});
+  const ember = svgEl('circle', { cx: x, cy: y, r: 9, fill: '#ffb347', filter: 'url(#glow)' });
+  const core = svgEl('circle', { cx: x, cy: y, r: 3, fill: '#fff4c2' });
+  const mdefs = svgEl('defs', {});
+  const mf = svgEl('filter', { id: 'glow', x: '-100%', y: '-100%', width: '300%', height: '300%' });
+  mf.appendChild(svgEl('feGaussianBlur', { stdDeviation: 4 }));
+  mdefs.appendChild(mf);
+  mark.append(mdefs, ember, core);
+  mark.style.transition = 'opacity 1.4s ease .5s';
+  layer().appendChild(mark);
+  requestAnimationFrame(() => { mark.style.opacity = 0; });
+  setTimeout(() => mark.remove(), 2100);
 }
 
 // Night Vigilante: a grapple line fires up to the rooftops from where you click.
@@ -237,6 +251,23 @@ export function mountEffects({ reduced = false } = {}) {
     if (current === 'web') shootWeb(e.clientX, e.clientY);
     else if (current === 'sky') heatVision(e.clientX, e.clientY);
     else if (current === 'night') grapple(e.clientX, e.clientY);
+  }, { passive: true });
+
+  // Sky Guardian: the altimeter drops as you scroll down through the hero.
+  const alt = document.querySelector('[data-alt]');
+  const hero = document.querySelector('.hero');
+  let altTick = false;
+  addEventListener('scroll', () => {
+    if (current !== 'sky' || altTick || !alt) return;
+    altTick = true;
+    requestAnimationFrame(() => {
+      const total = hero.offsetHeight - innerHeight;
+      const p = Math.min(1, Math.max(0, -hero.getBoundingClientRect().top / total));
+      alt.textContent = Math.round((30000 - p * 29000) / 100) * 100 + '';
+      alt.textContent = Number(alt.textContent).toLocaleString('en-US');
+      alt.parentElement.lastChild.textContent = p > 0.02 ? ' ft · descending' : ' ft · climbing';
+      altTick = false;
+    });
   }, { passive: true });
 
   // Night Vigilante: the flashlight follows the cursor or finger, and sweeps

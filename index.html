@@ -36,8 +36,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/style.css?v=20261003">
-  <link rel="stylesheet" href="assets/css/universes.css?v=20261003">
+  <link rel="stylesheet" href="assets/css/style.css?v=20261007">
+  <link rel="stylesheet" href="assets/css/universes.css?v=20261007">
   <script>
     document.documentElement.classList.add('js');
     // Failsafe: if scripts never boot, show the page anyway.
@@ -117,6 +117,15 @@
     <!-- ================= HERO: the name, made of particles ================= -->
     <section class="hero" id="overview">
       <div class="hero__stage">
+        <!-- Sky Guardian only: sunrise above a sea of clouds, a flyby and an altimeter -->
+        <div class="skyfx" aria-hidden="true">
+          <span class="skyfx__sun"></span>
+          <span class="skyfx__flare"></span>
+          <span class="skyfx__clouds skyfx__clouds--back"></span>
+          <span class="skyfx__flyby"></span>
+          <span class="skyfx__clouds skyfx__clouds--front"></span>
+          <span class="skyfx__alt"><b data-alt>30,000</b> ft · climbing</span>
+        </div>
         <!-- Night Vigilante only: searchlights, a signal in the clouds, fog and lightning -->
         <div class="noir" aria-hidden="true">
           <span class="noir__signal"></span>
@@ -143,6 +152,12 @@
         <p class="hero__hint" aria-hidden="true" data-t="hero-hint">Move your cursor through the name · scroll to dissolve it</p>
       </div>
     </section>
+
+    <!-- Sky Guardian only: a cape-red banner between the hero and the page -->
+    <div class="cape" aria-hidden="true"><div class="cape__track">
+      <span>Truth</span><i>★</i><span>Trust</span><i>★</i><span>Audited</span><i>★</i><span>Always</span><i>★</i><span>Truth</span><i>★</i><span>Trust</span><i>★</i><span>Audited</span><i>★</i><span>Always</span><i>★</i>
+      <span>Truth</span><i>★</i><span>Trust</span><i>★</i><span>Audited</span><i>★</i><span>Always</span><i>★</i><span>Truth</span><i>★</i><span>Trust</span><i>★</i><span>Audited</span><i>★</i><span>Always</span><i>★</i>
+    </div></div>
 
     <!-- Night Vigilante only: police tape between the hero and the page -->
     <div class="tape" aria-hidden="true"><div class="tape__track">
@@ -516,7 +531,7 @@
     </form>
   </aside>
 
-  <script src="assets/vendor/lenis.min.js?v=20261003"></script>
-  <script type="module" src="assets/js/main.js?v=20261003"></script>
+  <script src="assets/vendor/lenis.min.js?v=20261007"></script>
+  <script type="module" src="assets/js/main.js?v=20261007"></script>
 </body>
 </html>
