@@ -123,6 +123,49 @@ function galaxy(n, out) {
   }
 }
 
+// Name shape: draw the text to an offscreen canvas and scatter particles over
+// its filled pixels. boxW is the width the text should span in world units.
+function textShape(n, out, lines, boxW, yOffset, font) {
+  const W = 1400;
+  const c = document.createElement('canvas');
+  const ctx = c.getContext('2d', { willReadFrequently: true });
+  ctx.font = `700 200px ${font}`;
+  const widest = Math.max(...lines.map((l) => ctx.measureText(l).width));
+  const size = Math.floor((200 * W * 0.97) / widest);
+  const lineH = size * 1.02;
+  const H = Math.ceil(lineH * lines.length + size * 0.25);
+  c.width = W;
+  c.height = H;
+  ctx.font = `700 ${size}px ${font}`;
+  ctx.fillStyle = '#fff';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  lines.forEach((l, i) => ctx.fillText(l, W / 2, H / 2 + (i - (lines.length - 1) / 2) * lineH));
+
+  const data = ctx.getImageData(0, 0, W, H).data;
+  const pts = [];
+  for (let y = 0; y < H; y += 2) {
+    for (let x = 0; x < W; x += 2) {
+      if (data[(y * W + x) * 4 + 3] > 140) pts.push(x, y);
+    }
+  }
+  const scale = boxW / W;
+  const boxH = H * scale;
+  const dust = Math.floor(n * 0.1); // a little ambient sparkle around the name
+  for (let i = 0; i < n; i++) {
+    if (i < dust || pts.length === 0) {
+      out.set([rand(-1, 1) * boxW * 0.75, rand(-1, 1) * boxH * 1.4 + yOffset, rand(-2, 1.5)], i * 3);
+      continue;
+    }
+    const k = Math.floor(Math.random() * (pts.length / 2)) * 2;
+    out.set([
+      (pts[k] - W / 2 + rand(-1, 1)) * scale,
+      -(pts[k + 1] - H / 2 + rand(-1, 1)) * scale + yOffset,
+      gauss() * 0.04,
+    ], i * 3);
+  }
+}
+
 const vertex = /* glsl */ `
   uniform float uTime;
   uniform float uMorph;
@@ -136,6 +179,7 @@ const vertex = /* glsl */ `
   attribute vec3 aS2;
   attribute vec3 aS3;
   attribute vec3 aS4;
+  attribute vec3 aS5; // the name
   attribute float aRand;
   varying float vRand;
   varying float vAlpha;
@@ -143,12 +187,15 @@ const vertex = /* glsl */ `
   float w(float i) { return clamp(1.0 - abs(uMorph - i), 0.0, 1.0); }
 
   void main() {
+    // The name sits at morph -1, just before the core sphere, so scrolling
+    // dissolves it into the sphere and then into the agent network.
+    float wT = w(-1.0);
     float w0 = w(0.0), w1 = w(1.0), w2 = w(2.0), w3 = w(3.0), w4 = w(4.0);
-    vec3 p = position * w0 + aS1 * w1 + aS2 * w2 + aS3 * w3 + aS4 * w4;
+    vec3 p = aS5 * wT + position * w0 + aS1 * w1 + aS2 * w2 + aS3 * w3 + aS4 * w4;
 
     // Stagger the morph a little per particle so shapes dissolve rather than slide.
     float t = uTime * 0.6 + aRand * 6.2831;
-    float settled = max(max(w0, w1), max(max(w2, w3), w4));
+    float settled = max(max(max(w0, w1), max(w2, w3)), max(w4, wT));
     float amp = 0.025 + (1.0 - settled) * 0.9 * aRand + uActivity * 0.07;
     p += vec3(sin(t + p.y * 1.7), cos(t * 0.9 + p.x * 1.3), sin(t * 1.1 + p.z * 1.5)) * amp;
 
@@ -231,6 +278,8 @@ export function createScene(canvas, { reducedMotion = false } = {}) {
   wave(N, s2);
   guarded(N, s3);
   galaxy(N, s4);
+  const s5 = new Float32Array(N * 3);
+  sphere(N, s5); // replaced by the name once setText() is called
   for (let i = 0; i < N; i++) r[i] = Math.random();
 
   const geo = new THREE.BufferGeometry();
@@ -239,6 +288,8 @@ export function createScene(canvas, { reducedMotion = false } = {}) {
   geo.setAttribute('aS2', new THREE.BufferAttribute(s2, 3));
   geo.setAttribute('aS3', new THREE.BufferAttribute(s3, 3));
   geo.setAttribute('aS4', new THREE.BufferAttribute(s4, 3));
+  const textAttr = new THREE.BufferAttribute(s5, 3);
+  geo.setAttribute('aS5', textAttr);
   geo.setAttribute('aRand', new THREE.BufferAttribute(r, 1));
   geo.boundingSphere = new THREE.Sphere(new THREE.Vector3(), 12);
 
@@ -350,12 +401,14 @@ export function createScene(canvas, { reducedMotion = false } = {}) {
     uniforms.uOpacity.value += (state.opacity - uniforms.uOpacity.value) * k * 1.2;
     group.position.x += (offset - group.position.x) * k * 0.6;
 
-    if (!reducedMotion) rotY += dt * (0.08 + uniforms.uActivity.value * 0.9);
     const m = uniforms.uMorph.value;
+    // The name must face the camera, so rotation fades out while it is showing.
+    const textW = Math.max(0, 1 - Math.abs(m + 1));
+    if (!reducedMotion) rotY += dt * (0.08 + uniforms.uActivity.value * 0.9) * (1 - textW);
     // The waveform reads best from a low, near-frontal angle.
     const waveW = Math.max(0, 1 - Math.abs(m - 2));
-    group.rotation.y = rotY * (1 - waveW) + pointer.x * 0.25;
-    group.rotation.x = pointer.y * -0.15 + waveW * 0.28 + Math.max(0, 1 - Math.abs(m - 4)) * 0.55;
+    group.rotation.y = (rotY * (1 - waveW) + pointer.x * 0.25) * (1 - textW) + pointer.x * 0.1 * textW;
+    group.rotation.x = (pointer.y * -0.15 + waveW * 0.28 + Math.max(0, 1 - Math.abs(m - 4)) * 0.55) * (1 - textW) + pointer.y * -0.06 * textW;
     const yTarget = state.y + state.scroll * -0.4;
     group.position.y += (yTarget - group.position.y) * k * 0.6;
 
@@ -388,6 +441,22 @@ export function createScene(canvas, { reducedMotion = false } = {}) {
   return {
     state,
     uniforms,
+    // Build the name shape. lines: e.g. ['ADITYA SHUKLA'] or ['ADITYA', 'SHUKLA'].
+    // width: fraction of the visible width the name spans; lift: fraction of
+    // the half-height to move it up (leaving room for text underneath).
+    setText(lines, { width = 0.86, lift = 0.2, font = 'Poppins, sans-serif' } = {}) {
+      const halfH = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * camera.position.z;
+      const halfW = halfH * camera.aspect;
+      textShape(N, s5, lines, halfW * 2 * width, halfH * lift, font);
+      textAttr.needsUpdate = true;
+    },
+    // Recolour the particles: base, accent and highlight.
+    setColors(a, b, c) {
+      uniforms.uColA.value.set(a);
+      uniforms.uColB.value.set(b);
+      uniforms.uColC.value.set(c);
+      lineMat.color.set(b);
+    },
     // Half the visible height of the z=0 plane, in world units.
     halfHeight() { return Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * camera.position.z; },
     // Update any of: shape, x, y, opacity, scale, activity.
