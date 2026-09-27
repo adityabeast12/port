@@ -9,7 +9,7 @@ export const UNIVERSES = {
     particles: ['#dcebe2', '#3ee089', '#f5b23d'],
     additive: true,
     font: 'Poppins',
-    boot: [['loading operator profile', 'aditya.shukla'], ['mounting agents', '4 banks live'], ['arming guardrails', 'ok'], ['connecting tracing', 'ok']],
+    boot: [['loading operator profile', 'aditya.shukla'], ['mounting agents', 'rag live · agent rolling out'], ['arming guardrails', 'ok'], ['connecting tracing', 'ok']],
     copy: {}, // the page's own text
   },
 
@@ -19,7 +19,7 @@ export const UNIVERSES = {
     particles: ['#ffffff', '#ffcc00', '#e8272f'],
     additive: true,
     font: 'Bangers',
-    boot: [['web-shooters', 'loaded'], ['scanning the city', '4 banks safe'], ['guardrails', 'armed'], ['villains', 'none detected']],
+    boot: [['web-shooters', 'loaded'], ['scanning the city', 'all quiet'], ['guardrails', 'armed'], ['villains', 'none detected']],
     copy: {
       status: 'All clear in the neighbourhood',
       'bar-cta': 'Swing by',
@@ -33,7 +33,7 @@ export const UNIVERSES = {
       'demo-hello': "Hey! I can check your balance, send money, add payees or block a lost card. What's the mission?",
       'deployments-kicker': 'Issue #2',
       'deployments-h2': 'Missions accomplished',
-      'deployments-note': "Real systems, real banks. The names stay secret, like any good hero's.",
+      'deployments-note': "Built for real banks. The names stay secret, like any good hero's.",
       'capabilities-kicker': 'Issue #3',
       'capabilities-h2': 'Powers unlocked',
       'guardrails-kicker': 'Issue #4',
@@ -64,7 +64,7 @@ export const UNIVERSES = {
       'demo-hello': 'Hello, citizen! I can check your balance, send money, add payees or block a lost card. How can I help?',
       'deployments-kicker': 'Rescues',
       'deployments-h2': 'Rescues completed',
-      'deployments-note': "Systems that keep real banks safe. The clients' identities stay secret.",
+      'deployments-note': "Systems built to keep banks safe. The clients' identities stay secret.",
       'capabilities-kicker': 'Abilities',
       'capabilities-h2': 'Superpowers',
       'guardrails-kicker': 'The code',
@@ -83,19 +83,20 @@ export const UNIVERSES = {
     particles: ['#cfd3da', '#f5c518', '#7aa2c8'],
     additive: true,
     font: 'Bebas Neue',
-    boot: [['cave systems', 'online'], ['night vision', 'engaged'], ['city watch', '4 banks secure'], ['guardrails', 'armed']],
+    boot: [['cave systems', 'online'], ['night vision', 'engaged'], ['city watch', 'all quiet'], ['guardrails', 'armed']],
     copy: {
       status: 'Watching over the banks',
       'bar-cta': 'Light the signal',
+      'hero-role': '<span class="led"></span> Case file · AI Engineer &amp; Solutions Consultant · Nagpur',
       'hero-line': 'I work in the dark so your agents run in the light.',
-      'hero-hint': 'Move your light through the dark · scroll to vanish',
+      'hero-hint': 'Shine your light on the name · click to fire a grapple · scroll to vanish',
       'demo-kicker': 'Interrogation room',
       'demo-h2': 'Try to break my agent',
       'demo-note': 'It has one rule and it never breaks it. This is a simulation in your browser with no real bank connected. Do your worst.',
       'demo-hello': "I'm listening. Balance, transfers, payees or a lost card. Keep it quick.",
       'deployments-kicker': 'Case log',
       'deployments-h2': 'Cases closed',
-      'deployments-note': "Real systems protecting real banks. The identities stay hidden. That's the point.",
+      'deployments-note': "Systems built to protect banks. The identities stay hidden. That's the point.",
       'capabilities-kicker': 'Utility belt',
       'capabilities-h2': 'Tools of the trade',
       'guardrails-kicker': 'The one rule',
@@ -197,6 +198,35 @@ function heatVision(x, y) {
   setTimeout(() => svg.remove(), 800);
 }
 
+// Night Vigilante: a grapple line fires up to the rooftops from where you click.
+function grapple(x, y) {
+  const svg = svgEl('svg', {});
+  const topX = x + (x < innerWidth / 2 ? 60 : -60);
+  const line = svgEl('line', { x1: x, y1: y, x2: topX, y2: -10, stroke: '#d7dbe3', 'stroke-width': 2 });
+  const len = Math.hypot(topX - x, y + 10);
+  line.style.strokeDasharray = len;
+  line.style.strokeDashoffset = len;
+  line.style.transition = 'stroke-dashoffset .16s cubic-bezier(.2,.8,.3,1)';
+  // The hook: three short prongs at the top end of the line.
+  const hook = svgEl('g', { transform: `translate(${topX} 6)`, stroke: '#f5c518', 'stroke-width': 3, fill: 'none', 'stroke-linecap': 'round', opacity: 0 });
+  hook.append(svgEl('path', { d: 'M0 0 L0 14 M0 14 L-9 6 M0 14 L9 6' }));
+  hook.style.transition = 'opacity .1s ease .14s';
+  const spark = svgEl('circle', { cx: x, cy: y, r: 3, fill: '#f5c518' });
+  spark.style.transition = 'r .3s ease, opacity .3s ease';
+  svg.append(line, hook, spark);
+  svg.style.filter = 'drop-shadow(0 0 4px rgba(245,197,24,.6))';
+  svg.style.transition = 'opacity .45s ease .55s';
+  layer().appendChild(svg);
+  requestAnimationFrame(() => {
+    line.style.strokeDashoffset = 0;
+    hook.setAttribute('opacity', 1);
+    spark.setAttribute('r', 18);
+    spark.style.opacity = 0;
+    svg.style.opacity = 0;
+  });
+  setTimeout(() => svg.remove(), 1200);
+}
+
 let current = 'console';
 export function setEffectsUniverse(u) { current = u; }
 
@@ -206,13 +236,30 @@ export function mountEffects({ reduced = false } = {}) {
     if (e.button !== 0 || skip(e.target)) return;
     if (current === 'web') shootWeb(e.clientX, e.clientY);
     else if (current === 'sky') heatVision(e.clientX, e.clientY);
+    else if (current === 'night') grapple(e.clientX, e.clientY);
   }, { passive: true });
 
-  // Night Vigilante: the flashlight follows the cursor.
+  // Night Vigilante: the flashlight follows the cursor or finger, and sweeps
+  // across the name on its own when nobody is moving it.
   const spot = document.querySelector('.spot');
+  let lastMove = -1e9;
+  const aim = (x, y) => {
+    const r = spot.getBoundingClientRect();
+    spot.style.setProperty('--mx', x - r.left + 'px');
+    spot.style.setProperty('--my', y - r.top + 'px');
+  };
   addEventListener('pointermove', (e) => {
     if (current !== 'night') return;
-    spot.style.setProperty('--mx', e.clientX + 'px');
-    spot.style.setProperty('--my', e.clientY + 'px');
+    lastMove = performance.now();
+    aim(e.clientX, e.clientY);
   }, { passive: true });
+  const sweep = (t) => {
+    requestAnimationFrame(sweep);
+    if (current !== 'night' || document.hidden || t - lastMove < 2500) return;
+    const r = spot.getBoundingClientRect();
+    if (r.bottom < 0 || r.top > innerHeight) return;
+    const k = t / 2600;
+    aim(r.left + r.width * (0.5 + Math.sin(k) * 0.34), r.top + r.height * (0.36 + Math.sin(k * 1.7) * 0.08));
+  };
+  requestAnimationFrame(sweep);
 }

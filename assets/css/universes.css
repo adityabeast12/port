@@ -8,7 +8,7 @@
    and pattern themes only: no character names or logos. */
 
 /* Pieces that only some universes use are hidden by default. */
-.burst, .fx-layer, .spot { display: none; }
+.burst, .fx-layer, .spot, .noir, .tape { display: none; }
 .fx-layer { position: fixed; inset: 0; z-index: 80; pointer-events: none; }
 .fx-layer svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
 
@@ -262,7 +262,7 @@ html[data-universe="night"] .hero__stage::before {
   background: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%271600%27%20height%3D%27260%27%20viewBox%3D%270%200%201600%20260%27%20preserveAspectRatio%3D%27none%27%3E%3Cg%20fill%3D%27%230d0f13%27%3E%3Crect%20x%3D%270%27%20y%3D%27162%27%20width%3D%2781%27%20height%3D%2798%27/%3E%3Crect%20x%3D%2782%27%20y%3D%27178%27%20width%3D%2744%27%20height%3D%2782%27/%3E%3Crect%20x%3D%27126%27%20y%3D%27143%27%20width%3D%2755%27%20height%3D%27117%27/%3E%3Crect%20x%3D%27187%27%20y%3D%27126%27%20width%3D%2757%27%20height%3D%27134%27/%3E%3Crect%20x%3D%27250%27%20y%3D%27174%27%20width%3D%2763%27%20height%3D%2786%27/%3E%3Crect%20x%3D%27317%27%20y%3D%2742%27%20width%3D%2747%27%20height%3D%27218%27/%3E%3Crect%20x%3D%27368%27%20y%3D%27120%27%20width%3D%2794%27%20height%3D%27140%27/%3E%3Crect%20x%3D%27463%27%20y%3D%27180%27%20width%3D%2771%27%20height%3D%2780%27/%3E%3Crect%20x%3D%27534%27%20y%3D%2769%27%20width%3D%2755%27%20height%3D%27191%27/%3E%3Crect%20x%3D%27594%27%20y%3D%2758%27%20width%3D%2749%27%20height%3D%27202%27/%3E%3Crect%20x%3D%27649%27%20y%3D%27131%27%20width%3D%2751%27%20height%3D%27129%27/%3E%3Crect%20x%3D%27705%27%20y%3D%27112%27%20width%3D%2789%27%20height%3D%27148%27/%3E%3Crect%20x%3D%27797%27%20y%3D%27157%27%20width%3D%2785%27%20height%3D%27103%27/%3E%3Crect%20x%3D%27885%27%20y%3D%27180%27%20width%3D%27103%27%20height%3D%2780%27/%3E%3Crect%20x%3D%27992%27%20y%3D%27165%27%20width%3D%2775%27%20height%3D%2795%27/%3E%3Crect%20x%3D%271068%27%20y%3D%27179%27%20width%3D%2759%27%20height%3D%2781%27/%3E%3Crect%20x%3D%271132%27%20y%3D%27197%27%20width%3D%2769%27%20height%3D%2763%27/%3E%3Crect%20x%3D%271204%27%20y%3D%27106%27%20width%3D%27108%27%20height%3D%27154%27/%3E%3Crect%20x%3D%271317%27%20y%3D%2784%27%20width%3D%2746%27%20height%3D%27176%27/%3E%3Crect%20x%3D%271363%27%20y%3D%27183%27%20width%3D%2764%27%20height%3D%2777%27/%3E%3Crect%20x%3D%271427%27%20y%3D%2747%27%20width%3D%2783%27%20height%3D%27213%27/%3E%3Crect%20x%3D%271510%27%20y%3D%2755%27%20width%3D%2740%27%20height%3D%27205%27/%3E%3Crect%20x%3D%271552%27%20y%3D%27182%27%20width%3D%2743%27%20height%3D%2778%27/%3E%3Crect%20x%3D%271596%27%20y%3D%27112%27%20width%3D%2772%27%20height%3D%27148%27/%3E%3C/g%3E%3Cg%20fill%3D%27rgba%28245%2C197%2C24%2C0.55%29%27%3E%3Crect%20x%3D%2712%27%20y%3D%27181%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%2718%27%20y%3D%27218%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%2713%27%20y%3D%27236%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%27101%27%20y%3D%27192%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%2795%27%20y%3D%27193%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%27105%27%20y%3D%27215%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%27135%27%20y%3D%27226%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%27169%27%20y%3D%27203%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%27135%27%20y%3D%27181%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%27134%27%20y%3D%27224%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%27202%27%20y%3D%27205%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%27200%27%20y%3D%27209%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%27212%27%20y%3D%27207%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%27292%27%20y%3D%27224%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%27268%27%20y%3D%27207%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%27262%27%20y%3D%27219%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%27301%27%20y%3D%27188%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%27338%27%20y%3D%27226%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%27448%27%20y%3D%27188%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%27420%27%20y%3D%27168%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%27405%27%20y%3D%27231%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%27488%27%20y%3D%27223%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%27500%27%20y%3D%27211%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%27515%27%20y%3D%27218%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%27487%27%20y%3D%27228%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%27550%27%20y%3D%27166%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%27549%27%20y%3D%27204%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%27566%27%20y%3D%2789%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%27620%27%20y%3D%27155%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%27622%27%20y%3D%27220%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%27631%27%20y%3D%27216%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%27629%27%20y%3D%2785%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%27659%27%20y%3D%27148%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%27674%27%20y%3D%27223%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%27683%27%20y%3D%27177%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%27817%27%20y%3D%27230%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%27810%27%20y%3D%27194%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%27839%27%20y%3D%27183%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%27834%27%20y%3D%27217%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%27948%27%20y%3D%27215%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%271053%27%20y%3D%27210%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%271043%27%20y%3D%27228%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%271020%27%20y%3D%27223%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%271083%27%20y%3D%27203%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%271175%27%20y%3D%27218%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%271154%27%20y%3D%27225%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%271138%27%20y%3D%27216%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%271282%27%20y%3D%27156%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%271226%27%20y%3D%27204%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%271275%27%20y%3D%27237%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%271289%27%20y%3D%27199%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%271335%27%20y%3D%27195%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%271335%27%20y%3D%27194%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%271326%27%20y%3D%27217%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%271343%27%20y%3D%27196%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%271397%27%20y%3D%27203%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%271533%27%20y%3D%2790%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%271577%27%20y%3D%27216%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%271625%27%20y%3D%27182%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%271609%27%20y%3D%27136%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%271656%27%20y%3D%27184%27%20width%3D%274%27%20height%3D%276%27/%3E%3Crect%20x%3D%271631%27%20y%3D%27183%27%20width%3D%274%27%20height%3D%276%27/%3E%3C/g%3E%3C/svg%3E") bottom / 100% 100% no-repeat;
   opacity: .95;
 }
-html[data-universe="night"] .hero__copy, html[data-universe="night"] .hero__hint { z-index: 2; }
+html[data-universe="night"] .hero__copy, html[data-universe="night"] .hero__hint { z-index: 4; }
 html[data-universe="night"] :is(.panel, .metric, .service, .deploys, .policies, .changelog, .terminal) {
   border: 1px solid #22252c; border-top: 1px solid rgba(245, 197, 24, 0.5);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 20px 40px rgba(0, 0, 0, 0.6);
@@ -282,10 +282,136 @@ html[data-universe="night"] .service h3, html[data-universe="night"] .changelog 
 html[data-universe="night"] .pipe b { font-weight: 400; letter-spacing: 0.08em; font-size: 14px; }
 html[data-universe="night"] .hero__line { font-size: clamp(22px, 2.4vw, 32px); font-weight: 400; letter-spacing: 0.06em; text-transform: uppercase; max-width: 34ch; line-height: 1.15; }
 html[data-universe="night"] .hero__actions { top: calc(57% + 110px); }
-/* The flashlight: everything is dark except around the cursor. */
-@media (hover: hover) and (pointer: fine) {
-  html[data-universe="night"] .spot {
-    display: block; position: absolute; inset: 0; z-index: 3; pointer-events: none;
-    background: radial-gradient(circle at var(--mx, 50%) var(--my, 40%), transparent 0 200px, rgba(0, 0, 0, 0.42) 520px);
-  }
+
+/* ---------- Night Vigilante: the upgrade ---------- */
+/* Layer order in the hero: name (canvas) < skyline (1) < darkness (2) < searchlights (3) < copy (4). */
+html[data-universe="night"] .noir { display: block; position: absolute; inset: 0; z-index: 3; pointer-events: none; overflow: hidden; }
+/* A glowing signal on the low clouds, top right */
+html[data-universe="night"] .noir__signal {
+  position: absolute; right: 9%; top: 9%; width: 230px; height: 150px; border-radius: 50%;
+  background:
+    radial-gradient(ellipse at 50% 50%, rgba(255, 226, 120, 0.85) 0 32%, rgba(245, 197, 24, 0.35) 52%, transparent 70%);
+  filter: blur(2px);
+  animation: signal 4s ease-in-out infinite;
 }
+html[data-universe="night"] .noir__signal::after {
+  content: ""; position: absolute; inset: -60px -120px; border-radius: 50%;
+  background: radial-gradient(ellipse at 50% 50%, rgba(160, 170, 190, 0.18), transparent 65%); /* lit cloud */
+}
+@keyframes signal { 50% { opacity: 0.75; transform: scale(0.97); } }
+/* Searchlight beams rising from the skyline */
+html[data-universe="night"] .noir__beam {
+  position: absolute; bottom: 12%; width: 220px; height: 120vh; margin-left: -110px;
+  transform-origin: 50% 100%;
+  background: linear-gradient(0deg, rgba(255, 230, 150, 0.5), rgba(255, 230, 150, 0.08) 70%, transparent);
+  clip-path: polygon(46% 100%, 54% 100%, 100% 0, 0 0);
+  filter: blur(3px);
+  mix-blend-mode: screen;
+}
+html[data-universe="night"] .noir__beam--1 { left: 22%; animation: sweep1 9s ease-in-out infinite alternate; }
+html[data-universe="night"] .noir__beam--2 { left: 74%; transform: rotate(14deg); opacity: 0.8; animation: sweep2 6s ease-in-out infinite alternate; }
+@keyframes sweep1 { from { transform: rotate(-28deg); } to { transform: rotate(22deg); } }
+@keyframes sweep2 { from { transform: rotate(6deg); } to { transform: rotate(18deg); } }
+/* Fog rolling along the street */
+html[data-universe="night"] .noir__fog {
+  position: absolute; left: -30%; right: -30%; bottom: -6%; height: 34%;
+  background: radial-gradient(ellipse 40% 60% at 30% 70%, rgba(150, 160, 180, 0.2), transparent 70%),
+              radial-gradient(ellipse 35% 50% at 75% 80%, rgba(150, 160, 180, 0.16), transparent 70%);
+  filter: blur(8px);
+  animation: fog 26s ease-in-out infinite alternate;
+}
+html[data-universe="night"] .noir__fog--2 { bottom: -12%; opacity: 0.8; animation-duration: 38s; animation-direction: alternate-reverse; }
+@keyframes fog { to { transform: translateX(14%); } }
+/* Lightning: a double flash every few seconds */
+html[data-universe="night"] .noir__flash {
+  position: absolute; inset: 0; background: rgba(210, 225, 255, 0.9); opacity: 0;
+  animation: lightning 11s linear infinite 3s;
+}
+@keyframes lightning { 0%, 90%, 92.5%, 94%, 100% { opacity: 0; } 91% { opacity: 0.32; } 93% { opacity: 0.18; } }
+
+/* The flashlight: the hero is dark and your light reveals the name.
+   It follows the cursor (or your finger) and sweeps on its own when idle. */
+html[data-universe="night"] .spot {
+  display: block; position: absolute; inset: 0; z-index: 2; pointer-events: none;
+  background: radial-gradient(circle at var(--mx, 50%) var(--my, 40%),
+    rgba(255, 236, 170, 0.07) 0 150px, rgba(0, 0, 0, 0.35) 260px, rgba(0, 0, 0, 0.84) 480px);
+}
+
+/* Police tape */
+html[data-universe="night"] .tape {
+  display: block; position: relative; z-index: 5; overflow: hidden;
+  margin: -34px 0 40px; transform: rotate(-2deg) scale(1.04);
+  background: repeating-linear-gradient(-45deg, #f5c518 0 26px, #111 26px 44px);
+  border-top: 2px solid #111; border-bottom: 2px solid #111;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+  padding: 6px 0;
+}
+html[data-universe="night"] .tape__track {
+  display: flex; align-items: center; gap: 18px; width: max-content;
+  background: #f5c518; color: #111; padding: 4px 0;
+  font-family: var(--f-display); font-size: 24px; letter-spacing: 0.14em; text-transform: uppercase;
+  animation: marquee 34s linear infinite;
+}
+html[data-universe="night"] .tape__track i { font-style: normal; font-size: 0.6em; }
+@keyframes marquee { to { transform: translateX(-50%); } }
+
+/* Gold, metallic headings with a soft glow */
+html[data-universe="night"] .section h2, html[data-universe="night"] .terminal__title {
+  background: linear-gradient(180deg, #fff5cf 0%, #f5c518 48%, #a57c05 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  filter: drop-shadow(0 0 22px rgba(245, 197, 24, 0.22));
+}
+html[data-universe="night"] .kicker { font-family: var(--f-mono); }
+html[data-universe="night"] .kicker::after { content: "▍"; margin-left: 4px; animation: blink 1s steps(1) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+html[data-universe="night"] .metric__v { color: var(--accent); text-shadow: 0 0 20px rgba(245, 197, 24, 0.35); }
+
+/* Panels get gold HUD corner brackets, like a case board under a desk lamp */
+html[data-universe="night"] :is(.panel, .metric, .service, .deploys, .policies, .changelog, .terminal) {
+  border: 1px solid #1e2127;
+  background:
+    linear-gradient(var(--accent), var(--accent)) top left / 16px 2px no-repeat,
+    linear-gradient(var(--accent), var(--accent)) top left / 2px 16px no-repeat,
+    linear-gradient(var(--accent), var(--accent)) top right / 16px 2px no-repeat,
+    linear-gradient(var(--accent), var(--accent)) top right / 2px 16px no-repeat,
+    linear-gradient(var(--accent), var(--accent)) bottom left / 16px 2px no-repeat,
+    linear-gradient(var(--accent), var(--accent)) bottom left / 2px 16px no-repeat,
+    linear-gradient(var(--accent), var(--accent)) bottom right / 16px 2px no-repeat,
+    linear-gradient(var(--accent), var(--accent)) bottom right / 2px 16px no-repeat,
+    radial-gradient(ellipse at 50% 0%, rgba(245, 197, 24, 0.07), transparent 60%),
+    var(--panel);
+  box-shadow: 0 24px 50px rgba(0, 0, 0, 0.7);
+}
+html[data-universe="night"] .service:hover, html[data-universe="night"] .metric:hover { box-shadow: 0 0 0 1px rgba(245, 197, 24, 0.35), 0 24px 50px rgba(0, 0, 0, 0.7); }
+/* Deployments read as case files */
+html[data-universe="night"] .deploys { counter-reset: case; }
+html[data-universe="night"] .deploy { counter-increment: case; }
+html[data-universe="night"] .deploy__name b::before { content: "CASE 0" counter(case) " · "; color: var(--accent); }
+html[data-universe="night"] .deploys__cols { color: var(--accent); }
+/* Stamps instead of comic bursts */
+html[data-universe="night"] .burst {
+  display: block; position: absolute; z-index: 4; font-size: 0; pointer-events: none;
+  transform: rotate(-9deg);
+}
+html[data-universe="night"] .burst::after {
+  display: inline-block; font-family: var(--f-display); font-size: 26px; letter-spacing: 0.16em;
+  color: #e0463a; border: 3px solid #e0463a; border-radius: 3px; padding: 2px 12px 0;
+  opacity: 0.85; mix-blend-mode: screen;
+}
+html[data-universe="night"] .burst--hero1 { left: 7%; top: 22%; }
+html[data-universe="night"] .burst--hero1::after { content: "Classified"; }
+html[data-universe="night"] .burst--hero2 { display: none; }
+html[data-universe="night"] .section__head { position: relative; }
+html[data-universe="night"] .burst--section { left: calc(100% + 40px); top: 16px; transform: rotate(7deg); }
+html[data-universe="night"] .burst--section::after { content: "Evidence"; }
+html[data-universe="night"] .contact { position: relative; }
+html[data-universe="night"] .burst--contact { right: var(--gutter); top: 64px; }
+html[data-universe="night"] .burst--contact::after { content: "Case open"; }
+@media (max-width: 1000px) {
+  html[data-universe="night"] .burst--section { display: none; }
+  html[data-universe="night"] .burst--hero1 { left: 5%; top: 11%; }
+  html[data-universe="night"] .burst::after { font-size: 19px; }
+  html[data-universe="night"] .noir__signal { width: 150px; height: 100px; right: 6%; top: 11%; }
+  html[data-universe="night"] .noir__beam { width: 150px; margin-left: -75px; }
+}
+html[data-universe="night"] .fx-layer { display: block; }

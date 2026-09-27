@@ -227,7 +227,7 @@ export function mountDemo(root, { reduced = false } = {}) {
     nodes.reply.dataset.state = blocked ? 'block' : 'ok';
     nodes.reply.querySelector('.pipe__note').textContent = blocked ? 'refused' : 'sent';
     ms += 180;
-    trace.innerHTML += `<span class="t-time">+${String(ms).padStart(4)}ms</span>  <span class="t-ok">langfuse    </span> trace saved · ${result.steps.length + 1} steps · ${(ms / 1000).toFixed(1)}s\n`;
+    trace.innerHTML += `<span class="t-time">+${String(ms).padStart(4)}ms</span>  <span class="t-ok">langfuse    </span> trace saved · local LLM (vLLM) · ${result.steps.length + 1} steps · ${(ms / 1000).toFixed(1)}s\n`;
 
     const typing = bubble('bot', '<span class="dm__typing"><i></i><i></i><i></i></span>');
     await wait(450);

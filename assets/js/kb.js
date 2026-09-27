@@ -13,7 +13,13 @@ export const PROJECTS = [
     id: 'banking',
     title: 'Agentic banking assistant',
     meta: 'Banking · Conversational AI',
-    blurb: 'Multi-agent assistant for account operations, beneficiaries and transfers. Live at four banks.',
+    blurb: 'Multi-agent assistant for account operations, beneficiaries and transfers. Moving to production at a bank.',
+  },
+  {
+    id: 'banking',
+    title: 'Knowledge assistant (RAG)',
+    meta: 'Banking · Retrieval',
+    blurb: "Answers from each bank's own documents, with sources. Live at multiple banks.",
   },
   {
     id: 'platform',
@@ -72,7 +78,7 @@ export const TOPICS = {
     keys: ['project', 'built', 'build', 'work', 'portfolio', 'case stud', 'shipped', 'made', 'examples'],
     shape: 1,
     status: 'Searching projects',
-    text: ["Here are seven systems I've built, most of them running in production. Client names are withheld. Tap any card for details."],
+    text: ["Here are seven systems I've built, some in production and some rolling out now. Client names are withheld. Tap any card for details."],
     blocks: [{ type: 'projects' }],
     next: ['banking', 'voice', 'responsible'],
   },
@@ -84,12 +90,12 @@ export const TOPICS = {
     status: 'Opening case study',
     text: [
       'This is the project I\'m proudest of. I architected an **agentic banking assistant** that handles account operations, beneficiary management and transactions through natural conversation.',
-      "It's live at **four banks: three in India and one international.** An orchestrator routes each request to specialist agents for KYC, risk and core-banking tools. Guardrails check every input and output, and every step is traced in Langfuse. It has contributed directly to my organisation's revenue growth.",
+      "It's now **moving to production at a bank.** Separately, a **RAG knowledge assistant** I built is already **live at multiple banks**. The agentic assistant is built on **AutoGen and LlamaIndex** with a FastAPI backend, it runs on **local LLMs served with vLLM**, so customer data never leaves the bank. An orchestrator routes each request to specialist agents for KYC, risk and core-banking tools. Guardrails check every input and output, and every step is traced in Langfuse.",
       "Here's what a single request looks like inside the system:",
     ],
     blocks: [
       { type: 'trace' },
-      { type: 'chips', items: ['CrewAI', 'LangChain', 'FastAPI', 'Guardrails', 'Langfuse'] },
+      { type: 'chips', items: ['AutoGen', 'LlamaIndex', 'FastAPI', 'vLLM', 'Local LLMs', 'Langfuse'] },
     ],
     next: ['responsible', 'voice', 'projects'],
   },
@@ -176,7 +182,7 @@ export const TOPICS = {
 
   stack: {
     q: "What's your tech stack?",
-    keys: ['stack', 'skill', 'tech', 'tool', 'language', 'framework', 'python', 'langchain', 'fastapi', 'react', 'streamlit', 'llamaparse', 'docling', 'know'],
+    keys: ['stack', 'skill', 'tech', 'tool', 'language', 'framework', 'python', 'langchain', 'llamaindex', 'vllm', 'local llm', 'fastapi', 'react', 'streamlit', 'llamaparse', 'docling', 'know'],
     shape: 1,
     status: 'Listing tools',
     text: ["Here's what I work with day to day:"],
@@ -232,7 +238,7 @@ export const TOPICS = {
     shape: 0,
     status: 'Putting it together',
     text: [
-      'Here is the short version. I\'m an **AI Solutions Consultant** with 2+ years building agentic AI, RAG pipelines, voice agents and ML models for banking and insurance. My agentic banking assistant is live at four banks, and every build I ship has guardrails, tracing and governance built in.',
+      'Here is the short version. I\'m an **AI Solutions Consultant** with 2+ years building agentic AI, RAG pipelines, voice agents and ML models for banking and insurance. My RAG knowledge assistant is live at multiple banks, my agentic banking assistant is moving to production, and every build I ship has guardrails, tracing and governance built in.',
     ],
     blocks: [{ type: 'stats' }, { type: 'projects' }, { type: 'contact' }],
     next: ['banking', 'responsible', 'stack'],
