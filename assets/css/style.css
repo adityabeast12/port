@@ -214,6 +214,7 @@ main, .foot { position: relative; z-index: 1; }
 
 /* ---------- Try the agent ---------- */
 .demo { display: grid; grid-template-columns: 1fr 1.05fr; gap: 14px; align-items: stretch; }
+.demo > * { min-width: 0; } /* never let a long line widen the panels */
 .demo__chat { display: flex; flex-direction: column; min-height: 520px; }
 .demo__msgs { flex: 1; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; max-height: 340px; padding-right: 4px; }
 .dm { max-width: 88%; padding: 9px 13px; border-radius: 12px; font-size: 14.5px; line-height: 1.5; animation: pop .25s var(--ease); }
@@ -440,6 +441,8 @@ main, .foot { position: relative; z-index: 1; }
 .chip:hover { border-color: var(--accent); }
 .agent__form { display: flex; border-top: 1px solid var(--line-2); }
 .agent__form input { flex: 1; min-width: 0; border: 0; background: transparent; padding: 0 14px; height: 50px; outline: none; font-size: 16px; }
+.agent__form input:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
+.demo__form input:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
 .agent__form button { width: 54px; color: var(--on-accent); background: var(--accent); font-size: 18px; }
 .agent__form button:disabled { background: var(--panel-2); color: var(--fg-3); cursor: default; }
 
@@ -557,4 +560,12 @@ main, .foot { position: relative; z-index: 1; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
   .js .reveal { opacity: 1; transform: none; }
+}
+
+/* Small phones: keep the status bar on one line */
+@media (max-width: 420px) {
+  .bar { gap: 8px; padding: 0 12px; }
+  .bar__clock { display: none; }
+  .bar__cta { padding: 6px 10px; font-size: 11.5px; max-width: 46vw; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .bar__name { font-size: 12px; }
 }

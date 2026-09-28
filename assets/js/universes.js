@@ -276,8 +276,15 @@ export function mountEffects({ reduced = false } = {}) {
   let lastMove = -1e9;
   const aim = (x, y) => {
     const r = spot.getBoundingClientRect();
-    spot.style.setProperty('--mx', x - r.left + 'px');
-    spot.style.setProperty('--my', y - r.top + 'px');
+    const mx = x - r.left;
+    const my = y - r.top;
+    spot.style.setProperty('--mx', mx + 'px');
+    spot.style.setProperty('--my', my + 'px');
+    // Aim the beam cone from just below the bottom centre to the light pool.
+    const dx = mx - r.width / 2;
+    const dy = r.height * 1.04 - my;
+    spot.style.setProperty('--len', Math.hypot(dx, dy) + 'px');
+    spot.style.setProperty('--ang', (Math.atan2(dx, dy) * 180) / Math.PI + 'deg');
   };
   addEventListener('pointermove', (e) => {
     if (current !== 'night') return;

@@ -125,44 +125,64 @@ function galaxy(n, out) {
 
 // Name shape: draw the text to an offscreen canvas and scatter particles over
 // its filled pixels. boxW is the width the text should span in world units.
-function textShape(n, out, lines, boxW, yOffset, font) {
+function textShape(n, out, lines, boxW, yOffset, font, weight = 700, spacing = '0px') {
   const W = 1400;
   const c = document.createElement('canvas');
   const ctx = c.getContext('2d', { willReadFrequently: true });
-  ctx.font = `700 200px ${font}`;
+  ctx.font = `${weight} 200px ${font}`;
+  ctx.letterSpacing = spacing;
   const widest = Math.max(...lines.map((l) => ctx.measureText(l).width));
   const size = Math.floor((200 * W * 0.97) / widest);
   const lineH = size * 1.02;
   const H = Math.ceil(lineH * lines.length + size * 0.25);
   c.width = W;
   c.height = H;
-  ctx.font = `700 ${size}px ${font}`;
+  ctx.font = `${weight} ${size}px ${font}`;
+  ctx.letterSpacing = spacing;
   ctx.fillStyle = '#fff';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   lines.forEach((l, i) => ctx.fillText(l, W / 2, H / 2 + (i - (lines.length - 1) / 2) * lineH));
 
   const data = ctx.getImageData(0, 0, W, H).data;
-  const pts = [];
+  const on = (x, y) => x >= 0 && y >= 0 && x < W && y < H && data[(y * W + x) * 4 + 3] > 140;
+  // Split the letters into outline pixels and fill pixels. Outlines get extra
+  // particles so the letters read crisply, and the whole name is extruded
+  // into a shallow block so it shows depth when it tilts.
+  const edge = [];
+  const fill = [];
   for (let y = 0; y < H; y += 2) {
     for (let x = 0; x < W; x += 2) {
-      if (data[(y * W + x) * 4 + 3] > 140) pts.push(x, y);
+      if (!on(x, y)) continue;
+      const isEdge = !on(x - 3, y) || !on(x + 3, y) || !on(x, y - 3) || !on(x, y + 3);
+      (isEdge ? edge : fill).push(x, y);
     }
   }
   const scale = boxW / W;
   const boxH = H * scale;
-  const dust = Math.floor(n * 0.1); // a little ambient sparkle around the name
+  const depth = boxH * 0.05;
+  const dust = Math.floor(n * 0.05); // a little ambient sparkle around the name
+  const pick = (arr) => { const k = Math.floor(Math.random() * (arr.length / 2)) * 2; return [arr[k], arr[k + 1]]; };
   for (let i = 0; i < n; i++) {
-    if (i < dust || pts.length === 0) {
+    if (i < dust || edge.length + fill.length === 0) {
       out.set([rand(-1, 1) * boxW * 0.75, rand(-1, 1) * boxH * 1.4 + yOffset, rand(-2, 1.5)], i * 3);
       continue;
     }
-    const k = Math.floor(Math.random() * (pts.length / 2)) * 2;
-    out.set([
-      (pts[k] - W / 2 + rand(-1, 1)) * scale,
-      -(pts[k + 1] - H / 2 + rand(-1, 1)) * scale + yOffset,
-      gauss() * 0.04,
-    ], i * 3);
+    const r = Math.random();
+    let px, py, z;
+    if (r < 0.46 && edge.length) {
+      // Outline on the front face, with a fainter copy on the back face.
+      [px, py] = pick(edge);
+      z = Math.random() < 0.85 ? depth : -depth;
+    } else if (r < 0.58 && edge.length) {
+      // Sides of the extrusion.
+      [px, py] = pick(edge);
+      z = rand(-depth, depth);
+    } else {
+      [px, py] = pick(fill.length ? fill : edge);
+      z = depth - Math.abs(gauss()) * depth * 0.35;
+    }
+    out.set([(px - W / 2 + rand(-0.8, 0.8)) * scale, -(py - H / 2 + rand(-0.8, 0.8)) * scale + yOffset, z], i * 3);
   }
 }
 
@@ -175,6 +195,8 @@ const vertex = /* glsl */ `
   uniform float uActivity;
   uniform float uScale;
   uniform vec3  uMouse;
+  uniform float uRepel; // 1 = the cursor pushes particles, 0 = off
+  uniform float uSheen; // strength of the light sweep across the name
   attribute vec3 aS1;
   attribute vec3 aS2;
   attribute vec3 aS3;
@@ -183,6 +205,7 @@ const vertex = /* glsl */ `
   attribute float aRand;
   varying float vRand;
   varying float vAlpha;
+  varying float vSheen;
 
   float w(float i) { return clamp(1.0 - abs(uMorph - i), 0.0, 1.0); }
 
@@ -214,7 +237,8 @@ const vertex = /* glsl */ `
     // Mouse repulsion in world space.
     vec2 d = world.xy - uMouse.xy;
     float dist = length(d);
-    float force = smoothstep(1.4 * uScale, 0.0, dist);
+    // Softer, tighter push while the name is showing, so it ripples instead of tearing.
+    float force = smoothstep(mix(1.4, 0.95, wT) * uScale, 0.0, dist) * uRepel * mix(1.0, 0.55, wT);
     world.xy += normalize(d + 0.0001) * force * 0.55 * uScale;
     world.z += force * 0.4 * uScale;
 
@@ -224,7 +248,10 @@ const vertex = /* glsl */ `
     vec4 mv = viewMatrix * world;
     gl_Position = projectionMatrix * mv;
 
-    float size = uSize * (0.55 + aRand * 0.9) * mix(0.75, 1.0, uScale);
+    float size = uSize * (0.55 + aRand * 0.9) * mix(0.75, 1.0, uScale) * mix(1.0, 0.8, wT);
+    // A band of light sweeps diagonally across the name every few seconds.
+    float band = mod(uTime * 2.4, 26.0) - 13.0;
+    vSheen = smoothstep(1.1, 0.0, abs(p.x + p.y * 0.4 - band)) * wT * uSheen;
     size *= 1.0 + force * 1.5;
     gl_PointSize = min(size / -mv.z, uSize * 0.28);
 
@@ -240,6 +267,7 @@ const fragment = /* glsl */ `
   uniform float uOpacity;
   varying float vRand;
   varying float vAlpha;
+  varying float vSheen;
 
   void main() {
     vec2 c = gl_PointCoord - 0.5;
@@ -250,7 +278,8 @@ const fragment = /* glsl */ `
     vec3 col = uColA;
     col = mix(col, uColB, step(0.9, vRand));
     col = mix(col, uColC, step(0.985, vRand));
-    gl_FragColor = vec4(col, a * vAlpha * uOpacity);
+    col = mix(col, vec3(1.0), vSheen * 0.85);
+    gl_FragColor = vec4(col, a * vAlpha * uOpacity * (1.0 + vSheen));
   }
 `;
 
@@ -303,6 +332,8 @@ export function createScene(canvas, { reducedMotion = false } = {}) {
     uScale: { value: 1 },
     uOpacity: { value: 1 },
     uMouse: { value: new THREE.Vector3(99, 99, 0) },
+    uRepel: { value: 1 },
+    uSheen: { value: 1 },
     uColA: { value: new THREE.Color('#dcebe2') },
     uColB: { value: new THREE.Color('#3ee089') },
     uColC: { value: new THREE.Color('#f5b23d') },
@@ -407,8 +438,13 @@ export function createScene(canvas, { reducedMotion = false } = {}) {
     if (!reducedMotion) rotY += dt * (0.08 + uniforms.uActivity.value * 0.9) * (1 - textW);
     // The waveform reads best from a low, near-frontal angle.
     const waveW = Math.max(0, 1 - Math.abs(m - 2));
-    group.rotation.y = (rotY * (1 - waveW) + pointer.x * 0.25) * (1 - textW) + pointer.x * 0.1 * textW;
-    group.rotation.x = (pointer.y * -0.15 + waveW * 0.28 + Math.max(0, 1 - Math.abs(m - 4)) * 0.55) * (1 - textW) + pointer.y * -0.06 * textW;
+    // The name tilts toward the cursor so its extruded depth shows, and sways
+    // gently on its own when nobody is pointing at it.
+    const sway = pointer.active || reducedMotion ? 0 : 1;
+    const nameY = pointer.x * 0.26 * (1 - sway) + Math.sin(t * 0.45) * 0.09 * sway;
+    const nameX = pointer.y * -0.16 * (1 - sway) + Math.sin(t * 0.33) * 0.04 * sway;
+    group.rotation.y = (rotY * (1 - waveW) + pointer.x * 0.25) * (1 - textW) + nameY * textW;
+    group.rotation.x = (pointer.y * -0.15 + waveW * 0.28 + Math.max(0, 1 - Math.abs(m - 4)) * 0.55) * (1 - textW) + nameX * textW;
     const yTarget = state.y + state.scroll * -0.4;
     group.position.y += (yTarget - group.position.y) * k * 0.6;
 
@@ -444,10 +480,10 @@ export function createScene(canvas, { reducedMotion = false } = {}) {
     // Build the name shape. lines: e.g. ['ADITYA SHUKLA'] or ['ADITYA', 'SHUKLA'].
     // width: fraction of the visible width the name spans; lift: fraction of
     // the half-height to move it up (leaving room for text underneath).
-    setText(lines, { width = 0.86, lift = 0.2, font = 'Poppins, sans-serif' } = {}) {
+    setText(lines, { width = 0.86, lift = 0.2, font = 'Poppins, sans-serif', weight = 700, spacing = '0px' } = {}) {
       const halfH = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * camera.position.z;
       const halfW = halfH * camera.aspect;
-      textShape(N, s5, lines, halfW * 2 * width, halfH * lift, font);
+      textShape(N, s5, lines, halfW * 2 * width, halfH * lift, font, weight, spacing);
       textAttr.needsUpdate = true;
     },
     // Recolour the particles: base, accent and highlight.
@@ -474,6 +510,8 @@ export function createScene(canvas, { reducedMotion = false } = {}) {
       if (o.y !== undefined) state.y = o.y;
       if (o.scale !== undefined) state.scale = o.scale;
       if (o.activity !== undefined) state.activity = o.activity;
+      if (o.repel !== undefined) uniforms.uRepel.value = o.repel;
+      if (o.sheen !== undefined) uniforms.uSheen.value = o.sheen;
       // Text sits on top of the field on narrow screens, so dim it further there.
       if (o.opacity !== undefined) state.opacity = o.opacity < 1 && mobile ? o.opacity * 0.7 : o.opacity;
       // Jump straight to the target instead of easing (used for first placement).
