@@ -1,7 +1,7 @@
 // Bump ?v= in these imports and in index.html on every release so browsers never mix old and new files.
-import { mountChat } from './chat.js?v=20261007';
-import { mountDemo } from './agent-demo.js?v=20261007';
-import { UNIVERSES, applyCopy, loadFont, mountEffects, setEffectsUniverse } from './universes.js?v=20261007';
+import { mountChat } from './chat.js?v=20261010';
+import { mountDemo } from './agent-demo.js?v=20261010';
+import { UNIVERSES, applyCopy, loadFont, mountEffects, setEffectsUniverse } from './universes.js?v=20261010';
 
 const root = document.documentElement;
 const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -15,7 +15,12 @@ let gl = null; // the particle scene, once three.js has loaded
 /* ---------------- Smooth scroll ---------------- */
 let lenis = null;
 if (!reduced && window.Lenis) {
-  lenis = new window.Lenis({ lerp: 0.1 });
+  lenis = new window.Lenis({
+    lerp: 0.1,
+    // Let panels that scroll on their own (chat drawer, demo chat and trace,
+    // code blocks, the universe menu) take the wheel instead of the page.
+    prevent: (node) => !!node.closest?.('[data-lenis-prevent], .agent, .demo__msgs, .demo__trace, pre, .verse__menu'),
+  });
   const raf = (t) => { lenis.raf(t); requestAnimationFrame(raf); };
   requestAnimationFrame(raf);
 }
@@ -35,6 +40,15 @@ $$('a[href^="#"]').forEach((a) => {
 let universe = 'console';
 try { if (UNIVERSES[localStorage.getItem('universe')]) universe = localStorage.getItem('universe'); } catch { /* storage blocked */ }
 
+// Particle look per universe. In Night Vigilante the name must stay still
+// under the flashlight (no cursor push) and dark (no light sweep).
+function applyScene(u) {
+  const U = UNIVERSES[u];
+  gl.setColors(...U.particles);
+  gl.setBlending(U.additive);
+  gl.set({ repel: u === 'night' ? 0 : 1, sheen: u === 'night' ? 0 : 1 });
+}
+
 function paintUniverse(u) {
   universe = u;
   const U = UNIVERSES[u];
@@ -45,7 +59,7 @@ function paintUniverse(u) {
   $('[data-verse-label]').textContent = u === 'console' ? 'Multiverse' : U.name;
   $$('[data-verse-menu] [data-universe]').forEach((b) => b.setAttribute('aria-current', String(b.dataset.universe === u)));
   $('meta[name="theme-color"]').setAttribute('content', U.bg);
-  if (gl) { gl.setColors(...U.particles); gl.setBlending(U.additive); }
+  if (gl) applyScene(u);
   try { localStorage.setItem('universe', u); } catch { /* storage blocked */ }
   // Redraw the particle name in the universe's font once it has loaded.
   loadFont(u).then(() => { if (universe === u) buildName(true); });
@@ -127,14 +141,16 @@ async function buildName(force = false) {
     width: portrait ? 0.86 : 0.8,
     lift: portrait ? 0.2 : 0.22,
     font: `"${font}", Poppins, sans-serif`,
+    // Display fonts only ship one weight; faking bold on them blurs the letters.
+    weight: font === 'Poppins' ? 700 : 400,
+    spacing: font === 'Bangers' ? '0.08em' : font === 'Bebas Neue' ? '0.04em' : '0px',
   });
 }
 
-import('./scene.js?v=20261007')
+import('./scene.js?v=20261010')
   .then(async ({ createScene }) => {
     gl = createScene($('#gl'), { reducedMotion: reduced });
-    gl.setColors(...UNIVERSES[universe].particles);
-    gl.setBlending(UNIVERSES[universe].additive);
+    applyScene(universe);
     await buildName();
     gl.set({ shape: -1, opacity: 1, scale: 1, y: 0, snap: true });
     onHeroScroll();

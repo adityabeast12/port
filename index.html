@@ -36,8 +36,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/style.css?v=20261007">
-  <link rel="stylesheet" href="assets/css/universes.css?v=20261007">
+  <link rel="stylesheet" href="assets/css/style.css?v=20261010">
+  <link rel="stylesheet" href="assets/css/universes.css?v=20261010">
   <script>
     document.documentElement.classList.add('js');
     // Failsafe: if scripts never boot, show the page anyway.
@@ -187,7 +187,7 @@
       <div class="demo reveal" data-demo>
         <div class="panel demo__chat">
           <p class="panel__label"><span>01</span> Customer</p>
-          <div class="demo__msgs" data-demo-msgs aria-live="polite">
+          <div class="demo__msgs" data-demo-msgs aria-live="polite" data-lenis-prevent>
             <div class="dm dm--bot" data-t="demo-hello">Hi! I can check your balance, send money, add beneficiaries or block a lost card. What do you need?</div>
           </div>
           <div class="demo__chips">
@@ -215,7 +215,7 @@
             <li data-node="tools"><span class="pipe__dot"></span><b>Banking tools</b><span class="pipe__note"></span></li>
             <li data-node="reply"><span class="pipe__dot"></span><b>Reply</b><span class="pipe__note"></span></li>
           </ol>
-          <pre class="demo__trace" data-demo-trace></pre>
+          <pre class="demo__trace" data-demo-trace data-lenis-prevent></pre>
         </div>
       </div>
     </section>
@@ -520,7 +520,7 @@
       <div><strong>Ask my agent</strong><small>Pre-written answers, not generated</small></div>
       <button type="button" class="agent__close" data-agent-close aria-label="Close">✕</button>
     </header>
-    <div class="agent__log" data-scroll>
+    <div class="agent__log" data-scroll data-lenis-prevent>
       <div class="log" data-log role="log" aria-live="polite"></div>
       <div class="suggest" data-suggest></div>
     </div>
@@ -531,7 +531,7 @@
     </form>
   </aside>
 
-  <script src="assets/vendor/lenis.min.js?v=20261007"></script>
-  <script type="module" src="assets/js/main.js?v=20261007"></script>
+  <script src="assets/vendor/lenis.min.js?v=20261010"></script>
+  <script type="module" src="assets/js/main.js?v=20261010"></script>
 </body>
 </html>
