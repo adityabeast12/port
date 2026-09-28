@@ -290,7 +290,6 @@ html[data-universe="sky"] .kicker::before { content: "★"; color: var(--gold); 
 html[data-universe="sky"] :is(.panel, .metric, .service, .deploys, .policies, .changelog, .terminal) {
   border: 1px solid rgba(255, 255, 255, 0.95); border-top: 5px solid var(--accent);
   box-shadow: inset 0 1px 0 var(--gold), 0 20px 44px rgba(6, 30, 90, 0.28);
-  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
 }
 html[data-universe="sky"] :is(.service, .metric):hover { transform: translateY(-6px); box-shadow: inset 0 1px 0 var(--gold), 0 28px 50px rgba(6, 30, 90, 0.35); }
 html[data-universe="sky"] .metric__v { color: var(--accent); font-weight: 400; font-style: italic; text-shadow: 2px 2px 0 rgba(11, 42, 107, 0.15); }
@@ -380,8 +379,7 @@ html[data-universe="night"] .noir { display: block; position: absolute; inset: 0
 html[data-universe="night"] .noir__signal {
   position: absolute; right: 9%; top: 9%; width: 230px; height: 150px; border-radius: 50%;
   background:
-    radial-gradient(ellipse at 50% 50%, rgba(255, 226, 120, 0.85) 0 32%, rgba(245, 197, 24, 0.35) 52%, transparent 70%);
-  filter: blur(2px);
+    radial-gradient(ellipse at 50% 50%, rgba(255, 236, 160, 0.55) 0, rgba(255, 220, 110, 0.4) 22%, rgba(245, 197, 24, 0.16) 46%, rgba(245, 197, 24, 0.04) 62%, transparent 72%);
   animation: signal 4s ease-in-out infinite;
 }
 html[data-universe="night"] .noir__signal::after {
@@ -389,17 +387,22 @@ html[data-universe="night"] .noir__signal::after {
   background: radial-gradient(ellipse at 50% 50%, rgba(160, 170, 190, 0.18), transparent 65%); /* lit cloud */
 }
 @keyframes signal { 50% { opacity: 0.75; transform: scale(0.97); } }
-/* Searchlight beams rising from the skyline */
+/* Searchlight beams rising from the skyline. Each beam is a soft wedge drawn
+   with a conic gradient and faded with a mask: no blur filters or blend
+   modes, which render as visible boxes on some mobile GPUs. They only
+   animate transform, which stays on the compositor. */
 html[data-universe="night"] .noir__beam {
-  position: absolute; bottom: 12%; width: 220px; height: 120vh; margin-left: -110px;
+  position: absolute; bottom: 12%; width: 440px; height: 125vh; margin-left: -220px;
   transform-origin: 50% 100%;
-  background: linear-gradient(0deg, rgba(255, 230, 150, 0.5), rgba(255, 230, 150, 0.08) 70%, transparent);
-  clip-path: polygon(46% 100%, 54% 100%, 100% 0, 0 0);
-  filter: blur(3px);
-  mix-blend-mode: screen;
+  background: conic-gradient(from -10deg at 50% 100%,
+    rgba(255, 230, 150, 0) 0deg, rgba(255, 230, 150, 0.2) 6deg, rgba(255, 238, 180, 0.34) 10deg,
+    rgba(255, 230, 150, 0.2) 14deg, rgba(255, 230, 150, 0) 20deg, rgba(255, 230, 150, 0) 360deg);
+  -webkit-mask-image: linear-gradient(0deg, #000 10%, rgba(0, 0, 0, 0.5) 60%, transparent 95%);
+          mask-image: linear-gradient(0deg, #000 10%, rgba(0, 0, 0, 0.5) 60%, transparent 95%);
+  will-change: transform;
 }
 html[data-universe="night"] .noir__beam--1 { left: 22%; animation: sweep1 9s ease-in-out infinite alternate; }
-html[data-universe="night"] .noir__beam--2 { left: 74%; transform: rotate(14deg); opacity: 0.8; animation: sweep2 6s ease-in-out infinite alternate; }
+html[data-universe="night"] .noir__beam--2 { left: 74%; transform: rotate(14deg); opacity: 0.75; animation: sweep2 6s ease-in-out infinite alternate; }
 @keyframes sweep1 { from { transform: rotate(-28deg); } to { transform: rotate(22deg); } }
 @keyframes sweep2 { from { transform: rotate(6deg); } to { transform: rotate(18deg); } }
 /* Fog rolling along the street */
@@ -407,7 +410,6 @@ html[data-universe="night"] .noir__fog {
   position: absolute; left: -30%; right: -30%; bottom: -6%; height: 34%;
   background: radial-gradient(ellipse 40% 60% at 30% 70%, rgba(150, 160, 180, 0.2), transparent 70%),
               radial-gradient(ellipse 35% 50% at 75% 80%, rgba(150, 160, 180, 0.16), transparent 70%);
-  filter: blur(8px);
   animation: fog 26s ease-in-out infinite alternate;
 }
 html[data-universe="night"] .noir__fog--2 { bottom: -12%; opacity: 0.8; animation-duration: 38s; animation-direction: alternate-reverse; }
@@ -434,24 +436,25 @@ html[data-universe="night"] .spot {
 }
 /* The warm pool of light, with a brighter rim like a real torch */
 html[data-universe="night"] .spot::after {
-  content: ""; position: absolute; inset: 0; mix-blend-mode: screen;
+  content: ""; position: absolute; inset: 0;
   background:
     radial-gradient(circle at var(--mx, 50%) var(--my, 40%),
-      rgba(255, 226, 150, 0.2) 0, rgba(255, 214, 120, 0.1) calc(var(--r) * 0.6),
-      rgba(255, 236, 180, 0.2) calc(var(--r) * 0.86), rgba(255, 214, 120, 0) calc(var(--r) * 1.02));
+      rgba(255, 226, 150, 0.13) 0, rgba(255, 214, 120, 0.06) calc(var(--r) * 0.6),
+      rgba(255, 236, 180, 0.16) calc(var(--r) * 0.88), rgba(255, 214, 120, 0) calc(var(--r) * 1.02));
 }
-/* The beam: a soft cone from the bottom of the screen up to the light pool */
+/* The beam: a soft wedge from just below the screen up to the light pool.
+   --ang, --len and --spread (the wedge half-angle) are set from universes.js. */
 html[data-universe="night"] .spot::before {
   content: ""; position: absolute; left: 50%; bottom: -4%;
-  width: calc(var(--r) * 2.1); margin-left: calc(var(--r) * -1.05);
+  width: calc(var(--r) * 3); margin-left: calc(var(--r) * -1.5);
   height: var(--len, 60%);
   transform-origin: 50% 100%; transform: rotate(var(--ang, 0deg));
-  background: linear-gradient(0deg, rgba(255, 228, 160, 0.03), rgba(255, 228, 160, 0.12));
-  clip-path: polygon(47% 100%, 53% 100%, 100% 0, 0 0);
-  /* fade out before the top, so the cone melts into the light pool */
-  -webkit-mask-image: linear-gradient(0deg, #000 55%, transparent 96%);
-          mask-image: linear-gradient(0deg, #000 55%, transparent 96%);
-  mix-blend-mode: screen;
+  background: conic-gradient(from calc(-1 * var(--spread, 8deg) - 3deg) at 50% 100%,
+    rgba(255, 228, 160, 0) 0deg, rgba(255, 228, 160, 0.1) 3deg,
+    rgba(255, 228, 160, 0.1) calc(var(--spread, 8deg) * 2 + 3deg),
+    rgba(255, 228, 160, 0) calc(var(--spread, 8deg) * 2 + 6deg), rgba(255, 228, 160, 0) 360deg);
+  -webkit-mask-image: linear-gradient(0deg, #000 50%, transparent 97%);
+          mask-image: linear-gradient(0deg, #000 50%, transparent 97%);
 }
 
 /* Police tape */
@@ -513,7 +516,7 @@ html[data-universe="night"] .burst {
 html[data-universe="night"] .burst::after {
   display: inline-block; font-family: var(--f-display); font-size: 26px; letter-spacing: 0.16em;
   color: #e0463a; border: 3px solid #e0463a; border-radius: 3px; padding: 2px 12px 0;
-  opacity: 0.85; mix-blend-mode: screen;
+  opacity: 0.85;
 }
 html[data-universe="night"] .burst--hero1 { left: 7%; top: 22%; }
 html[data-universe="night"] .burst--hero1::after { content: "Classified"; }
