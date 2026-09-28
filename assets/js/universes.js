@@ -283,8 +283,11 @@ export function mountEffects({ reduced = false } = {}) {
     // Aim the beam cone from just below the bottom centre to the light pool.
     const dx = mx - r.width / 2;
     const dy = r.height * 1.04 - my;
-    spot.style.setProperty('--len', Math.hypot(dx, dy) + 'px');
+    const len = Math.hypot(dx, dy);
+    const radius = Math.min(185, Math.max(110, innerWidth * 0.15)); // matches --r in universes.css
+    spot.style.setProperty('--len', len + 'px');
     spot.style.setProperty('--ang', (Math.atan2(dx, dy) * 180) / Math.PI + 'deg');
+    spot.style.setProperty('--spread', (Math.atan2(radius * 0.8, len) * 180) / Math.PI + 'deg');
   };
   addEventListener('pointermove', (e) => {
     if (current !== 'night') return;

@@ -206,6 +206,7 @@ const vertex = /* glsl */ `
   varying float vRand;
   varying float vAlpha;
   varying float vSheen;
+  varying float vPx; // point size in device pixels, for a 1px anti-aliased edge
 
   float w(float i) { return clamp(1.0 - abs(uMorph - i), 0.0, 1.0); }
 
@@ -248,12 +249,14 @@ const vertex = /* glsl */ `
     vec4 mv = viewMatrix * world;
     gl_Position = projectionMatrix * mv;
 
-    float size = uSize * (0.55 + aRand * 0.9) * mix(0.75, 1.0, uScale) * mix(1.0, 0.8, wT);
+    // The name uses more uniform dots so the letters read cleanly.
+    float size = uSize * mix(0.55 + aRand * 0.9, 0.8 + aRand * 0.35, wT) * mix(0.75, 1.0, uScale) * mix(0.9, 0.6, wT);
     // A band of light sweeps diagonally across the name every few seconds.
     float band = mod(uTime * 2.4, 26.0) - 13.0;
     vSheen = smoothstep(1.1, 0.0, abs(p.x + p.y * 0.4 - band)) * wT * uSheen;
     size *= 1.0 + force * 1.5;
-    gl_PointSize = min(size / -mv.z, uSize * 0.28);
+    gl_PointSize = clamp(size / -mv.z, uSize * 0.035, uSize * 0.28);
+    vPx = gl_PointSize;
 
     vRand = aRand;
     vAlpha = smoothstep(18.0, 3.0, -mv.z) * (0.35 + 0.65 * uIntro) * (1.0 + uActivity * 0.5);
@@ -268,13 +271,16 @@ const fragment = /* glsl */ `
   varying float vRand;
   varying float vAlpha;
   varying float vSheen;
+  varying float vPx;
 
   void main() {
     vec2 c = gl_PointCoord - 0.5;
     float d = length(c);
     if (d > 0.5) discard;
-    float a = smoothstep(0.5, 0.0, d);
-    a = pow(a, 1.6);
+    // A crisp disc with a one-pixel anti-aliased edge (not a soft blob),
+    // lightly shaded toward the rim so each dot reads like a bead.
+    float a = 1.0 - smoothstep(0.5 - 1.0 / vPx, 0.5, d);
+    a *= mix(1.0, 0.72, smoothstep(0.0, 0.5, d));
     vec3 col = uColA;
     col = mix(col, uColB, step(0.9, vRand));
     col = mix(col, uColC, step(0.985, vRand));
@@ -285,7 +291,9 @@ const fragment = /* glsl */ `
 
 export function createScene(canvas, { reducedMotion = false } = {}) {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: false, alpha: true, powerPreference: 'high-performance' });
-  const dpr = Math.min(window.devicePixelRatio || 1, 1.75);
+  // Render at the screen's real pixel density (up to 3x on phones), otherwise
+  // the browser stretches the canvas and every particle looks blurry.
+  const dpr = Math.min(window.devicePixelRatio || 1, window.matchMedia('(max-width: 900px)').matches ? 3 : 2);
   renderer.setPixelRatio(dpr);
   renderer.setClearColor(0x000000, 0);
 
@@ -294,7 +302,7 @@ export function createScene(canvas, { reducedMotion = false } = {}) {
   camera.position.set(0, 0, 8);
 
   const mobile = window.matchMedia('(max-width: 900px)').matches;
-  const N = mobile ? 5200 : 11000;
+  const N = mobile ? 9000 : 16000; // many small, crisp dots read better than fewer big ones
 
   const s0 = new Float32Array(N * 3);
   const s1 = new Float32Array(N * 3);
