@@ -535,3 +535,21 @@ html[data-universe="night"] .burst--contact::after { content: "Case open"; }
   html[data-universe="night"] .noir__beam { width: 150px; margin-left: -75px; }
 }
 html[data-universe="night"] .fx-layer { display: block; }
+
+/* Agent Atlas card and hero stage captions in each universe */
+html[data-universe] .atlas-card__title, html[data-universe] .stagecap b { font-family: var(--f-display); font-weight: 400; }
+html[data-universe="web"] .atlas-card { border: 3px solid #111; box-shadow: 7px 7px 0 #111; }
+html[data-universe="web"] .atlas-card__title { font-size: clamp(34px, 4vw, 54px); letter-spacing: .02em; color: #111; }
+html[data-universe="web"] .atlas-card__stack i { border: 2px solid #111; background: #fff1b8; }
+html[data-universe="web"] .stagecap b { letter-spacing: .03em; font-size: clamp(28px, 3.2vw, 40px); -webkit-text-stroke: 1px #111; text-shadow: 3px 3px 0 #111; }
+html[data-universe="sky"] .atlas-card__title { font-style: italic; text-transform: uppercase; }
+html[data-universe="sky"] .atlas-card__stack i { border-color: rgba(23, 71, 184, .5); background: rgba(23, 71, 184, .06); }
+html[data-universe="sky"] .stagecap b { font-style: italic; text-transform: uppercase; }
+html[data-universe="night"] .atlas-card__title { text-transform: uppercase; letter-spacing: .05em; font-size: clamp(36px, 4.4vw, 60px); color: var(--accent); }
+html[data-universe="night"] .stagecap b { text-transform: uppercase; letter-spacing: .06em; font-size: clamp(30px, 3.6vw, 46px); color: var(--accent); }
+
+/* Contrast: amber and red labels on the comic page's pale panels */
+html[data-universe="web"] .status--roll, html[data-universe="web"] .flow__g { color: #8a5a00; }
+html[data-universe="web"] .flow__o { color: #a50f19; }
+html[data-universe="web"] .pipe li[data-state="idle"] { opacity: 1; }
+html[data-universe="web"] .pipe li[data-state="idle"] b { color: #5a5f73; }

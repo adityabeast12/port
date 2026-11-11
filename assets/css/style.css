@@ -8,7 +8,7 @@
   --line-2: rgba(200, 255, 225, 0.16);
   --fg: #e8eeea;
   --fg-2: #9ba6a1;
-  --fg-3: #616b66;
+  --fg-3: #7d8782;
   --accent: #3ee089;                      /* the universe's signature colour */
   --accent-dim: rgba(62, 224, 137, 0.14);
   --on-accent: #0a0c0b;                   /* text on an accent background */
@@ -569,3 +569,91 @@ main, .foot { position: relative; z-index: 1; }
   .bar__cta { padding: 6px 10px; font-size: 11.5px; max-width: 46vw; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .bar__name { font-size: 12px; }
 }
+
+/* ---------------- Hero stages: the agent loop and the trace ---------------- */
+.glabels { position: absolute; inset: 0; z-index: 2; pointer-events: none; overflow: hidden; }
+.glabel {
+  position: absolute; left: 0; top: 0; opacity: 0; white-space: nowrap; will-change: transform, opacity;
+  font: 500 11px/1.2 var(--f-mono); letter-spacing: .02em; color: #eef4f0;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, .7), 0 0 10px rgba(0, 0, 0, .5);
+}
+.glabel--station {
+  display: inline-flex; align-items: center; gap: 6px; padding: 4px 9px 4px 4px; border-radius: 999px;
+  background: rgba(6, 10, 8, .62); border: 1px solid rgba(255, 255, 255, .22); text-shadow: none;
+}
+.glabel--station i {
+  font-style: normal; width: 17px; height: 17px; border-radius: 50%; display: grid; place-items: center;
+  background: var(--accent); color: var(--on-accent); font-size: 10px; font-weight: 600;
+}
+.glabel--span { padding-bottom: 3px; color: rgba(238, 244, 240, .7); }
+.glabel--span em { font-style: normal; margin-left: 8px; color: rgba(238, 244, 240, .55); }
+.glabel--span.is-rec { color: #fff; }
+.glabel--span.is-rec em { color: var(--amber); }
+.stagecap {
+  position: absolute; left: 50%; top: 11%; z-index: 4; transform: translateX(-50%);
+  width: min(560px, calc(100% - 2 * var(--gutter))); text-align: center; opacity: 0; pointer-events: none;
+  color: #f2f6f3; text-shadow: 0 2px 12px rgba(0, 0, 0, .55);
+}
+.stagecap b { display: block; font-family: var(--f-display, var(--f-sans)); font-size: clamp(22px, 2.6vw, 32px); font-weight: 600; line-height: 1.1; letter-spacing: -.01em; }
+.stagecap span { display: block; margin-top: 8px; font-size: 14px; color: rgba(242, 246, 243, .82); }
+.stagecap__link {
+  display: inline-block; margin-top: 14px; padding: 8px 14px; border-radius: 999px; font-size: 13px; font-weight: 600; text-decoration: none;
+  background: var(--accent); color: var(--on-accent); text-shadow: none;
+}
+.stagecap.is-on .stagecap__link { pointer-events: auto; }
+[data-stagecap="trace"] { top: auto; bottom: 9%; }
+@media (max-width: 760px) {
+  .stagecap { top: 9%; }
+  .stagecap span { font-size: 13px; }
+  [data-stagecap="trace"] { bottom: 7%; }
+  .glabel { font-size: 10px; }
+  .glabel--span em { display: none; }
+}
+
+/* ---------------- Agent Atlas card ---------------- */
+.atlas-card {
+  display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: clamp(20px, 4vw, 48px); align-items: center;
+  padding: clamp(20px, 3.5vw, 40px); text-decoration: none; color: inherit; overflow: hidden; position: relative;
+  transition: border-color .25s var(--ease), transform .25s var(--ease);
+}
+.atlas-card:hover { border-color: var(--accent); }
+.atlas-card:hover .atlas-card__cta { transform: translateX(3px); }
+.atlas-card__stack { position: relative; height: 260px; perspective: 900px; display: block; }
+.atlas-card__stack i, .atlas-card__pkt { position: absolute; left: 50%; top: 50%; }
+.atlas-card__stack i {
+  width: 230px; height: 150px; margin: -75px 0 0 -115px; border-radius: 10px;
+  border: 1px solid color-mix(in srgb, var(--accent) 55%, transparent);
+  background: color-mix(in srgb, var(--accent) 7%, transparent);
+  transform: rotateX(62deg) rotateZ(-38deg) translateZ(calc((var(--n) - 2) * -34px));
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, .02) inset;
+}
+.atlas-card__stack i:nth-child(1) { --n: 0; } .atlas-card__stack i:nth-child(2) { --n: 1; } .atlas-card__stack i:nth-child(3) { --n: 2; }
+.atlas-card__stack i:nth-child(4) { --n: 3; } .atlas-card__stack i:nth-child(5) { --n: 4; }
+.atlas-card__pkt {
+  width: 12px; height: 12px; margin: -6px 0 0 -6px; border-radius: 50%; background: var(--amber);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--amber) 25%, transparent), 0 0 18px var(--amber);
+  animation: pkt 5.5s cubic-bezier(.6, 0, .4, 1) infinite;
+}
+@keyframes pkt {
+  0%   { transform: translate(-70px, -78px); }
+  20%  { transform: translate(40px, -40px); }
+  40%  { transform: translate(-30px, 0); }
+  60%  { transform: translate(60px, 30px); }
+  80%  { transform: translate(-10px, 70px); }
+  100% { transform: translate(-70px, -78px); }
+}
+.atlas-card__body { display: grid; gap: 14px; justify-items: start; }
+.atlas-card__eyebrow { font-family: var(--f-mono); font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); }
+.atlas-card__title { font-family: var(--f-display, var(--f-sans)); font-size: clamp(28px, 3.4vw, 44px); font-weight: 700; line-height: 1.02; letter-spacing: -.02em; }
+.atlas-card__title em { font-style: normal; color: var(--accent); }
+.atlas-card__list { display: grid; gap: 8px; font-size: 14px; color: var(--fg-2); }
+.atlas-card__list b { font-family: var(--f-mono); font-weight: 500; color: var(--fg-3); margin-right: 8px; }
+.atlas-card__tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.atlas-card__tags span { font-family: var(--f-mono); font-size: 11.5px; padding: 3px 9px; border-radius: 999px; border: 1px solid var(--line-2); color: var(--fg-2); }
+.atlas-card__cta { transition: transform .25s var(--ease); }
+@media (max-width: 860px) {
+  .atlas-card { grid-template-columns: minmax(0, 1fr); }
+  .atlas-card__stack { height: 200px; }
+  .atlas-card__stack i { width: 190px; height: 124px; margin: -62px 0 0 -95px; }
+}
+@media (prefers-reduced-motion: reduce) { .atlas-card__pkt { animation: none; } }

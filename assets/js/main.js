@@ -1,7 +1,7 @@
 // Bump ?v= in these imports and in index.html on every release so browsers never mix old and new files.
-import { mountChat } from './chat.js?v=20261012';
-import { mountDemo } from './agent-demo.js?v=20261012';
-import { UNIVERSES, applyCopy, loadFont, mountEffects, setEffectsUniverse } from './universes.js?v=20261012';
+import { mountChat } from './chat.js?v=20261111';
+import { mountDemo } from './agent-demo.js?v=20261111';
+import { UNIVERSES, applyCopy, loadFont, mountEffects, setEffectsUniverse } from './universes.js?v=20261111';
 
 const root = document.documentElement;
 const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -147,9 +147,9 @@ async function buildName(force = false) {
   });
 }
 
-import('./scene.js?v=20261012')
+import('./scene.js?v=20261111')
   .then(async ({ createScene }) => {
-    gl = createScene($('#gl'), { reducedMotion: reduced });
+    gl = createScene($('#gl'), { reducedMotion: reduced, labels: $('[data-glabels]') });
     applyScene(universe);
     await buildName();
     gl.set({ shape: -1, opacity: 1, scale: 1, y: 0, snap: true });
@@ -163,8 +163,10 @@ import('./scene.js?v=20261012')
     root.classList.add('no-webgl');
   });
 
-// Scrolling through the hero dissolves the name into the core sphere,
-// then into the agent network.
+// Scrolling through the hero turns the name into the agent loop, then into
+// the trace of one agent run.
+const caps = { loop: $('[data-stagecap="loop"]'), trace: $('[data-stagecap="trace"]') };
+const capLink = $('.stagecap__link');
 function onHeroScroll() {
   const total = hero.offsetHeight - innerHeight;
   const p = clamp(-hero.getBoundingClientRect().top / total);
@@ -174,7 +176,12 @@ function onHeroScroll() {
   heroHint.style.opacity = fade;
   if (!gl) return;
   const morph = p < 0.08 ? -1 : p < 0.5 ? -1 + smooth(0.08, 0.5, p) : smooth(0.5, 0.88, p);
-  gl.set({ shape: morph, scale: 1 - 0.15 * smooth(0.08, 0.5, p), opacity: 1 - 0.5 * smooth(0.85, 1, p) });
+  gl.set({ shape: morph, scale: 1 - 0.08 * smooth(0.08, 0.5, p), opacity: 1 - 0.35 * smooth(0.9, 1, p) });
+  const wLoop = clamp(1 - Math.abs(morph) * 2.2), wTrace = clamp(1 - Math.abs(morph - 1) * 2.2);
+  caps.loop.style.opacity = wLoop;
+  caps.trace.style.opacity = wTrace;
+  capLink.tabIndex = wTrace > 0.6 ? 0 : -1;
+  caps.trace.classList.toggle('is-on', wTrace > 0.6);
 }
 let heroTicking = false;
 addEventListener('scroll', () => {

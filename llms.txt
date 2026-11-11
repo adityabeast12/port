@@ -10,6 +10,7 @@ Aditya has 2+ years of experience shipping generative AI to production. He start
 - LinkedIn: https://www.linkedin.com/in/aditya-shukla-2a86991b4/
 - GitHub: https://github.com/adityabeast12
 - Portfolio: https://adityabeast12.github.io/port/
+- Field guide: https://adityabeast12.github.io/port/atlas/
 - Location: Nagpur, Maharashtra, India
 - Open to: AI engineering and AI consulting work, especially agentic systems in regulated industries such as banking, insurance and fintech
 
@@ -23,6 +24,19 @@ Aditya has 2+ years of experience shipping generative AI to production. He start
 - Logo and hologram validation for an international trade organisation in the UK, using image embeddings and similarity search, plus a maritime query system.
 - Predictive ML models: churn prediction for a term insurance plan (moving to production), a customer propensity model and an email triage model.
 - Natural-language-to-SQL interfaces for querying structured databases in real time.
+
+## Agent Atlas: a field guide to AI agents
+
+- URL: https://adityabeast12.github.io/port/atlas/
+- What it is: an interactive, narrated guide by Aditya that explains how AI agents do real work, safely, for business and technical leaders anywhere in the world.
+- Five ideas in order: LLM, RAG, API, tool, agent; and the difference between a workflow and an agent.
+- The trick: the model writes a tool call as JSON; code you own validates it, checks permissions and approvals, and makes the real API call.
+- The blueprint: three tiers and five layers (channels, a FastAPI gateway, agent orchestration, tools over MCP, data), with tracing, evaluation and an audit trail across all of them.
+- Seven working demos on simulated data: an AI voice lead qualifier, CRM lead scoring, quoting, invoice capture with tax-ID and tax checks, cross-system middleware, a permission-aware knowledge assistant (RAG) and automated reporting.
+- Regions: every demo switches currency, tax, business-ID checks (GSTIN, EU and UK VAT, EIN, TRN, ABN) and software for India, the EU, the UK, the US, the UAE and Australia.
+- The rules, as of November 2026: the EU AI Act (with the Digital Omnibus moving high-risk duties to December 2027), GDPR, the UK Data (Use and Access) Act, US state laws (California, Colorado, Texas) and the federal preemption push, India's DPDP Rules, IT Rules and RBI FREE-AI framework, Canada, Singapore's agentic AI framework, Japan, South Korea, China, Vietnam, Brazil, the UAE and Saudi Arabia, Australia, and the standards ISO/IEC 42001, NIST AI RMF and the OWASP Top 10s for LLM and agentic applications.
+- Design once: six controls nearly every regime asks for: say it is an AI, keep a person on decisions that matter, explain and allow appeal, label generated content, keep data in-region, keep records and assess risk.
+- A 12-minute narrated tour, voiced with an open-source model (Kokoro) running locally, with captions.
 
 ## Skills
 

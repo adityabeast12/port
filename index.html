@@ -36,8 +36,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/style.css?v=20261012">
-  <link rel="stylesheet" href="assets/css/universes.css?v=20261012">
+  <link rel="stylesheet" href="assets/css/style.css?v=20261111">
+  <link rel="stylesheet" href="assets/css/universes.css?v=20261111">
   <script>
     document.documentElement.classList.add('js');
     // Failsafe: if scripts never boot, show the page anyway.
@@ -75,7 +75,7 @@
         "name": "Aditya Shukla — AI Engineer & AI Consultant",
         "inLanguage": "en",
         "mainEntity": { "@id": "https://adityabeast12.github.io/port/#person" },
-        "dateModified": "2026-09-27"
+        "dateModified": "2026-11-11"
       },
       {
         "@type": "WebSite",
@@ -101,6 +101,7 @@
     <nav class="bar__tabs" aria-label="Sections">
       <a href="#demo">Try the agent</a>
       <a href="#deployments">Deployments</a>
+      <a href="#atlas">Field guide</a>
       <a href="#capabilities">Capabilities</a>
       <a href="#guardrails">Guardrails</a>
       <a href="#operator">Operator</a>
@@ -136,6 +137,10 @@
           <span class="noir__flash"></span>
         </div>
         <canvas id="gl" aria-hidden="true"></canvas>
+        <!-- Labels for the loop's stations and the trace's spans (placed by scene.js) -->
+        <div class="glabels" data-glabels aria-hidden="true"></div>
+        <div class="stagecap" data-stagecap="loop" aria-hidden="true"><b>The agent loop</b><span>Decide, call a tool, read the result, check. Round and round until the job is done.</span></div>
+        <div class="stagecap" data-stagecap="trace"><b>Every step, traced</b><span>One agent run, recorded span by span as it happens.</span><a href="atlas/" class="stagecap__link" tabindex="-1">How agents work · open Agent Atlas →</a></div>
         <div class="hero__copy">
           <p class="hero__role" data-t="hero-role"><span class="led"></span> AI Engineer &amp; AI Solutions Consultant · Nagpur, India</p>
           <!-- The particles spell the name; this heading is the real, readable text (shown if WebGL is unavailable). -->
@@ -149,7 +154,7 @@
         <span class="burst burst--hero1" aria-hidden="true">ZAP!</span>
         <span class="burst burst--hero2" aria-hidden="true">POW!</span>
         <div class="spot" aria-hidden="true"></div>
-        <p class="hero__hint" aria-hidden="true" data-t="hero-hint">Move your cursor through the name · scroll to dissolve it</p>
+        <p class="hero__hint" aria-hidden="true" data-t="hero-hint">Move through the name · scroll to watch it become an agent</p>
       </div>
     </section>
 
@@ -218,6 +223,32 @@
           <pre class="demo__trace" data-demo-trace data-lenis-prevent></pre>
         </div>
       </div>
+    </section>
+
+    <!-- ================= AGENT ATLAS: the field guide ================= -->
+    <section class="section" id="atlas">
+      <header class="section__head reveal">
+        <p class="kicker" data-t="atlas-kicker">Field guide</p>
+        <h2 data-t="atlas-h2">How agents work, anywhere in the world</h2>
+        <p class="section__note" data-t="atlas-note">Agent Atlas is a narrated, hands-on guide I built for business and tech leaders: five ideas, the trick behind every tool call, seven working demos, and the AI rules from the EU to India. Read it in 25 minutes, or take the 12-minute tour.</p>
+      </header>
+      <a class="atlas-card panel reveal" href="atlas/">
+        <span class="atlas-card__stack" aria-hidden="true">
+          <i></i><i></i><i></i><i></i><i></i><b class="atlas-card__pkt"></b>
+        </span>
+        <span class="atlas-card__body">
+          <span class="atlas-card__eyebrow">Agent Atlas · 8 chapters</span>
+          <span class="atlas-card__title">LLMs write. <em>Agents act.</em></span>
+          <span class="atlas-card__list">
+            <span><b>01</b> LLM → RAG → API → tool → agent</span>
+            <span><b>02</b> The model writes the order; your code presses the button</span>
+            <span><b>03</b> Seven live demos, from invoices to a voice agent</span>
+            <span><b>04</b> The rules in 13 regions, and six controls they share</span>
+          </span>
+          <span class="atlas-card__tags"><span>Narrated tour · 12 min</span><span>6 regions · 6 currencies</span><span>4 universes</span></span>
+          <span class="btn btn--primary atlas-card__cta">Open Agent Atlas →</span>
+        </span>
+      </a>
     </section>
 
     <!-- ================= DEPLOYMENTS ================= -->
@@ -490,7 +521,7 @@
 
   <footer class="foot">
     <p><span class="led"></span> Aditya Shukla — AI engineer and AI solutions consultant in Nagpur, India. Agentic AI, multi-agent systems, RAG, voice AI and ML for banking and insurance.</p>
-    <p>© <span data-year>2026</span></p>
+    <p><a href="atlas/">Agent Atlas: how AI agents work, safely, anywhere</a> · © <span data-year>2026</span></p>
   </footer>
 
   <!-- Universe click effects (web shots, heat beams) -->
@@ -531,7 +562,7 @@
     </form>
   </aside>
 
-  <script src="assets/vendor/lenis.min.js?v=20261012"></script>
-  <script type="module" src="assets/js/main.js?v=20261012"></script>
+  <script src="assets/vendor/lenis.min.js?v=20261111"></script>
+  <script type="module" src="assets/js/main.js?v=20261111"></script>
 </body>
 </html>
