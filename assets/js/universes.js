@@ -27,6 +27,8 @@ export const UNIVERSES = {
       'hero-line': 'I spin AI agents that catch fraud before it lands.',
       'hero-btn': 'Try my agent!',
       'hero-hint': 'Click anywhere to shoot a web · scroll to dissolve the name',
+      'atlas-kicker': 'Training montage',
+      'atlas-h2': 'Learn how the agents really work',
       'demo-kicker': 'Issue #1',
       'demo-h2': 'Try to trick my agent',
       'demo-note': "It senses a scam before you finish typing. It's a simulation in your browser, with no real bank connected. Go on, try to break it.",
@@ -59,6 +61,8 @@ export const UNIVERSES = {
       'hero-role': '<span class="led"></span> AI Engineer &amp; Solutions Consultant · Nagpur, India',
       'hero-line': 'Faster than a failing request. Stronger than a prompt injection.',
       'hero-hint': 'Click anywhere for heat vision · scroll to descend through the clouds',
+      'atlas-kicker': 'The academy',
+      'atlas-h2': 'How agents work, explained for everyone',
       'demo-kicker': 'Test of strength',
       'demo-h2': 'Try to trick my agent',
       'demo-note': 'Built to be incorruptible. This simulation runs in your browser with no real bank connected. Try your worst.',
@@ -91,6 +95,8 @@ export const UNIVERSES = {
       'hero-role': '<span class="led"></span> Case file · AI Engineer &amp; Solutions Consultant · Nagpur',
       'hero-line': 'I work in the dark so your agents run in the light.',
       'hero-hint': 'Shine your light on the name · click to fire a grapple · scroll to vanish',
+      'atlas-kicker': 'The archives',
+      'atlas-h2': 'Case study: how agents work',
       'demo-kicker': 'Interrogation room',
       'demo-h2': 'Try to break my agent',
       'demo-note': 'It has one rule and it never breaks it. This is a simulation in your browser with no real bank connected. Do your worst.',
@@ -244,10 +250,12 @@ function grapple(x, y) {
 let current = 'console';
 export function setEffectsUniverse(u) { current = u; }
 
-export function mountEffects({ reduced = false } = {}) {
+// exclude: extra selector for targets that should never fire an effect
+// (pages full of controls pass their buttons and panels here).
+export function mountEffects({ reduced = false, exclude = '' } = {}) {
   if (reduced) return;
   addEventListener('pointerdown', (e) => {
-    if (e.button !== 0 || skip(e.target)) return;
+    if (e.button !== 0 || skip(e.target) || (exclude && e.target.closest(exclude))) return;
     if (current === 'web') shootWeb(e.clientX, e.clientY);
     else if (current === 'sky') heatVision(e.clientX, e.clientY);
     else if (current === 'night') grapple(e.clientX, e.clientY);
@@ -261,6 +269,7 @@ export function mountEffects({ reduced = false } = {}) {
     if (current !== 'sky' || altTick || !alt) return;
     altTick = true;
     requestAnimationFrame(() => {
+      if (!hero) { altTick = false; return; }
       const total = hero.offsetHeight - innerHeight;
       const p = Math.min(1, Math.max(0, -hero.getBoundingClientRect().top / total));
       alt.textContent = Math.round((30000 - p * 29000) / 100) * 100 + '';
@@ -273,6 +282,7 @@ export function mountEffects({ reduced = false } = {}) {
   // Night Vigilante: the flashlight follows the cursor or finger, and sweeps
   // across the name on its own when nobody is moving it.
   const spot = document.querySelector('.spot');
+  if (!spot) return; // pages without the hero flashlight
   let lastMove = -1e9;
   const aim = (x, y) => {
     const r = spot.getBoundingClientRect();

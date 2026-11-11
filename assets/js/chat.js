@@ -1,6 +1,6 @@
 // "Ask my agent": an optional chat drawer. Answers are pre-written in kb.js
 // and routed by keyword score; nothing is generated.
-import { TOPICS, PROJECTS, WELCOME, FALLBACK } from './kb.js?v=20261012';
+import { TOPICS, PROJECTS, WELCOME, FALLBACK } from './kb.js?v=20261111';
 
 const $ = (s, el = document) => el.querySelector(s);
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
@@ -104,6 +104,7 @@ export function mountChat({ reduced = false, onAsk } = {}) {
       });
       return el;
     },
+    atlas: () => h('<div class="b-contact"><a class="primary" href="atlas/">Open Agent Atlas</a><a href="atlas/#guardrails">The rules by region</a></div>'),
     chips: (b) => h(`<ul class="b-chips">${b.items.map((i) => `<li>${esc(i)}</li>`).join('')}</ul>`),
   };
 

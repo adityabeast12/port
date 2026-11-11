@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Agent Atlas — How AI agents do real work, safely, anywhere | Aditya Shukla</title>
+  <meta name="description" content="Agent Atlas is an interactive field guide to AI agents by AI engineer Aditya Shukla: LLM, RAG, APIs, tools and agents explained with working demos, a 3D system map, a narrated tour, and the AI rules in the EU, UK, US, India and beyond.">
+  <meta name="keywords" content="how AI agents work, agentic AI explained, AI agents for business, LLM tool calling, RAG, AI agent architecture, FastAPI, MCP, AI governance, EU AI Act, DPDP, AI regulation by country, human in the loop, AI engineer, AI consultant">
+  <meta name="author" content="Aditya Shukla">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <link rel="canonical" href="https://adityabeast12.github.io/port/atlas/">
+  <meta name="theme-color" content="#0a0c0b">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Aditya Shukla">
+  <meta property="og:url" content="https://adityabeast12.github.io/port/atlas/">
+  <meta property="og:title" content="Agent Atlas — How AI agents do real work, safely, anywhere">
+  <meta property="og:description" content="A narrated, hands-on field guide to AI agents: five ideas, the trick behind tool calls, seven working demos, and the rules from Brussels to Bengaluru.">
+  <meta property="og:image" content="https://adityabeast12.github.io/port/assets/img/og.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@Adityabeast12">
+  <meta name="twitter:title" content="Agent Atlas — How AI agents do real work, safely, anywhere">
+  <meta name="twitter:description" content="Five ideas, seven working demos and the world's AI rules, in one narrated field guide.">
+  <meta name="twitter:image" content="https://adityabeast12.github.io/port/assets/img/og.jpg">
+  <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="alternate" type="text/plain" href="../llms.txt" title="LLM-readable summary">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="atlas.css?v=20261111">
+  <script>
+    // Apply the visitor's universe before first paint (shared with the main site).
+    (function () {
+      var d = document.documentElement;
+      d.classList.add('js');
+      try { var u = localStorage.getItem('universe'); if (u && u !== 'console' && /^(web|sky|night)$/.test(u)) d.dataset.universe = u; } catch (e) {}
+    })();
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": ["TechArticle", "LearningResource"],
+        "@id": "https://adityabeast12.github.io/port/atlas/#guide",
+        "headline": "Agent Atlas: how AI agents do real work, safely, anywhere",
+        "description": "An interactive field guide to AI agents: LLM, RAG, API, tools and agents; tool calling; system architecture with FastAPI and MCP; seven working demos; and AI regulation across the EU, UK, US, India, Canada, Singapore, Japan, South Korea, China, Vietnam, Brazil, the Gulf and Australia.",
+        "url": "https://adityabeast12.github.io/port/atlas/",
+        "inLanguage": "en",
+        "learningResourceType": "Interactive guide",
+        "educationalLevel": "Business and technical leaders",
+        "timeRequired": "PT25M",
+        "dateModified": "2026-11-11",
+        "author": { "@type": "Person", "@id": "https://adityabeast12.github.io/port/#person", "name": "Aditya Shukla", "url": "https://adityabeast12.github.io/port/" },
+        "isPartOf": { "@id": "https://adityabeast12.github.io/port/#site" },
+        "about": ["AI agents", "Agentic AI", "Large language models", "Retrieval-augmented generation", "Tool calling", "AI governance", "AI regulation"]
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://adityabeast12.github.io/port/#site",
+        "url": "https://adityabeast12.github.io/port/",
+        "name": "Aditya Shukla"
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to the guide</a>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#top"><span class="brand__mark" aria-hidden="true"></span>Agent <span>Atlas</span></a>
+    <a class="byline" href="../">by Aditya Shukla</a>
+    <nav class="nav" aria-label="Chapters">
+      <a href="#top" data-ch="1"><i>1</i>Overview</a>
+      <a href="#foundations" data-ch="2"><i>2</i>Ideas</a>
+      <a href="#toolcall" data-ch="3"><i>3</i>Trick</a>
+      <a href="#architecture" data-ch="4"><i>4</i>Blueprint</a>
+      <a href="#usecases" data-ch="5"><i>5</i>Jobs</a>
+      <a href="#ecosystems" data-ch="6"><i>6</i>Platforms</a>
+      <a href="#guardrails" data-ch="7"><i>7</i>Rules</a>
+      <a href="#playbook" data-ch="8"><i>8</i>Start</a>
+    </nav>
+    <div class="upick" data-verse>
+      <button class="upick__btn" type="button" data-verse-toggle aria-expanded="false" aria-controls="upick-menu" title="Switch universe"><span class="upick__orb" aria-hidden="true"></span><span class="upick__label" data-verse-label>Console</span></button>
+      <div class="upick__menu" id="upick-menu" data-verse-menu hidden>
+        <p class="upick__title">Choose a universe</p>
+        <button type="button" data-universe="console"><i class="sw sw--console"></i><span><b>Console</b><small>The original</small></span></button>
+        <button type="button" data-universe="web"><i class="sw sw--web"></i><span><b>Web-slinger</b><small>Comic book</small></span></button>
+        <button type="button" data-universe="sky"><i class="sw sw--sky"></i><span><b>Sky Guardian</b><small>Daylight hero</small></span></button>
+        <button type="button" data-universe="night"><i class="sw sw--night"></i><span><b>Night Vigilante</b><small>Rain and noir</small></span></button>
+      </div>
+    </div>
+    <button class="guide-btn" id="guide-open" type="button" aria-controls="guide">Guided tour</button>
+  </div>
+  <div class="readbar" aria-hidden="true"><i id="readbar"></i></div>
+</header>
+
+<main id="main">
+<!-- ============ CHAPTER 1 · HERO ============ -->
+<section class="hero part-first" id="top" data-ch="1">
+  <div class="wrap">
+    <div class="hero-grid">
+      <div class="hero-copy">
+        <p class="eyebrow"><b>Chapter 1 of 8 · The big picture</b> · for leaders who know LLMs and RAG</p>
+        <h1 class="display">LLMs write.<br><em>Agents act.</em></h1>
+      </div>
+      <div class="hero-copy">
+        <p class="lede">You have seen a model answer questions, and RAG answer from your own documents. The next step is software that reads a supplier invoice, checks it and drafts the bill in your accounting system; answers the phone at 9pm and books the site visit; and stops to ask a person before anything touches money or a customer.</p>
+        <p class="muted">Below: the five ideas that get you there, the system design behind every build, seven jobs you can run as demos, and the rules that apply from Brussels to Bengaluru.</p>
+      </div>
+    </div>
+
+    <div class="stats" aria-label="Where companies are with AI agents">
+      <div class="stat"><span class="num tabnum">40%</span><span class="what">of large companies say they are scaling AI agents, up from 27% a year earlier. Among smaller firms it is 22%.</span><span class="src">McKinsey, The state of AI in 2026</span></div>
+      <div class="stat"><span class="num tabnum">~6%</span><span class="what">are AI high performers, earning 5% or more of EBIT from AI. Using AI is common; running on it is rare.</span><span class="src">McKinsey, The state of AI in 2026</span></div>
+      <div class="stat"><span class="num tabnum">46%</span><span class="what">of people across 47 countries are willing to trust AI systems. The gap is trust, not technology.</span><span class="src">KPMG &amp; University of Melbourne, 2025</span></div>
+    </div>
+
+    <div class="regionbar" id="regionbar">
+      <p class="eyebrow"><b>Where are you building?</b></p>
+      <div class="chips" id="region-chips" role="group" aria-label="Choose your region"></div>
+      <p class="small muted" id="region-note">Currency, tax rules, business IDs, systems and laws in every demo follow your choice.</p>
+    </div>
+
+    <nav class="routemap" id="route-map" aria-label="Reading order">
+      <div class="rm-head"><span class="eyebrow"><b>How to read this guide</b> · eight chapters, top to bottom, about 25 minutes</span><button class="btn primary" type="button" id="guide-start-inline">Take the narrated tour · 12 min</button></div>
+      <ol class="rm-list" id="rm-list"></ol>
+    </nav>
+
+    <div class="scene" id="scene">
+      <div class="scene-top">
+        <span class="eyebrow"><b>Live</b> · route a job through the stack</span>
+        <div class="chips" id="route-chips" role="group" aria-label="Choose a job"></div>
+      </div>
+      <div class="stage" id="stage">
+        <canvas id="scene-canvas" role="img" aria-label="3D view of a five-layer AI system: channels, FastAPI gateway, agent orchestration, tools and data. A highlighted packet travels the route for the selected job."></canvas>
+        <div class="labels" id="labels" aria-hidden="true"></div>
+        <div class="stage-hint">Drag to turn · click a layer</div>
+      </div>
+      <div class="scene-side">
+        <div class="route" data-lenis-prevent>
+          <h2 id="route-title">Invoice capture</h2>
+          <p class="small muted" id="route-sub">How one supplier bill moves through the system.</p>
+          <ol id="route-steps"></ol>
+        </div>
+        <div class="layerinfo" id="layerinfo" aria-live="polite"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CHAPTER 2 · FIVE IDEAS ============ -->
+<section class="part" id="foundations" data-ch="2">
+  <div class="wrap">
+    <div class="part-head">
+      <p class="eyebrow"><b>Chapter 2 of 8 · Five ideas</b> · the building blocks, in order</p>
+      <h2 class="h2">Five ideas, each built on the last</h2>
+      <p class="lede">Every system in this guide is these five pieces in different arrangements. Pick a step to see what it adds, what it still can't do, and what actually goes in and comes out.</p>
+    </div>
+    <div class="ladder" role="tablist" id="ladder" aria-label="Five ideas"></div>
+    <div class="rung-panel" role="tabpanel" id="rung-panel" aria-live="polite"></div>
+
+    <div class="vs">
+      <div class="panel">
+        <p class="h4">Workflow</p>
+        <h3 class="h3">The path is written in code. The LLM fills in one or two steps.</h3>
+        <div class="mini-flow"><span>Email arrives</span><i>→</i><span class="llm">LLM extracts fields</span><i>→</i><span>Rules check</span><i>→</i><span>Draft in <b data-r="ledger">the ledger</b></span></div>
+        <p class="small muted">Predictable, cheap, easy to audit. Most business automation should start here: invoice capture, reporting, middleware.</p>
+      </div>
+      <div class="panel">
+        <p class="h4">Agent</p>
+        <h3 class="h3">The LLM chooses the next step, in a loop, until the job is done.</h3>
+        <div class="mini-flow"><span>Caller speaks</span><i>→</i><span class="llm">LLM decides</span><i>⇄</i><span>Tools</span><i>→</i><span class="llm">LLM decides</span><i>→</i><span>Booked</span></div>
+        <p class="small muted">Needed when the path can't be known in advance: a phone conversation, a research task, a messy request. More flexible, so it needs tighter guardrails.</p>
+      </div>
+    </div>
+    <p class="small muted" style="margin-top:.9rem; max-width:80ch">Anthropic draws this line in <em>Building effective agents</em>: workflows run LLMs and tools through predefined code paths; agents direct their own process. In practice we build workflows first and give a step more autonomy only once it has earned it.</p>
+  </div>
+</section>
+
+<!-- ============ CHAPTER 3 · THE TRICK ============ -->
+<section class="part" id="toolcall" data-ch="3">
+  <div class="wrap">
+    <div class="part-head">
+      <p class="eyebrow"><b>Chapter 3 of 8 · The trick</b> · how an LLM "uses" your systems</p>
+      <h2 class="h2">The model writes the order. Your code presses the button.</h2>
+      <p class="lede">An LLM never logs into <span data-r="ledger">your ledger</span>. It reads a list of tools, picks one and writes the JSON payload. Our server checks that payload, makes the real API call, and hands the result back. Step through one real request below.</p>
+    </div>
+    <div class="sim" id="sim">
+      <div class="sim-steps" id="sim-steps"></div>
+      <div class="sim-main">
+        <div class="actor" id="sim-actor"></div>
+        <h3 id="sim-title"></h3>
+        <p class="explain" id="sim-explain"></p>
+        <div id="sim-art"></div>
+        <div class="sim-ctrl">
+          <button class="btn" id="sim-prev" type="button">← Back</button>
+          <button class="btn primary" id="sim-next" type="button">Next step →</button>
+          <button class="btn" id="sim-play" type="button">Play all</button>
+          <span class="progress" id="sim-prog"></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-2" style="margin-top:2rem">
+      <div>
+        <p class="code-cap"><span>The whole agent loop, in Python</span><span>~ what LangGraph, CrewAI, AutoGen or LlamaIndex run underneath</span></p>
+<pre class="code" tabindex="0"><span class="k">while</span> <span class="n">True</span>:
+    reply = llm.create(messages, tools=TOOLS)       <span class="c"># 1. model thinks</span>
+    <span class="k">if</span> reply.stop_reason != <span class="s">"tool_use"</span>:
+        <span class="k">return</span> reply.text                           <span class="c"># 4. done: answer</span>
+    <span class="k">for</span> call <span class="k">in</span> reply.tool_calls:
+        guard.check(call, user)                     <span class="c"># 2. schema, role, approval</span>
+        result = TOOL_IMPL[call.name](**call.input)  <span class="c"># 3. OUR code calls the API</span>
+        messages.append(tool_result(call.id, result))</pre>
+      </div>
+      <div class="prose" style="display:grid; gap:.85rem; align-content:start">
+        <h3 class="h3">Why this matters to a CTO</h3>
+        <p class="muted">Because the model only ever produces text, every action passes through code you own. That is where permissions, validation, rate limits, approvals and audit logs live. The model can be swapped; the control plane stays.</p>
+        <p class="muted">The Model Context Protocol (MCP) standardises how tools are described and served, so one accounting tool can serve every agent. Anthropic donated MCP to the Linux Foundation's Agentic AI Foundation in December 2025, alongside OpenAI's AGENTS.md and Block's goose.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CHAPTER 4 · BLUEPRINT ============ -->
+<section class="part" id="architecture" data-ch="4">
+  <div class="wrap">
+    <div class="part-head">
+      <p class="eyebrow"><b>Chapter 4 of 8 · The blueprint</b> · the same skeleton under every build</p>
+      <h2 class="h2">Three tiers, five layers</h2>
+      <p class="lede">The classic three-tier web app still holds: presentation, application, data. AI splits the application tier into three: a typed API gateway, the agents that decide, and the tools that act. Your systems of record (<span data-r="ledger">the ledger</span>, <span data-r="crm">the CRM</span>, SharePoint or Drive) stay where they are; we connect to them, we don't replace them.</p>
+    </div>
+
+    <div class="arch">
+      <div class="bands" id="bands"></div>
+      <div class="cross">
+        <p class="h4">Runs through every layer</p>
+        <div><b>Identity &amp; tenancy</b><span>Each client's OAuth tokens and data are isolated. Secrets live in a vault, never in prompts.</span></div>
+        <div><b>Guardrails</b><span>Schema validation, per-tool permissions, PII redaction, injection checks, approval gates.</span></div>
+        <div><b>Observability</b><span>Langfuse traces every prompt, tool call, token and cost, linked to the business record.</span></div>
+        <div><b>Evaluation</b><span>A golden set of real cases replayed before every release. Accuracy is measured, not assumed.</span></div>
+        <div><b>Audit trail</b><span>Who asked, what the agent saw, what it did, who approved. Kept for the period your records policy requires.</span></div>
+      </div>
+    </div>
+
+    <div class="grid-2" style="margin-top:2.5rem">
+      <div style="display:grid; gap:.9rem; align-content:start">
+        <h3 class="h3">What FastAPI does here</h3>
+        <p class="muted">FastAPI is a Python web framework. Each endpoint declares the exact shape of what it accepts and returns as typed models (Pydantic), so bad input is rejected before any AI runs, and API documentation is generated automatically. It is async, so one server can hold hundreds of slow LLM and ledger calls open at once.</p>
+        <p class="muted">Short jobs answer immediately. Long jobs (a 40-page PDF, a month of reporting) return <span class="mono">202 Accepted</span> with a job ID; a worker picks it up from the queue and calls back when done.</p>
+<pre class="code" tabindex="0"><span class="k">class</span> InvoiceJob(BaseModel):
+    tenant_id: str
+    source: Literal[<span class="s">"email"</span>, <span class="s">"upload"</span>, <span class="s">"e-invoice"</span>]
+    file_url: AnyUrl
+    callback_url: AnyUrl | <span class="n">None</span> = <span class="n">None</span>
+
+<span class="m">@app.post</span>(<span class="s">"/v1/jobs/invoice-capture"</span>, status_code=<span class="n">202</span>)
+<span class="k">async def</span> capture(job: InvoiceJob, user=Depends(auth)):
+    job_id = <span class="k">await</span> queue.enqueue(<span class="s">"invoice_capture"</span>, job.model_dump())
+    <span class="k">return</span> {<span class="s">"job_id"</span>: job_id, <span class="s">"status"</span>: <span class="s">"queued"</span>}</pre>
+      </div>
+      <div style="display:grid; gap:.75rem; align-content:start" id="gw-io"></div>
+    </div>
+
+    <div class="deploy" id="deploy"></div>
+  </div>
+</section>
+
+<!-- ============ CHAPTER 5 · SEVEN JOBS ============ -->
+<section class="part" id="usecases" data-ch="5">
+  <div class="wrap">
+    <div class="part-head">
+      <p class="eyebrow"><b>Chapter 5 of 8 · Seven jobs</b> · working demos in three groups</p>
+      <h2 class="h2">The use cases, built and running</h2>
+      <p class="lede">Each one below has a working demo on simulated data, the pipeline we would build, the inputs and outputs, the stack, the controls, and what we measure. Pick one.</p>
+      <p class="small muted region-inline">Demos are set for <b data-r="label">your region</b>. <a href="#regionbar" class="link-btn">Change region</a></p>
+    </div>
+    <div class="uc-nav" id="uc-nav"></div>
+    <div id="uc-panel" role="tabpanel" aria-live="polite"></div>
+  </div>
+</section>
+
+<!-- ============ CHAPTER 6 · PLATFORMS ============ -->
+<section class="part" id="ecosystems" data-ch="6">
+  <div class="wrap">
+    <div class="part-head">
+      <p class="eyebrow"><b>Chapter 6 of 8 · Your platform</b> · Microsoft 365, Google Workspace or Zoho</p>
+      <h2 class="h2">Build on what the business already pays for</h2>
+      <p class="lede">Most companies live in Microsoft 365 or Google Workspace; across India and the Gulf, Zoho is common too. Their built-in AI handles personal productivity well. Custom agents earn their place on cross-system jobs: anything that has to read the ledger, write the CRM and follow your rules in between.</p>
+    </div>
+    <div class="eco">
+      <div class="panel">
+        <h3 class="h3">Microsoft 365</h3>
+        <dl>
+          <div><dt>Built-in AI</dt><dd>Microsoft 365 Copilot, including Copilot Business for organisations up to 300 users.</dd></div>
+          <div><dt>Automation</dt><dd>Power Automate for approvals and simple flows; our agents call into it, or it calls our API.</dd></div>
+          <div><dt>Knowledge</dt><dd>SharePoint and OneDrive as the source for the knowledge assistant, read through Microsoft Graph with each user's permissions.</dd></div>
+          <div><dt>Front door</dt><dd>Teams bot for staff, Outlook shared mailbox for invoices.</dd></div>
+          <div><dt>Reporting</dt><dd>Power BI, fed from a warehouse (Fabric or Postgres).</dd></div>
+        </dl>
+      </div>
+      <div class="panel">
+        <h3 class="h3">Google Workspace</h3>
+        <dl>
+          <div><dt>Built-in AI</dt><dd>Gemini in Gmail, Docs, Sheets and Drive.</dd></div>
+          <div><dt>Automation</dt><dd>Apps Script and AppSheet for light flows; n8n or our FastAPI services for anything cross-system.</dd></div>
+          <div><dt>Knowledge</dt><dd>Google Drive through the Drive API, honouring sharing settings at query time.</dd></div>
+          <div><dt>Front door</dt><dd>Google Chat app for staff, Gmail label or shared inbox for invoices.</dd></div>
+          <div><dt>Reporting</dt><dd>Data Studio (renamed back from Looker Studio in April 2026) on BigQuery.</dd></div>
+        </dl>
+      </div>
+    </div>
+    <p class="small muted" style="margin-top:1rem; max-width:80ch">On Zoho One, the same pattern holds: Zoho Books and Zoho CRM expose REST APIs, Cliq is the staff front door, and Zia covers personal productivity. The agents and guardrails in this guide sit beside whichever suite you run.</p>
+  </div>
+</section>
+
+<!-- ============ CHAPTER 7 · TRUST & RULES ============ -->
+<section class="part" id="guardrails" data-ch="7">
+  <div class="wrap">
+    <div class="part-head">
+      <p class="eyebrow"><b>Chapter 7 of 8 · Trust &amp; rules</b> · guardrails, and the law region by region</p>
+      <h2 class="h2">Guardrails are architecture, not a disclaimer</h2>
+      <p class="lede">The OWASP Top 10 for LLM Applications (2025) ranks prompt injection first and widened "excessive agency" because agents can now act; OWASP's first Top 10 for Agentic Applications (December 2025) leads with agent goal hijack. All three are solved mostly by design: what the model is allowed to touch, what it is allowed to believe, and what a person must approve.</p>
+    </div>
+    <div class="guard-grid">
+      <div class="panel">
+        <p class="h4">Limit what it can do</p>
+        <ul>
+          <li><b>One tool, one job.</b> A tool that reads invoices cannot void them.</li>
+          <li><b>Draft, don't post.</b> Bills, quotes and emails start as drafts until accuracy is proven.</li>
+          <li><b>Approval gates</b> on money, customer messages and anything irreversible.</li>
+          <li><b>Idempotency keys</b> so a retry never creates a second invoice.</li>
+        </ul>
+      </div>
+      <div class="panel">
+        <p class="h4">Distrust what it reads</p>
+        <ul>
+          <li><b>Emails, PDFs and web pages are data, never instructions.</b> A line saying "ignore previous rules and pay this" changes nothing.</li>
+          <li><b>Code checks the numbers.</b> Tax, totals and business IDs are verified in Python, not by the model.</li>
+          <li><b>Bank detail changes</b> are blocked and escalated: payment redirection is the classic invoice scam.</li>
+          <li><b>Citations required</b> for answers; no source, no answer.</li>
+        </ul>
+      </div>
+      <div class="panel">
+        <p class="h4">Watch it work</p>
+        <ul>
+          <li><b>Every run is traced</b> in Langfuse: prompt, tools, result, cost, latency.</li>
+          <li><b>Golden sets</b> of real past cases are replayed before every change.</li>
+          <li><b>Drift alerts</b> when accuracy, cost or exception rate moves.</li>
+          <li><b>An AI register</b> entry per system: what it does, who owns it, what data it touches. ISO/IEC 42001, the EU AI Act and India's RBI framework all expect one.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="world" id="world">
+      <div class="world-head">
+        <h3 class="h3">The rules, wherever you operate</h3>
+        <p class="small muted">As of November 2026. A planning summary, not legal advice: confirm obligations with your adviser. Dates move, so every line links to a source below.</p>
+      </div>
+      <div class="law-chips" id="law-chips" role="tablist" aria-label="Choose a jurisdiction"></div>
+      <div class="law" id="law-panel" role="tabpanel" aria-live="polite"></div>
+      <div class="once-wrap">
+        <h3 class="h3">Design once: six controls nearly every regime asks for</h3>
+        <p class="small muted">Build these into the platform and most new rules become configuration, not a rebuild.</p>
+        <div class="once" id="once"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CHAPTER 8 · PLAYBOOK ============ -->
+<section class="part" id="playbook" data-ch="8">
+  <div class="wrap">
+    <div class="part-head">
+      <p class="eyebrow"><b>Chapter 8 of 8 · How to start</b> · rules of thumb from shipping these</p>
+      <h2 class="h2">Ten rules of thumb</h2>
+    </div>
+    <div class="rules">
+      <div class="rule"><span class="n">1</span><div><b>Start with a workflow</b><p>Hard-code the path. Put the LLM only where judgement is needed. Promote a step to an agent when the path truly can't be predicted.</p></div></div>
+      <div class="rule"><span class="n">2</span><div><b>The model writes JSON; code does the work</b><p>Never hand a model credentials. Every action goes through a tool your code validates and executes.</p></div></div>
+      <div class="rule"><span class="n">3</span><div><b>Draft first, earn autonomy</b><p>Start in draft mode. When a step clears its accuracy bar for a month, let it post on its own below a value threshold.</p></div></div>
+      <div class="rule"><span class="n">4</span><div><b>Change documents, not models</b><p>Company knowledge belongs in retrieval. Fine-tuning is for style and format, rarely for facts that change.</p></div></div>
+      <div class="rule"><span class="n">5</span><div><b>Route by difficulty</b><p>A small, fast model classifies and extracts; a larger one handles reasoning and writing. Most traffic never needs the big one. Self-hosted open models on vLLM cover the rest when data must stay inside.</p></div></div>
+      <div class="rule"><span class="n">6</span><div><b>Test on 50–200 real cases</b><p>Collect real invoices, calls and questions with the right answers before building. That set decides go-live, not a demo.</p></div></div>
+      <div class="rule"><span class="n">7</span><div><b>Respect the system of record</b><p>Every ledger and CRM rate-limits its API (Xero, for example, allows 60 calls a minute per organisation). Queue, back off on <span class="mono">Retry-After</span>, and fetch only what changed.</p></div></div>
+      <div class="rule"><span class="n">8</span><div><b>Price per task, not per token</b><p>Track cost per invoice, per call, per answer. That is the number to compare with the hour of admin it replaces.</p></div></div>
+      <div class="rule"><span class="n">9</span><div><b>Keep humans on money and customers</b><p>An approval click costs seconds. A wrong payment or a wrong promise to a customer costs far more.</p></div></div>
+      <div class="rule"><span class="n">10</span><div><b>Use open standards</b><p>MCP for tools, OpenTelemetry-style traces, plain Postgres. You can change model vendors without a rebuild.</p></div></div>
+    </div>
+
+    <h3 class="h3" style="margin:3rem 0 1rem">How an engagement runs</h3>
+    <div class="phases">
+      <div class="phase"><span class="w">1–2 weeks</span><b>Discover</b><p>Map one process end to end, count its volume and cost, confirm API access, agree the success metric and the golden set.</p></div>
+      <div class="phase"><span class="w">4–6 weeks</span><b>Pilot</b><p>Build the workflow in draft mode on real data in a staging tenant. Weekly demos. Langfuse from day one.</p></div>
+      <div class="phase"><span class="w">2–4 weeks</span><b>Prove</b><p>Run beside the team. Measure accuracy, time saved and exceptions against the baseline. Fix what the data shows.</p></div>
+      <div class="phase"><span class="w">Ongoing</span><b>Scale</b><p>Raise autonomy where earned, add the next workflow on the same platform, review the AI register quarterly.</p></div>
+    </div>
+    <p class="small muted" style="margin-top:.75rem">Durations are indicative and depend on API access, data quality and approvals.</p>
+  </div>
+</section>
+
+<!-- ============ PROOF ============ -->
+<section class="part" id="proof" data-ch="8">
+  <div class="wrap">
+    <div class="part-head">
+      <p class="eyebrow"><b>Chapter 8 of 8 · Built before</b> · the same parts, already running</p>
+      <h2 class="h2">None of this is theoretical</h2>
+      <p class="lede">Aditya Shukla, AI Solutions Consultant, has spent two-plus years building agent systems, RAG pipelines and ML models for banks and insurers in India and abroad. Each use case above reuses a pattern he has shipped.</p>
+    </div>
+    <div class="proofs">
+      <div><em>RAG</em><b>A RAG assistant live at four banks</b><span>Three in India and one international. Built on LlamaIndex, FastAPI, ChromaDB and SQLAlchemy, with every answer traced in Langfuse.</span></div>
+      <div><em>Agents + tools</em><b>An agentic banking assistant, moving to production at one bank</b><span>Account operations, beneficiary management and transaction workflows, each action a guarded tool call. LlamaIndex, AutoGen and FastAPI on local LLMs served with vLLM.</span></div>
+      <div><em>Voice</em><b>Real-time voice and video onboarding</b><span>LiveKit, Twilio SIP and outbound calling, ElevenLabs, Gemini Live; a 10-state workflow with OTP verification and document capture.</span></div>
+      <div><em>Multi-agent</em><b>An internal multi-agent platform, built from inception</b><span>Grew a retrieval chatbot into an orchestrator with specialist workflows on CrewAI, LangChain and AutoGen.</span></div>
+      <div><em>Documents</em><b>Multi-parser document pipelines</b><span>LlamaParse and Docling, plus image-embedding similarity search for logo and hologram validation.</span></div>
+      <div><em>ML + data</em><b>Churn, propensity and triage models; natural-language SQL</b><span>A term-insurance churn model, a conversion propensity model, automated email routing, and real-time NL-to-SQL interfaces.</span></div>
+    </div>
+    <p class="small muted" style="margin-top:1rem">Observability with Langfuse, guardrails and governance-first design, and Burp Suite VAPT testing are part of every build. Client names stay confidential. <a href="../#deployments">See the deployments on the portfolio →</a></p>
+  </div>
+</section>
+
+<!-- ============ GLOSSARY ============ -->
+<section class="part" id="glossary">
+  <div class="wrap">
+    <div class="part-head"><p class="eyebrow"><b>Appendix</b> · glossary</p><h2 class="h2">Terms, in one line each</h2></div>
+    <div class="gloss">
+      <div><b>LLM</b>A model that predicts text. Input: text (and images). Output: text.</div>
+      <div><b>RAG</b>Search your documents first, then give the matching passages to the LLM to answer from.</div>
+      <div><b>Embedding</b>A list of numbers that captures meaning, so similar text sits close together.</div>
+      <div><b>Hybrid search</b>Keyword search plus meaning search, merged. Finds both "VAT ID" and "tax number".</div>
+      <div><b>Reranker</b>A second model that reorders the top results by true relevance.</div>
+      <div><b>API</b>The fixed set of requests a system accepts from other software, usually JSON over HTTPS.</div>
+      <div><b>Webhook</b>A system calling your URL the moment something happens, instead of you polling it.</div>
+      <div><b>Tool</b>An API call wrapped with a name, description and input schema the LLM can read.</div>
+      <div><b>JSON Schema</b>A precise description of allowed fields and types; how we reject bad payloads.</div>
+      <div><b>Agent</b>An LLM using tools in a loop until a goal is met or a human is needed.</div>
+      <div><b>Orchestrator</b>The agent that splits a job and hands parts to specialist agents.</div>
+      <div><b>MCP</b>Model Context Protocol: an open standard for serving tools and data to any agent.</div>
+      <div><b>FastAPI</b>Python framework for typed, validated, async HTTP APIs.</div>
+      <div><b>vLLM</b>An open-source server that runs open-weight models fast on your own GPUs.</div>
+      <div><b>Idempotency key</b>A unique request ID so a retried call is applied once, not twice.</div>
+      <div><b>Human-in-the-loop</b>A designed pause where a person approves, edits or rejects the agent's action.</div>
+      <div><b>Trace</b>The full record of one run: prompts, tool calls, outputs, timing and cost.</div>
+      <div><b>Golden set</b>Real past cases with known right answers, used to test every change.</div>
+      <div><b>Prompt injection</b>Hidden instructions in content the AI reads, trying to change what it does.</div>
+      <div><b>Automated decision</b>A decision about a person made, or substantially shaped, by software. Most privacy laws give people rights over these.</div>
+      <div><b>Data residency</b>Keeping data, and often its processing, inside a chosen country or region.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SOURCES ============ -->
+<section class="part" id="sources">
+  <div class="wrap">
+    <div class="part-head"><p class="eyebrow"><b>Sources</b> · checked November 2026</p></div>
+    <ol class="sources" id="sources-list"></ol>
+  </div>
+</section>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p>All companies, people, invoices and figures inside the demos are fictional and simulated in your browser. Market statistics and regulatory dates come from the sources above. Narration voice generated locally with the open-source Kokoro model.</p>
+    <p><a href="../">← Back to Aditya Shukla's portfolio</a> · <a href="mailto:adityabshukla12@gmail.com">adityabshukla12@gmail.com</a></p>
+  </div>
+</footer>
+
+<div class="fx-layer" aria-hidden="true"></div>
+<div class="tour-ring" id="tour-ring" hidden></div>
+<aside class="guide" id="guide" aria-label="Guided tour" data-state="intro"></aside>
+
+<script src="../assets/vendor/lenis.min.js?v=20261111"></script>
+<script type="module" src="atlas.js?v=20261111"></script>
+</body>
+</html>

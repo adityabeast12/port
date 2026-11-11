@@ -222,6 +222,19 @@ export const TOPICS = {
     next: ['projects', 'stack', 'contact'],
   },
 
+  atlas: {
+    q: 'How do AI agents actually work?',
+    keys: ['how agents work', 'how do agents', 'how does an agent', 'how does agent', 'explain agent', 'what is an agent', 'what are agents', 'tool call', 'tool calling', 'field guide', 'atlas', 'regulation', 'ai act', 'law', 'dpdp', 'compliance', 'learn', 'guide', 'tutorial', 'agents work', 'agent work', 'how do ai', 'agentic ai work'],
+    shape: 1,
+    status: 'Opening the field guide',
+    text: [
+      "I wrote a whole field guide for that: **Agent Atlas**. It walks through five ideas (LLM, RAG, API, tool, agent), shows how a model's tool call is checked by code before anything happens, and has seven working demos, from invoice capture to a voice agent that books a site visit.",
+      "It also maps the AI rules in 13 regions, from the EU AI Act to India's DPDP Rules, and the six controls nearly all of them ask for. There's a 12-minute narrated tour if you'd rather listen.",
+    ],
+    blocks: [{ type: 'atlas' }],
+    next: ['responsible', 'banking', 'contact'],
+  },
+
   contact: {
     q: 'How can I reach you?',
     keys: ['contact', 'email', 'hire', 'reach', 'linkedin', 'available', 'freelance', 'together', 'collaborat', 'call you', 'phone', 'talk', 'job offer', 'opportunit'],
@@ -245,7 +258,7 @@ export const TOPICS = {
   },
 };
 
-export const WELCOME = ['projects', 'banking', 'voice', 'responsible', 'stack', 'contact'];
+export const WELCOME = ['projects', 'banking', 'atlas', 'voice', 'responsible', 'contact'];
 
 export const FALLBACK = {
   shape: 0,
