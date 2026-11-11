@@ -27,8 +27,6 @@ export const UNIVERSES = {
       'hero-line': 'I spin AI agents that catch fraud before it lands.',
       'hero-btn': 'Try my agent!',
       'hero-hint': 'Click anywhere to shoot a web · scroll to dissolve the name',
-      'atlas-kicker': 'Training montage',
-      'atlas-h2': 'Learn how the agents really work',
       'demo-kicker': 'Issue #1',
       'demo-h2': 'Try to trick my agent',
       'demo-note': "It senses a scam before you finish typing. It's a simulation in your browser, with no real bank connected. Go on, try to break it.",
@@ -61,8 +59,6 @@ export const UNIVERSES = {
       'hero-role': '<span class="led"></span> AI Engineer &amp; Solutions Consultant · Nagpur, India',
       'hero-line': 'Faster than a failing request. Stronger than a prompt injection.',
       'hero-hint': 'Click anywhere for heat vision · scroll to descend through the clouds',
-      'atlas-kicker': 'The academy',
-      'atlas-h2': 'How agents work, explained for everyone',
       'demo-kicker': 'Test of strength',
       'demo-h2': 'Try to trick my agent',
       'demo-note': 'Built to be incorruptible. This simulation runs in your browser with no real bank connected. Try your worst.',
@@ -95,8 +91,6 @@ export const UNIVERSES = {
       'hero-role': '<span class="led"></span> Case file · AI Engineer &amp; Solutions Consultant · Nagpur',
       'hero-line': 'I work in the dark so your agents run in the light.',
       'hero-hint': 'Shine your light on the name · click to fire a grapple · scroll to vanish',
-      'atlas-kicker': 'The archives',
-      'atlas-h2': 'Case study: how agents work',
       'demo-kicker': 'Interrogation room',
       'demo-h2': 'Try to break my agent',
       'demo-note': 'It has one rule and it never breaks it. This is a simulation in your browser with no real bank connected. Do your worst.',
@@ -145,7 +139,7 @@ const svgEl = (tag, attrs) => {
   Object.entries(attrs).forEach(([k, v]) => el.setAttribute(k, v));
   return el;
 };
-const skip = (target) => target.closest('input, textarea, [data-verse], .agent, .agent-fab');
+const skip = (target) => target.closest('input, textarea, [data-verse], .agent, .agent-fab, .buddy');
 
 // Web-slinger: a web line shoots from the nearest bottom corner and splats where you click.
 function shootWeb(x, y) {

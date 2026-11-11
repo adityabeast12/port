@@ -3,6 +3,7 @@
 // and laws; universes are shared with the main portfolio.
 import { REGIONS, REGION_ORDER, guessRegion, CHECKS, LEDGERS, JURIS, LAWS, ONCE, SOURCES } from './data.js?v=20261111';
 import { UNIVERSES, loadFont, mountEffects, setEffectsUniverse } from '../assets/js/universes.js?v=20261111';
+import { mountBuddy, BEAR_FACE } from '../assets/js/buddy.js?v=20261111';
 
 const V = '20261111';
 /* ---------- utilities ---------- */
@@ -1384,6 +1385,52 @@ const NARRATOR = (() => {
   };
 })();
 
+/* ---------- live voice: Microsoft's neural voices, where the browser has them ----------
+   Edge ships Microsoft's natural voices (the UK male voice is "Ryan"). When one
+   is available the tour speaks live with it; other browsers play the recording. */
+const LIVE = (() => {
+  const ok = 'speechSynthesis' in window && 'SpeechSynthesisUtterance' in window;
+  const PREF = [/Ryan.*(Natural|Neural)/i, /Thomas.*(Natural|Neural)/i, /(Andrew|Brian|Guy|Christopher|Eric|Roger|Steffan|Davis|Tony|Jason|William|Liam).*(Natural|Neural)/i];
+  let voice = null, caps = null, rate = 1, token = 0, qi = 0;
+  const listeners = [];
+  fetch(`audio/captions.json?v=${V}`).then((r) => r.json()).then((j) => { caps = j; listeners.forEach((f) => f()); }).catch(() => {});
+  function load() {
+    if (!ok) return;
+    const vs = (speechSynthesis.getVoices() || []).filter((v) => /^en([-_]|$)/i.test(v.lang || ''));
+    voice = null;
+    for (const re of PREF) { voice = vs.find((v) => re.test(v.name)); if (voice) break; }
+    listeners.forEach((f) => f());
+  }
+  if (ok) { load(); try { speechSynthesis.addEventListener('voiceschanged', load); } catch { speechSynthesis.onvoiceschanged = load; } }
+  const stop = () => { token++; if (ok) try { speechSynthesis.cancel(); } catch { /* ignore */ } };
+  return {
+    get ok() { return !!(ok && voice && caps); },
+    get name() { return voice ? voice.name.replace(/^Microsoft\s+/, '').replace(/\s+Online.*$/, '').replace(/\s+-\s+.*$/, '') : ''; },
+    get pos() { return qi; },
+    get rate() { return rate; },
+    setRate(r) { rate = r; },
+    onChange(f) { listeners.push(f); },
+    play(i, { from = 0, end, cue } = {}) {
+      stop();
+      const my = token, s = caps[i].s; qi = from;
+      const next = () => {
+        if (my !== token) return;
+        if (qi >= s.length) { end && end(); return; }
+        const u = new SpeechSynthesisUtterance(s[qi][2]);
+        u.voice = voice; u.lang = voice.lang; u.rate = rate;
+        u.onend = () => { if (my !== token) return; qi++; next(); };
+        u.onerror = (e) => { if (my !== token) return; if (e && (e.error === 'interrupted' || e.error === 'canceled')) return; qi++; next(); };
+        cue && cue(s[qi][2], (qi + 0.5) / s.length);
+        speechSynthesis.speak(u);
+      };
+      setTimeout(next, 40);
+      return Promise.resolve(true);
+    },
+    pause() { stop(); },
+    stop,
+  };
+})();
+
 /* ---------- the guide ---------- */
 const clickSel = (sel, delay = 350) => setTimeout(() => { const b = $(sel); if (b) b.click(); }, delay);
 const TOUR = [
@@ -1441,10 +1488,16 @@ const TOUR = [
   const saved = +store.get('atlas-guide-idx'); if (saved > 0 && saved < TOUR.length) S.idx = saved;
   const gs = store.get('atlas-guide');
   if (gs === 'closed' || (!gs && innerWidth <= 640)) S.state = 'closed';
+  // Arriving from the bear on the CV page (?tour=1) opens the guide.
+  const fromBear = new URLSearchParams(location.search).get('tour') === '1';
+  if (fromBear) {
+    S.state = 'intro'; S.idx = 0;
+    try { history.replaceState(null, '', location.pathname + location.hash); } catch { /* sandboxed */ }
+  }
   S.size = store.get('atlas-guide-size') || (innerHeight < 760 ? 'bar' : 'full');
   S.audio = store.get('atlas-guide-audio') !== 'off';
   S.hold = false; S.cc = ''; S.spoke = 'idle'; S.prog = 0; S.doneAt = 0; S.resumeFrom = 0;
-  { const r = +store.get('atlas-rate'); if (r) NARRATOR.setRate(r); }
+  { const r = +store.get('atlas-rate'); if (r) { NARRATOR.setRate(r); LIVE.setRate(r); } }
 
   /* move + resize: the dock stays anchored by its left and bottom edges */
   const geo = (() => { try { return JSON.parse(store.get('atlas-guide-geo') || '{}'); } catch { return {}; } })();
@@ -1486,20 +1539,23 @@ const TOUR = [
     on: '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 6h2.5L8 3v10L4.5 10H2z"/><path d="M10.5 5.2a3.5 3.5 0 0 1 0 5.6M12.3 3.4a6 6 0 0 1 0 9.2" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>',
     off: '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 6h2.5L8 3v10L4.5 10H2z"/><path d="M10.5 6l4 4M14.5 6l-4 4" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>',
   };
-  const audioOn = () => S.audio && NARRATOR.ok;
+  S.voice = store.get('atlas-voice') || 'ms';
+  const ENG = () => (S.voice === 'ms' && LIVE.ok ? LIVE : NARRATOR);
+  const audioOn = () => S.audio && (NARRATOR.ok || LIVE.ok);
+  LIVE.onChange(() => { if (S.state === 'tour' || S.state === 'intro') render(); });
   const soundBtn = (cls) => h('button', { class: 'g-snd' + (cls ? ' ' + cls : ''), type: 'button', 'aria-pressed': S.audio ? 'true' : 'false', 'aria-label': S.audio ? 'Mute the voice' : 'Turn the voice on', title: S.audio ? 'Mute voice' : 'Voice on', html: S.audio ? ICON.on : ICON.off, onclick: () => toggleSound() });
 
   function render() {
     G.dataset.state = S.state;
     if (S.state === 'closed') {
-      G.replaceChildren(h('button', { class: 'g-pill', type: 'button', onclick: () => open() }, h('span', { class: 'g-mark' }, 'A'), S.idx > 0 ? `Resume tour · stop ${S.idx + 1} of ${TOUR.length}` : 'Narrated tour'));
+      G.replaceChildren(h('button', { class: 'g-pill', type: 'button', onclick: () => open() }, h('span', { class: 'g-mark', html: BEAR_FACE }), S.idx > 0 ? `Resume tour · stop ${S.idx + 1} of ${TOUR.length}` : 'Narrated tour'));
       ring.hidden = true; tip.hidden = true; pulse.hidden = true; return;
     }
     if (S.state === 'intro') {
       G.replaceChildren(
-        h('div', { class: 'g-top' }, h('span', { class: 'g-mark talk' }, 'A'), h('div', { class: 'g-where' }, h('b', null, 'Your guide'), h('span', null, `${TOUR.length} stops · about 12 minutes`)), soundBtn(), h('button', { class: 'g-x', type: 'button', 'aria-label': 'Close the guide', onclick: () => close() }, '×')),
+        h('div', { class: 'g-top' }, h('span', { class: 'g-mark talk', html: BEAR_FACE }), h('div', { class: 'g-where' }, h('b', null, 'Atlas, your guide'), h('span', null, `${TOUR.length} stops · about 12 minutes`)), soundBtn(), h('button', { class: 'g-x', type: 'button', 'aria-label': 'Close the guide', onclick: () => close() }, '×')),
         h('div', { class: 'g-intro' },
-          h('h3', null, "New to AI agents? I'll walk you through."),
+          h('h3', null, "Hi, I'm Atlas. New to AI agents? I'll walk you through."),
           h('p', null, 'I talk you through the guide chapter by chapter, light up what to look at, and tell you what to click.'),
           h('ul', null,
             h('li', null, 'Sound is ' + (S.audio ? 'on' : 'off') + '. The speaker button mutes me; captions show what I\'m saying.'),
@@ -1524,14 +1580,18 @@ const TOUR = [
         h('div', { class: 'g-timer bar', 'aria-hidden': 'true' }, h('i', { id: 'g-bar' })));
       setStatus(); return;
     }
-    const speed = h('details', { class: 'g-voice' }, h('summary', null, 'Speed'),
+    const speed = h('details', { class: 'g-voice' }, h('summary', null, 'Voice'),
       h('div', { class: 'g-voice-body' },
+        LIVE.ok ? h('label', { for: 'g-voice-name' }, 'Voice') : null,
+        LIVE.ok ? h('select', { id: 'g-voice-name', onchange: (e) => { S.voice = e.target.value; store.set('atlas-voice', S.voice); NARRATOR.stop(); LIVE.stop(); if (S.playing) speakStep(0); render(); } },
+          h('option', { value: 'ms', selected: S.voice === 'ms' ? true : null }, `Microsoft ${LIVE.name} (live)`),
+          h('option', { value: 'rec', selected: S.voice !== 'ms' ? true : null }, 'Recorded voice')) : null,
         h('label', { for: 'g-voice-rate' }, 'Speed'),
-        h('select', { id: 'g-voice-rate', onchange: (e) => { NARRATOR.setRate(+e.target.value); store.set('atlas-rate', e.target.value); } }, [['0.9', 'Relaxed'], ['1', 'Normal'], ['1.1', 'Brisk'], ['1.25', 'Fast']].map(([v, l]) => h('option', { value: v, selected: String(NARRATOR.rate) === v ? true : null }, l))),
-        h('p', { class: 'g-hint' }, 'The voice is pre-recorded with Kokoro, an open-source model that runs on a laptop, so it sounds the same in every browser.')));
+        h('select', { id: 'g-voice-rate', onchange: (e) => { NARRATOR.setRate(+e.target.value); LIVE.setRate(+e.target.value); store.set('atlas-rate', e.target.value); } }, [['0.9', 'Relaxed'], ['1', 'Normal'], ['1.1', 'Brisk'], ['1.25', 'Fast']].map(([v, l]) => h('option', { value: v, selected: String(NARRATOR.rate) === v ? true : null }, l))),
+        h('p', { class: 'g-hint' }, LIVE.ok ? "Your browser has Microsoft's neural voices, so I speak live in Microsoft's UK voice." : "In Microsoft Edge I speak live in Microsoft's UK voice. Here you hear a recorded voice made with an open-source model.")));
     G.replaceChildren(
       h('span', { class: 'g-grip', title: 'Drag to resize', 'aria-hidden': 'true' }),
-      h('div', { class: 'g-top g-drag', title: 'Drag to move' }, h('span', { class: 'g-mark' + (S.playing ? ' talk' : '') }, 'A'),
+      h('div', { class: 'g-top g-drag', title: 'Drag to move' }, h('span', { class: 'g-mark' + (S.playing ? ' talk' : ''), html: BEAR_FACE }),
         h('div', { class: 'g-where' }, h('b', null, `Chapter ${ch.n} of 8 · ${ch.title}`), h('span', null, `Stop ${S.idx + 1} of ${TOUR.length} · drag to move`)),
         sizeBtn, closeBtn),
       h('div', { class: 'g-body', 'aria-live': 'polite' }, h('h3', null, st.title), h('p', null, st.body),
@@ -1570,7 +1630,7 @@ const TOUR = [
     if (!audioOn()) return;
     const my = S.idx;
     S.spoke = 'speaking';
-    NARRATOR.play(my, {
+    ENG().play(my, {
       from,
       cue: (s, p) => { if (S.idx !== my) return; S.cc = s; S.prog = p; setStatus(); },
       end: (err) => {
@@ -1586,7 +1646,7 @@ const TOUR = [
   }
   function toggleSound() {
     S.audio = !S.audio; store.set('atlas-guide-audio', S.audio ? 'on' : 'off');
-    if (!S.audio) { NARRATOR.stop(); S.cc = ''; S.spoke = 'idle'; S.elapsed = 0; }
+    if (!S.audio) { NARRATOR.stop(); LIVE.stop(); S.cc = ''; S.spoke = 'idle'; S.elapsed = 0; }
     else if (S.state === 'tour' && S.playing) speakStep(0);
     render();
   }
@@ -1594,7 +1654,7 @@ const TOUR = [
     S.note = ''; S.hold = false;
     if (S.playing) {
       S.playing = false;
-      if (audioOn() && S.spoke === 'speaking') { S.resumeFrom = NARRATOR.pos; NARRATOR.pause(); S.spoke = 'paused'; }
+      if (audioOn() && S.spoke === 'speaking') { S.resumeFrom = ENG().pos; ENG().pause(); S.spoke = 'paused'; }
     } else {
       if (S.idx === TOUR.length - 1 && (S.spoke === 'done' || !audioOn())) { render(); return; }
       S.playing = true;
@@ -1607,10 +1667,10 @@ const TOUR = [
     go(S.idx + 1);
   }
   function open() { S.state = S.idx > 0 ? 'tour' : 'intro'; if (S.state === 'tour') { S.playing = true; go(S.idx); } else render(); store.set('atlas-guide', 'open'); }
-  function close() { S.state = 'closed'; S.playing = false; NARRATOR.stop(); S.cc = ''; store.set('atlas-guide', 'closed'); render(); }
+  function close() { S.state = 'closed'; S.playing = false; NARRATOR.stop(); LIVE.stop(); S.cc = ''; store.set('atlas-guide', 'closed'); render(); }
   function start(i) { S.state = 'tour'; S.playing = true; store.set('atlas-guide', 'open'); go(i); }
   function go(i) {
-    NARRATOR.stop();
+    NARRATOR.stop(); LIVE.stop();
     S.idx = Math.max(0, Math.min(TOUR.length - 1, i)); S.elapsed = 0; S.note = ''; S.hold = false; S.cc = ''; S.spoke = 'idle'; S.prog = 0;
     const st = TOUR[S.idx]; S.dur = durFor(st);
     if (S.idx === TOUR.length - 1 && !audioOn()) S.playing = false;
@@ -1678,6 +1738,16 @@ const TOUR = [
     }
     requestAnimationFrame(frame);
   }
-  addEventListener('pagehide', () => NARRATOR.stop());
+  addEventListener('pagehide', () => { NARRATOR.stop(); LIVE.stop(); });
+  // Atlas the bear sits on the dock while it is open (and talks with the
+  // narration), and strolls along the bottom when it is closed.
+  const bear = mountBuddy({ reduced: REDUCED, mode: 'atlas', avoid: ['.guide'], onActivate: () => { if (S.state === 'closed') open(); else bear.wave(); } });
+  const dockRect = () => { const r = G.getBoundingClientRect(); return S.state === 'closed' || !r.width ? null : r; };
+  (function bearLoop() {
+    bear.dockTo(S.state === 'closed' ? null : dockRect);
+    bear.setTalking(S.state === 'tour' && S.playing && S.spoke === 'speaking' && audioOn());
+    requestAnimationFrame(bearLoop);
+  })();
   render(); requestAnimationFrame(frame);
+  if (fromBear) setTimeout(() => { const b = G.querySelector('.btn.primary'); if (b) b.focus({ preventScroll: true }); }, 1200);
 })();
