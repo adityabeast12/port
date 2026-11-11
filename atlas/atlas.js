@@ -1,11 +1,11 @@
 // Agent Atlas: a hands-on field guide to AI agents. Every demo runs on
 // simulated data in the browser; regions change currency, tax, IDs, systems
 // and laws; universes are shared with the main portfolio.
-import { REGIONS, REGION_ORDER, guessRegion, CHECKS, LEDGERS, JURIS, LAWS, ONCE, SOURCES } from './data.js?v=20261112';
-import { UNIVERSES, loadFont, mountEffects, setEffectsUniverse } from '../assets/js/universes.js?v=20261112';
-import { mountBuddy, BEAR_FACE } from '../assets/js/buddy.js?v=20261112';
+import { REGIONS, REGION_ORDER, guessRegion, CHECKS, LEDGERS, JURIS, LAWS, ONCE, SOURCES } from './data.js?v=20261113';
+import { UNIVERSES, loadFont, mountEffects, setEffectsUniverse } from '../assets/js/universes.js?v=20261113';
+import { mountBuddy, BEAR_FACE } from '../assets/js/buddy.js?v=20261113';
 
-const V = '20261112';
+const V = '20261113';
 /* ---------- utilities ---------- */
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
@@ -1496,7 +1496,7 @@ const TOUR = [
   }
   S.size = store.get('atlas-guide-size') || (innerHeight < 760 ? 'bar' : 'full');
   S.audio = store.get('atlas-guide-audio') !== 'off';
-  S.hold = false; S.cc = ''; S.spoke = 'idle'; S.prog = 0; S.doneAt = 0; S.resumeFrom = 0;
+  S.hold = false; S.cc = ''; S.spoke = 'idle'; S.prog = 0; S.doneAt = 0; S.resumeFrom = 0; S.lastCue = 0;
   { const r = +store.get('atlas-rate'); if (r) { NARRATOR.setRate(r); LIVE.setRate(r); } }
 
   /* move + resize: the dock stays anchored by its left and bottom edges */
@@ -1629,10 +1629,10 @@ const TOUR = [
   function speakStep(from = 0) {
     if (!audioOn()) return;
     const my = S.idx;
-    S.spoke = 'speaking';
+    S.spoke = 'speaking'; S.lastCue = performance.now();
     ENG().play(my, {
       from,
-      cue: (s, p) => { if (S.idx !== my) return; S.cc = s; S.prog = p; setStatus(); },
+      cue: (s, p) => { if (S.idx !== my) return; S.cc = s; S.prog = p; S.lastCue = performance.now(); setStatus(); },
       end: (err) => {
         if (S.idx !== my) return;
         if (err) { S.audio = false; S.spoke = 'idle'; S.elapsed = 0; render(); return; }
@@ -1716,6 +1716,8 @@ const TOUR = [
       if (S.playing) {
         if (audioOn()) {
           if (S.spoke === 'done' && now - S.doneAt > 1100 && S.idx < TOUR.length - 1) advance();
+          // Edge's live voice can stall on a slow network: never wait more than 25s on one sentence.
+          else if (S.spoke === 'speaking' && ENG() === LIVE && now - S.lastCue > 25000) { LIVE.stop(); S.spoke = 'done'; S.doneAt = now; S.cc = ''; }
           else if (S.spoke === 'done' && S.idx === TOUR.length - 1) { S.playing = false; render(); }
         } else {
           S.elapsed += dt; if (S.elapsed >= S.dur) { if (S.idx < TOUR.length - 1) advance(); else { S.playing = false; render(); } }
