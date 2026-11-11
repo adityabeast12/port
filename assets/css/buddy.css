@@ -1,0 +1,115 @@
+/* Atlas the polar bear: a small guide who strolls along the bottom of the screen. */
+.buddy {
+  --line: #23313b;
+  --fur: #ffffff;
+  --fur-2: #e2eaf0;
+  --scarf: var(--accent, #3ee089);
+  position: fixed; left: 0; bottom: 10px; z-index: 64; width: 96px; height: 73px;
+  pointer-events: none; opacity: 0; transition: opacity .6s ease;
+  will-change: transform;
+}
+.buddy.is-in { opacity: 1; }
+.buddy__btn {
+  pointer-events: auto; display: block; width: 96px; height: 73px; padding: 0; margin: 0;
+  background: none; border: 0; cursor: pointer; border-radius: 14px; -webkit-tap-highlight-color: transparent;
+}
+.buddy__btn:focus-visible { outline: 2px solid var(--scarf); outline-offset: 2px; }
+.buddy__bear { width: 100%; height: 100%; overflow: visible; display: block; filter: drop-shadow(0 3px 6px rgba(0, 0, 0, .28)); }
+.buddy.is-left .buddy__bear { transform: scaleX(-1); }
+
+/* drawing */
+.buddy .b-fur, .buddy .b-torso { fill: var(--fur); stroke: var(--line); stroke-width: 2; }
+.buddy .b-leg rect { fill: var(--fur); stroke: var(--line); stroke-width: 2; }
+.buddy .b-leg--bf rect, .buddy .b-leg--ff rect { fill: var(--fur-2); }
+.buddy .b-ear__in { fill: #f4c9cf; }
+.buddy .b-snout { fill: #eef3f6; stroke: var(--line); stroke-width: 1.6; }
+.buddy .b-nose, .buddy .b-eye circle:first-child { fill: var(--line); }
+.buddy .b-glint { fill: #fff; }
+.buddy .b-mouth { fill: #5a2730; }
+.buddy .b-blush { fill: #f6aab4; opacity: .7; }
+.buddy .b-shadow { fill: rgba(0, 0, 0, .22); }
+.buddy .b-scarf { fill: var(--scarf); stroke: var(--line); stroke-width: 1.4; }
+.buddy .b-cape, .buddy .b-torch, .buddy .b-beam { display: none; }
+.buddy .b-pad { stroke: var(--line); stroke-width: 1.4; stroke-linecap: round; opacity: .35; }
+
+/* motion */
+.buddy .b-leg { transform-box: fill-box; transform-origin: 50% 10%; }
+.buddy .b-head { transform-box: view-box; transform-origin: 80px 50px; }
+.buddy .b-eye { transform-box: fill-box; transform-origin: center; animation: b-blink 4.6s infinite; }
+.buddy .b-mouth { transform-box: fill-box; transform-origin: center; }
+.buddy .b-scarf__tail { transform-box: fill-box; transform-origin: 100% 0; animation: b-flap 1.1s ease-in-out infinite alternate; }
+.buddy.is-walking .b-leg--bn, .buddy.is-walking .b-leg--ff { animation: b-leg-a .56s ease-in-out infinite; }
+.buddy.is-walking .b-leg--bf, .buddy.is-walking .b-leg--fn { animation: b-leg-b .56s ease-in-out infinite; }
+.buddy.is-walking .b-body { animation: b-bob .28s ease-in-out infinite alternate; }
+.buddy:not(.is-walking) .b-head { animation: b-nod 3.4s ease-in-out infinite; }
+.buddy.is-waving .b-leg--fn { animation: b-wave .45s ease-in-out infinite alternate; }
+.buddy.is-talking .b-mouth { animation: b-talk .2s ease-in-out infinite alternate; }
+.buddy.is-talking .b-head { animation: b-chat .9s ease-in-out infinite; }
+@keyframes b-leg-a { 0%, 100% { transform: rotate(17deg); } 50% { transform: rotate(-17deg); } }
+@keyframes b-leg-b { 0%, 100% { transform: rotate(-17deg); } 50% { transform: rotate(17deg); } }
+@keyframes b-bob { to { transform: translateY(-1.6px); } }
+@keyframes b-nod { 0%, 100% { transform: rotate(0); } 40% { transform: rotate(-5deg); } 60% { transform: rotate(3deg); } }
+@keyframes b-chat { 0%, 100% { transform: rotate(-2deg); } 50% { transform: rotate(3deg); } }
+@keyframes b-wave { from { transform: rotate(-70deg); } to { transform: rotate(-40deg); } }
+@keyframes b-blink { 0%, 95%, 100% { transform: scaleY(1); } 97% { transform: scaleY(.1); } }
+@keyframes b-talk { from { transform: scale(1, 1); } to { transform: scale(1.15, 3.4); } }
+@keyframes b-flap { from { transform: rotate(-6deg); } to { transform: rotate(10deg); } }
+
+/* "Psst" hint on hover, and the invitation card */
+.buddy__hi {
+  position: absolute; bottom: calc(100% + 4px); left: 50%; transform: translate(-50%, 4px);
+  white-space: nowrap; font: 600 12px/1 var(--f-sans, "Poppins", system-ui, sans-serif); color: #12201a;
+  background: #fff; border: 1.5px solid var(--line); border-radius: 999px; padding: 6px 10px;
+  opacity: 0; transition: opacity .2s ease, transform .2s ease; pointer-events: none;
+}
+.buddy:hover .buddy__hi, .buddy__btn:focus-visible ~ .buddy__hi { opacity: 1; transform: translate(-50%, 0); }
+.buddy.is-open .buddy__hi, .buddy.is-docked .buddy__hi { display: none; }
+.buddy__card {
+  position: absolute; bottom: calc(100% + 10px); left: 50%; transform: translateX(calc(-50% + var(--shift, 0px)));
+  width: min(300px, calc(100vw - 24px)); pointer-events: auto; text-align: left;
+  background: #fff; color: #12201a; border: 2px solid var(--line); border-radius: 16px; padding: 14px 14px 12px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, .35); font: 400 13.5px/1.5 var(--f-sans, "Poppins", system-ui, sans-serif);
+}
+.buddy__card[hidden] { display: none; }
+.buddy__card::after {
+  content: ""; position: absolute; left: calc(50% - 8px - var(--shift, 0px)); bottom: -9px; width: 14px; height: 14px; background: #fff;
+  border-right: 2px solid var(--line); border-bottom: 2px solid var(--line); transform: rotate(45deg);
+}
+.buddy__hello b { display: block; font-size: 15px; margin-bottom: 2px; }
+.buddy__actions { display: grid; gap: 6px; margin-top: 10px; }
+.buddy__go, .buddy__alt { display: block; text-align: center; text-decoration: none; border-radius: 10px; padding: 9px 12px; font-weight: 600; font-size: 13.5px; }
+.buddy__go { background: #12201a; color: #fff; }
+.buddy__go:hover { background: #000; }
+.buddy__alt { color: #12201a; border: 1.5px solid #cfd8d3; }
+.buddy__alt:hover { border-color: #12201a; }
+.buddy__x { position: absolute; top: 6px; right: 8px; border: 0; background: none; font-size: 18px; line-height: 1; color: #55615b; cursor: pointer; padding: 4px; }
+.buddy__x:hover { color: #000; }
+
+/* sitting on the tour dock */
+.buddy.is-docked { transition: opacity .4s ease; }
+.buddy.is-docked .b-shadow { display: none; }
+
+/* one prop per universe */
+html[data-universe="web"] .buddy { --line: #111; --scarf: #cc1420; }
+html[data-universe="web"] .buddy .b-fur, html[data-universe="web"] .buddy .b-torso, html[data-universe="web"] .buddy .b-leg rect { stroke-width: 2.8; }
+html[data-universe="web"] .buddy__bear { filter: drop-shadow(3px 3px 0 #111); }
+html[data-universe="web"] .buddy__card, html[data-universe="web"] .buddy__hi { box-shadow: 4px 4px 0 #111; }
+html[data-universe="sky"] .buddy { --scarf: #ffcf4a; }
+html[data-universe="sky"] .buddy .b-cape { display: inline; fill: #d8202b; stroke: #7a0a10; stroke-width: 1.4; transform-box: fill-box; transform-origin: 100% 20%; animation: b-cape 1.3s ease-in-out infinite alternate; }
+@keyframes b-cape { from { transform: skewY(0) scaleX(1); } to { transform: skewY(-4deg) scaleX(1.06); } }
+html[data-universe="night"] .buddy { --scarf: #f5c518; --line: #1a1d23; }
+html[data-universe="night"] .buddy .b-torch { display: inline; }
+html[data-universe="night"] .buddy .b-torch rect:first-child { fill: #3a3d44; stroke: #111; stroke-width: 1.2; }
+html[data-universe="night"] .buddy .b-torch__lens { fill: #fff4c2; }
+html[data-universe="night"] .buddy .b-beam { display: inline; }
+html[data-universe="night"] .buddy .b-beam path { fill: rgba(255, 230, 150, .16); }
+html[data-universe="night"] .buddy.is-docked .b-beam { display: none; }
+
+@media (max-width: 600px) {
+  .buddy, .buddy__btn { width: 72px; height: 55px; }
+  .buddy { bottom: 14px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .buddy * { animation: none !important; }
+}
+@media (max-width: 600px) { .buddy__hi { display: none; } }

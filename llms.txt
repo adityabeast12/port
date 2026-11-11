@@ -36,7 +36,7 @@ Aditya has 2+ years of experience shipping generative AI to production. He start
 - Regions: every demo switches currency, tax, business-ID checks (GSTIN, EU and UK VAT, EIN, TRN, ABN) and software for India, the EU, the UK, the US, the UAE and Australia.
 - The rules, as of November 2026: the EU AI Act (with the Digital Omnibus moving high-risk duties to December 2027), GDPR, the UK Data (Use and Access) Act, US state laws (California, Colorado, Texas) and the federal preemption push, India's DPDP Rules, IT Rules and RBI FREE-AI framework, Canada, Singapore's agentic AI framework, Japan, South Korea, China, Vietnam, Brazil, the UAE and Saudi Arabia, Australia, and the standards ISO/IEC 42001, NIST AI RMF and the OWASP Top 10s for LLM and agentic applications.
 - Design once: six controls nearly every regime asks for: say it is an AI, keep a person on decisions that matter, explain and allow appeal, label generated content, keep data in-region, keep records and assess risk.
-- A 12-minute narrated tour, voiced with an open-source model (Kokoro) running locally, with captions.
+- A 12-minute narrated tour led by Atlas, a cartoon polar bear guide, with captions. It speaks in Microsoft's neural UK voice in Microsoft Edge and uses a locally recorded voice elsewhere.
 
 ## Skills
 

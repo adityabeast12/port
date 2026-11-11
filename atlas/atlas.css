@@ -821,3 +821,8 @@ html[data-universe="sky"] .regionbar .chip[aria-pressed="true"] i{opacity:1}
   html[data-universe="web"] main > section > .wrap, html[data-universe="sky"] main > section > .wrap{padding:1rem .85rem; width:calc(100% - 16px)}
   .inv{padding:.8rem .75rem; font-size:.72rem} .inv .ih{gap:.5rem}
 }
+
+/* Atlas the bear in the tour dock */
+.g-mark{background:#fff; border:1.5px solid #23313b; padding:1px; overflow:visible}
+.g-mark svg{width:100%; height:100%; display:block}
+.g-pill .g-mark{width:1.9rem; height:1.9rem}

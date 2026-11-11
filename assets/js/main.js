@@ -1,7 +1,8 @@
 // Bump ?v= in these imports and in index.html on every release so browsers never mix old and new files.
-import { mountChat } from './chat.js?v=20261111';
-import { mountDemo } from './agent-demo.js?v=20261111';
-import { UNIVERSES, applyCopy, loadFont, mountEffects, setEffectsUniverse } from './universes.js?v=20261111';
+import { mountChat } from './chat.js?v=20261112';
+import { mountDemo } from './agent-demo.js?v=20261112';
+import { UNIVERSES, applyCopy, loadFont, mountEffects, setEffectsUniverse } from './universes.js?v=20261112';
+import { mountBuddy } from './buddy.js?v=20261112';
 
 const root = document.documentElement;
 const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -110,6 +111,9 @@ async function boot() {
   }
   $('.boot').remove();
   root.classList.add('is-ready');
+  // Atlas the polar bear strolls between the corner buttons and invites
+  // visitors to the Agent Atlas guide. The CV stays the page itself.
+  mountBuddy({ reduced, mode: 'site', href: 'atlas/', avoid: ['[data-verse-toggle]', '[data-agent-open]'] });
 }
 
 /* ---------------- Clock ---------------- */
@@ -147,7 +151,7 @@ async function buildName(force = false) {
   });
 }
 
-import('./scene.js?v=20261111')
+import('./scene.js?v=20261112')
   .then(async ({ createScene }) => {
     gl = createScene($('#gl'), { reducedMotion: reduced, labels: $('[data-glabels]') });
     applyScene(universe);
@@ -166,7 +170,6 @@ import('./scene.js?v=20261111')
 // Scrolling through the hero turns the name into the agent loop, then into
 // the trace of one agent run.
 const caps = { loop: $('[data-stagecap="loop"]'), trace: $('[data-stagecap="trace"]') };
-const capLink = $('.stagecap__link');
 function onHeroScroll() {
   const total = hero.offsetHeight - innerHeight;
   const p = clamp(-hero.getBoundingClientRect().top / total);
@@ -180,8 +183,6 @@ function onHeroScroll() {
   const wLoop = clamp(1 - Math.abs(morph) * 2.2), wTrace = clamp(1 - Math.abs(morph - 1) * 2.2);
   caps.loop.style.opacity = wLoop;
   caps.trace.style.opacity = wTrace;
-  capLink.tabIndex = wTrace > 0.6 ? 0 : -1;
-  caps.trace.classList.toggle('is-on', wTrace > 0.6);
 }
 let heroTicking = false;
 addEventListener('scroll', () => {
