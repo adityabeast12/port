@@ -1,11 +1,11 @@
 // Agent Atlas: a hands-on field guide to AI agents. Every demo runs on
 // simulated data in the browser; regions change currency, tax, IDs, systems
 // and laws; universes are shared with the main portfolio.
-import { REGIONS, REGION_ORDER, guessRegion, CHECKS, LEDGERS, JURIS, LAWS, ONCE, SOURCES } from './data.js?v=20261111';
-import { UNIVERSES, loadFont, mountEffects, setEffectsUniverse } from '../assets/js/universes.js?v=20261111';
-import { mountBuddy, BEAR_FACE } from '../assets/js/buddy.js?v=20261111';
+import { REGIONS, REGION_ORDER, guessRegion, CHECKS, LEDGERS, JURIS, LAWS, ONCE, SOURCES } from './data.js?v=20261112';
+import { UNIVERSES, loadFont, mountEffects, setEffectsUniverse } from '../assets/js/universes.js?v=20261112';
+import { mountBuddy, BEAR_FACE } from '../assets/js/buddy.js?v=20261112';
 
-const V = '20261111';
+const V = '20261112';
 /* ---------- utilities ---------- */
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
