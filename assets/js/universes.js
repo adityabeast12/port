@@ -274,14 +274,67 @@ export function mountEffects({ reduced = false, exclude = '' } = {}) {
   }, { passive: true });
 
   // Night Vigilante: the flashlight follows the cursor or finger, and sweeps
-  // across the name on its own when nobody is moving it.
+  // across the name on its own when nobody is moving it. It is drawn into a
+  // small canvas that the browser scales up (the light is soft anyway), so a
+  // frame costs a few thousand pixels instead of repainting the whole hero:
+  // smooth at 120 Hz on a phone. CSS gradients remain as the fallback.
   const spot = document.querySelector('.spot');
   if (!spot) return; // pages without the hero flashlight
+  const cv = document.createElement('canvas');
+  cv.className = 'spot__cv';
+  const g = cv.getContext && cv.getContext('2d');
+  if (g) { spot.append(cv); spot.classList.add('spot--cv'); }
+  const Q = 0.5; // canvas pixels per CSS pixel
+  let sw = 0, sh = 0;
+  const fit = () => {
+    sw = spot.clientWidth; sh = spot.clientHeight;
+    if (!g || !sw) return;
+    cv.width = Math.max(1, Math.round(sw * Q)); cv.height = Math.max(1, Math.round(sh * Q));
+  };
+  if (g) new ResizeObserver(() => { fit(); last && draw(last[0], last[1]); }).observe(spot);
+  let last = null;
+  const D = Math.PI / 180;
+  function draw(mx, my) {
+    last = [mx, my];
+    if (!sw) fit();
+    const W = cv.width, H = cv.height;
+    if (!W || !H) return;
+    const r = Math.min(185, Math.max(110, innerWidth * 0.15)) * Q; // matches --r in universes.css
+    const x = mx * Q, y = my * Q;
+    g.clearRect(0, 0, W, H);
+    // darkness, with a clear hole where the light falls
+    const m = g.createRadialGradient(x, y, 0, x, y, r * 3);
+    m.addColorStop(0, 'rgba(0,0,0,0)'); m.addColorStop(0.24, 'rgba(0,0,0,0)');
+    m.addColorStop(0.35, 'rgba(0,0,0,0.55)'); m.addColorStop(0.567, 'rgba(0,0,0,0.9)'); m.addColorStop(1, 'rgba(0,0,0,0.95)');
+    g.fillStyle = m; g.fillRect(0, 0, W, H);
+    // the beam: a soft wedge from just below the screen up to the pool
+    const ax = W / 2, ay = H * 1.04, dx = x - ax, dy = y - ay, len = Math.hypot(dx, dy);
+    if (len > 1) {
+      const ang = Math.atan2(dy, dx), spread = Math.atan2(r * 0.8, len);
+      const lg = g.createLinearGradient(ax, ay, x, y);
+      lg.addColorStop(0, 'rgba(255,228,160,0.034)'); lg.addColorStop(0.5, 'rgba(255,228,160,0.034)'); lg.addColorStop(0.97, 'rgba(255,228,160,0)');
+      g.fillStyle = lg;
+      // three nested wedges give the edges a soft 3-degree falloff
+      for (const extra of [0.25, 1.5, 2.75]) {
+        const half = spread + extra * D;
+        g.beginPath(); g.moveTo(ax, ay);
+        g.lineTo(ax + Math.cos(ang - half) * len * 1.02, ay + Math.sin(ang - half) * len * 1.02);
+        g.lineTo(ax + Math.cos(ang + half) * len * 1.02, ay + Math.sin(ang + half) * len * 1.02);
+        g.closePath(); g.fill();
+      }
+    }
+    // the warm pool of light, with a brighter rim like a real torch
+    const pr = r * 1.02, pg = g.createRadialGradient(x, y, 0, x, y, pr);
+    pg.addColorStop(0, 'rgba(255,226,150,0.13)'); pg.addColorStop(0.588, 'rgba(255,214,120,0.06)');
+    pg.addColorStop(0.863, 'rgba(255,236,180,0.16)'); pg.addColorStop(1, 'rgba(255,214,120,0)');
+    g.fillStyle = pg; g.fillRect(x - pr, y - pr, pr * 2, pr * 2);
+  }
   let lastMove = -1e9;
   const aim = (x, y) => {
     const r = spot.getBoundingClientRect();
     const mx = x - r.left;
     const my = y - r.top;
+    if (g) { draw(mx, my); return; }
     spot.style.setProperty('--mx', mx + 'px');
     spot.style.setProperty('--my', my + 'px');
     // Aim the beam cone from just below the bottom centre to the light pool.
@@ -293,14 +346,18 @@ export function mountEffects({ reduced = false, exclude = '' } = {}) {
     spot.style.setProperty('--ang', (Math.atan2(dx, dy) * 180) / Math.PI + 'deg');
     spot.style.setProperty('--spread', (Math.atan2(radius * 0.8, len) * 180) / Math.PI + 'deg');
   };
+  // Pointer events can arrive faster than the screen refreshes: draw once per frame.
+  let want = null;
   addEventListener('pointermove', (e) => {
     if (current !== 'night') return;
     lastMove = performance.now();
-    aim(e.clientX, e.clientY);
+    want = [e.clientX, e.clientY];
   }, { passive: true });
   const sweep = (t) => {
     requestAnimationFrame(sweep);
-    if (current !== 'night' || document.hidden || t - lastMove < 2500) return;
+    if (current !== 'night' || document.hidden) return;
+    if (want) { aim(want[0], want[1]); want = null; return; }
+    if (t - lastMove < 2500) return;
     const r = spot.getBoundingClientRect();
     if (r.bottom < 0 || r.top > innerHeight) return;
     const k = t / 2600;

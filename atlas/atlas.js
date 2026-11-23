@@ -1,11 +1,12 @@
 // Agent Atlas: a hands-on field guide to AI agents. Every demo runs on
 // simulated data in the browser; regions change currency, tax, IDs, systems
 // and laws; universes are shared with the main portfolio.
-import { REGIONS, REGION_ORDER, guessRegion, CHECKS, LEDGERS, JURIS, LAWS, ONCE, SOURCES } from './data.js?v=20261114';
-import { UNIVERSES, loadFont, mountEffects, setEffectsUniverse } from '../assets/js/universes.js?v=20261114';
-import { mountBuddy, BEAR_FACE } from '../assets/js/buddy.js?v=20261114';
+import { REGIONS, REGION_ORDER, guessRegion, CHECKS, LEDGERS, JURIS, LAWS, ONCE, SOURCES } from './data.js?v=20261115';
+import { UNIVERSES, loadFont, mountEffects, setEffectsUniverse } from '../assets/js/universes.js?v=20261115';
+import { mountBuddy, BEAR_FACE } from '../assets/js/buddy.js?v=20261115';
+import { adaptiveResolution } from '../assets/js/perf.js?v=20261115';
 
-const V = '20261114';
+const V = '20261115';
 /* ---------- utilities ---------- */
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
@@ -1035,7 +1036,8 @@ function initThree(THREE) {
   let renderer;
   try { renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true }); } catch { return null; }
   if (!renderer.getContext()) return null;
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  // Full density, stepped down if the GPU cannot keep up with the display.
+  const res = adaptiveResolution(renderer, { max: Math.min(window.devicePixelRatio || 1, 2), min: 1 });
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(30, 1, 0.1, 200);
   const root = new THREE.Group(); scene.add(root);
@@ -1178,7 +1180,7 @@ function initThree(THREE) {
     el.style.visibility = 'visible';
     el.style.transform = `translate(${xx.toFixed(1)}px, ${yy.toFixed(1)}px) ${el.classList.contains('layer') ? 'translate(0, -50%)' : 'translate(-50%, -100%)'}`;
   }
-  let last = performance.now(), running = false, lastScroll = -1e9;
+  let last = performance.now(), running = false, lastScroll = -1e9, trailAcc = 0;
   addEventListener('scroll', () => { lastScroll = performance.now(); }, { passive: true });
   const MOVE = 1.15, DWELL = 0.75, END = 2.4;
   function loop() {
@@ -1199,19 +1201,25 @@ function initThree(THREE) {
           if (t >= 1) { seg++; phase = 'dwell'; dwell = 0; onStep(seg); style(seg); }
         }
       }
-      trailPts.unshift(packet.position.clone()); if (trailPts.length > 30) trailPts.pop();
+      // Sample the trail by time (60 points a second), so it is the same
+      // length on a 60, 90, 120 or 144 Hz display.
+      trailAcc += dt;
+      while (trailAcc >= 1 / 60) { trailAcc -= 1 / 60; trailPts.unshift(packet.position.clone()); if (trailPts.length > 30) trailPts.pop(); }
       trail.forEach((s, i) => { const p = trailPts[Math.min(trailPts.length - 1, (i + 1) * 3)]; if (p) { s.position.copy(p); s.visible = phase === 'move'; } });
       halo.scale.setScalar(0.85 + Math.sin(now / 220) * (REDUCED ? 0 : 0.08));
-      Object.values(nodeMeshes).forEach((m) => { const tg = m.userData.target || 1; m.scale.y += (tg - m.scale.y) * 0.15; m.scale.x += (tg - m.scale.x) * 0.15; m.scale.z = m.scale.x; });
+      // Easing per second, not per frame: identical at any refresh rate.
+      const kGrow = 1 - Math.pow(0.85, dt * 60), kTurn = 1 - Math.pow(0.92, dt * 60);
+      Object.values(nodeMeshes).forEach((m) => { const tg = m.userData.target || 1; m.scale.y += (tg - m.scale.y) * kGrow; m.scale.x += (tg - m.scale.x) * kGrow; m.scale.z = m.scale.x; });
       const idle = now - lastInteract > 2500;
       if (!REDUCED && idle && !drag) yawT += dt * 0.06 * Math.cos(now / 9000);
-      yaw += (yawT - yaw) * 0.08; pitch += (pitchT - pitch) * 0.08;
+      yaw += (yawT - yaw) * kTurn; pitch += (pitchT - pitch) * kTurn;
       root.rotation.y = yaw; root.rotation.x = pitch;
       root.updateMatrixWorld();
       // While the page is scrolling, keep the last frame (the canvas scrolls
       // with the page anyway) so every frame goes to smooth scrolling.
-      if (!drag && now - lastScroll < 160) { requestAnimationFrame(frame); return; }
+      if (!drag && now - lastScroll < 160) { res.skip(); requestAnimationFrame(frame); return; }
       renderer.render(scene, camera);
+      res.tick(now);
       layerLabels.forEach((l) => project(l.p, l.d));
       Object.entries(nodeLabels).forEach(([id, d]) => { if (d.style.opacity !== '0') project(nodePos[id], d, -14); });
       requestAnimationFrame(frame);
@@ -1228,7 +1236,10 @@ function initThree(THREE) {
 
 /* ---------- smooth scroll ---------- */
 let lenis = null;
-if (!REDUCED && window.Lenis) {
+// Wheel smoothing only: on touch-first devices native scrolling is smoother
+// (and Lenis' non-passive touch listeners would make every swipe wait).
+const TOUCH_FIRST = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+if (!REDUCED && window.Lenis && !TOUCH_FIRST) {
   lenis = new window.Lenis({ lerp: 0.1, prevent: (node) => !!node.closest?.('[data-lenis-prevent], .route, .transcript, .log, pre, .tbl-wrap, .g-body, .g-toc, .upick__menu, .guide') });
   const raf = (t) => { lenis.raf(t); requestAnimationFrame(raf); };
   requestAnimationFrame(raf);
