@@ -1,11 +1,11 @@
 // Agent Atlas: a hands-on field guide to AI agents. Every demo runs on
 // simulated data in the browser; regions change currency, tax, IDs, systems
 // and laws; universes are shared with the main portfolio.
-import { REGIONS, REGION_ORDER, guessRegion, CHECKS, LEDGERS, JURIS, LAWS, ONCE, SOURCES } from './data.js?v=20261113';
-import { UNIVERSES, loadFont, mountEffects, setEffectsUniverse } from '../assets/js/universes.js?v=20261113';
-import { mountBuddy, BEAR_FACE } from '../assets/js/buddy.js?v=20261113';
+import { REGIONS, REGION_ORDER, guessRegion, CHECKS, LEDGERS, JURIS, LAWS, ONCE, SOURCES } from './data.js?v=20261114';
+import { UNIVERSES, loadFont, mountEffects, setEffectsUniverse } from '../assets/js/universes.js?v=20261114';
+import { mountBuddy, BEAR_FACE } from '../assets/js/buddy.js?v=20261114';
 
-const V = '20261113';
+const V = '20261114';
 /* ---------- utilities ---------- */
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
@@ -210,6 +210,7 @@ const rungs = () => [
   { t: 'LLM', d: 'Reads text, writes text', analogy: 'A brilliant new hire, locked in a room with no phone and no files.',
     adds: 'Language: summarising, drafting, classifying, extracting, reasoning over what it is given.',
     cant: 'Knows nothing about your business after its training date, and cannot press a single button.',
+    eg: 'The models themselves: OpenAI\'s GPT, Anthropic\'s Claude, Google\'s Gemini, Meta\'s Llama, Mistral. ChatGPT, the Claude app and the Gemini app are chat products built on top of those models, not the models.',
     io: { cap: 'Input → output', obj: { input: 'Summarise this complaint in one line: Third late delivery this month, I want a credit on my next order...', output: 'Customer reports a third late delivery this month and wants a credit.' } } },
   { t: 'RAG', d: 'Answers from your documents', analogy: 'The same hire, now handed the right pages from your filing cabinet before each question.',
     adds: 'Your facts. We search your SOPs, policies and past cases, paste the best passages into the prompt, and ask for an answer with citations.',
@@ -239,7 +240,8 @@ function ladderShow(i) {
     h('div', null, h('p', { class: 'analogy' }, r.analogy),
       h('dl', { class: 'facts' },
         h('div', { class: 'fact' }, h('dt', null, 'What it adds'), h('dd', null, r.adds)),
-        h('div', { class: 'fact' }, h('dt', null, "Still can't"), h('dd', null, r.cant)))),
+        h('div', { class: 'fact' }, h('dt', null, "Still can't"), h('dd', null, r.cant)),
+        r.eg ? h('div', { class: 'fact' }, h('dt', null, 'Examples'), h('dd', null, r.eg)) : null)),
     codeBlock(r.io.obj, r.io.cap));
 }
 (function ladder() {
@@ -1173,9 +1175,11 @@ function initThree(THREE) {
     tmp.copy(v).applyMatrix4(root.matrixWorld).project(camera);
     const xx = ((tmp.x + 1) / 2) * W, yy = ((1 - tmp.y) / 2) * H + dy;
     if (tmp.z > 1 || xx < -40 || xx > W + 40 || yy < -20 || yy > H + 20) { el.style.visibility = 'hidden'; return; }
-    el.style.visibility = 'visible'; el.style.left = xx.toFixed(1) + 'px'; el.style.top = yy.toFixed(1) + 'px';
+    el.style.visibility = 'visible';
+    el.style.transform = `translate(${xx.toFixed(1)}px, ${yy.toFixed(1)}px) ${el.classList.contains('layer') ? 'translate(0, -50%)' : 'translate(-50%, -100%)'}`;
   }
-  let last = performance.now(), running = false;
+  let last = performance.now(), running = false, lastScroll = -1e9;
+  addEventListener('scroll', () => { lastScroll = performance.now(); }, { passive: true });
   const MOVE = 1.15, DWELL = 0.75, END = 2.4;
   function loop() {
     if (running) return; running = true;
@@ -1204,6 +1208,9 @@ function initThree(THREE) {
       yaw += (yawT - yaw) * 0.08; pitch += (pitchT - pitch) * 0.08;
       root.rotation.y = yaw; root.rotation.x = pitch;
       root.updateMatrixWorld();
+      // While the page is scrolling, keep the last frame (the canvas scrolls
+      // with the page anyway) so every frame goes to smooth scrolling.
+      if (!drag && now - lastScroll < 160) { requestAnimationFrame(frame); return; }
       renderer.render(scene, camera);
       layerLabels.forEach((l) => project(l.p, l.d));
       Object.entries(nodeLabels).forEach(([id, d]) => { if (d.style.opacity !== '0') project(nodePos[id], d, -14); });
@@ -1227,9 +1234,13 @@ if (!REDUCED && window.Lenis) {
   requestAnimationFrame(raf);
 }
 const headH = () => $('.top').offsetHeight;
+// Programmatic scrolls ease in and out, and take longer the further they go,
+// so a jump back to the tour stop glides instead of lurching.
+const easeInOut = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
 function goY(y) {
-  if (lenis) lenis.scrollTo(Math.max(0, y), { duration: 1.1 });
-  else window.scrollTo({ top: Math.max(0, y), behavior: REDUCED ? 'auto' : 'smooth' });
+  y = Math.max(0, Math.min(y, document.documentElement.scrollHeight - innerHeight));
+  if (lenis) lenis.scrollTo(y, { duration: Math.min(1.5, 0.6 + Math.abs(y - scrollY) / 2600), easing: easeInOut });
+  else window.scrollTo({ top: y, behavior: REDUCED ? 'auto' : 'smooth' });
 }
 function goTo(el, block = 'start') {
   if (!el) return;
@@ -1303,7 +1314,7 @@ const CHAPTERS = [
   const update = () => {
     ticking = false;
     const max = document.documentElement.scrollHeight - innerHeight;
-    $('#readbar').style.width = (max > 0 ? Math.min(100, (scrollY / max) * 100) : 0) + '%';
+    $('#readbar').style.transform = `scaleX(${max > 0 ? Math.min(1, scrollY / max).toFixed(4) : 0})`;
     let cur = 1; const line = innerHeight * 0.35;
     secs.forEach((s) => { if (s.getBoundingClientRect().top <= line) cur = +s.dataset.ch; });
     $$('.nav a[data-ch]').forEach((a) => a.classList.toggle('active', +a.dataset.ch === cur));
@@ -1435,7 +1446,7 @@ const LIVE = (() => {
 const clickSel = (sel, delay = 350) => setTimeout(() => { const b = $(sel); if (b) b.click(); }, delay);
 const TOUR = [
   // 1 · big picture
-  { ch: 1, t: ['.hero-grid'], title: 'Welcome. The whole idea in four words.', body: 'An LLM, like ChatGPT, can only write. An agent is an LLM connected to your business systems, so it can look things up and get work done. I\'ll take you through the guide one stop at a time.', doText: 'Nothing yet. Listen, or press pause to stay here.' },
+  { ch: 1, t: ['.hero-grid'], title: 'Welcome. The whole idea in four words.', body: 'A large language model (LLM), such as OpenAI\'s GPT, Anthropic\'s Claude or Google\'s Gemini, can only write. Apps like ChatGPT are built on top of one. An agent is an LLM connected to your business systems, so it can look things up and get work done.', doText: 'Nothing yet. Listen, or press pause to stay here.' },
   { ch: 1, t: ['.stats'], title: 'Why this matters now', body: 'Four in ten large companies say they are scaling AI agents, but only about 6% earn real profit from AI, and fewer than half of people trust it. Everything here is about closing that gap safely.' },
   { ch: 1, t: ['#regionbar'], title: 'Where are you building?', body: 'Pick your region. Every demo switches its currency, tax rules, business IDs, software and laws to match. I guessed from your time zone.', doText: 'Pick a region, or keep my guess.', doSel: '#region-chips', doLabel: 'Pick a region' },
   { ch: 1, t: ['#route-map'], title: 'Your map of the guide', body: 'Eight chapters, top to bottom. Each box is one chapter with its reading time. The numbered menu at the top does the same, and the thin line under it shows how far down you are.', doText: 'Later, click any chapter box to jump straight there.', doSel: '#rm-list li:nth-child(5) a', doLabel: 'Jump to any chapter' },
@@ -1481,9 +1492,65 @@ const TOUR = [
 ];
 
 (function guide() {
-  const G = $('#guide'), ring = $('#tour-ring');
-  const tip = h('div', { class: 'do-tip', hidden: true }), pulse = h('div', { class: 'do-pulse', hidden: true });
-  document.body.append(tip, pulse);
+  const G = $('#guide');
+  let bear = null; // Atlas the bear, mounted below
+
+  /* The tour highlight (dim panels, ring, "Do" pulse and tip) lives in page
+     coordinates, so it scrolls with the content natively: nothing is
+     repositioned per frame, so it cannot lag or wobble. It is re-measured only
+     when the stop or the layout changes, and glides between stops. */
+  const HL = (() => {
+    const layer = h('div', { class: 'tour-layer', 'aria-hidden': 'true', hidden: true });
+    const ring = h('div', { class: 'tour-ring' }), pulse = h('div', { class: 'do-pulse' }), tip = h('div', { class: 'do-tip' });
+    layer.append(ring, pulse, tip);
+    document.body.append(layer);
+    let cur = null, tween = 0, W = 0, H = 0;
+    const box = (el, x, y, w, hh) => { el.style.transform = `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px)`; el.style.width = Math.max(0, w).toFixed(1) + 'px'; el.style.height = Math.max(0, hh).toFixed(1) + 'px'; };
+    // The ring's own shadow dims the rest of the page (clipped to the page by
+    // the layer), which keeps the rounded cut-out and has no size limit.
+    const paint = (r) => box(ring, r.x, r.y, r.w, r.h);
+    function moveTo(t) {
+      if (!cur || REDUCED) { cur = t; paint(t); return; }
+      if (['x', 'y', 'w', 'h'].every((k) => Math.abs(t[k] - cur[k]) < 0.5)) { paint(cur); return; }
+      const from = { ...cur }, t0 = performance.now(), my = ++tween;
+      const step = (now) => {
+        if (my !== tween) return;
+        const k = Math.min(1, (now - t0) / 420), e = 1 - Math.pow(1 - k, 3);
+        cur = { x: from.x + (t.x - from.x) * e, y: from.y + (t.y - from.y) * e, w: from.w + (t.w - from.w) * e, h: from.h + (t.h - from.h) * e };
+        paint(cur);
+        if (k < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    }
+    function measure() {
+      if (S.state !== 'tour') { layer.hidden = true; cur = null; tween++; return; }
+      const st = TOUR[S.idx], r = rectOf(st.t);
+      if (!r) { layer.hidden = true; return; }
+      layer.hidden = false;
+      // The layer covers the whole body, so its own box is the page's origin.
+      const L = layer.getBoundingClientRect(), p = 8;
+      W = Math.round(L.width); H = Math.round(L.height);
+      ring.style.setProperty('--spread', W + H + 'px');
+      moveTo({ x: r.left - L.left - p, y: r.top - L.top - p, w: r.right - r.left + 2 * p, h: r.bottom - r.top + 2 * p });
+      const d = st.doSel && $(st.doSel), b = d && d.getBoundingClientRect();
+      if (b && b.width) {
+        pulse.hidden = false; tip.hidden = false;
+        box(pulse, b.left - L.left, b.top - L.top, b.width, b.height);
+        tip.textContent = st.doLabel || 'Try this';
+        const below = b.top - L.top < 140;
+        tip.classList.toggle('below', below);
+        const cx = Math.max(70, Math.min(W - 70, b.left - L.left + Math.min(b.width, 260) / 2));
+        tip.style.transform = `translate(${cx.toFixed(1)}px, ${(below ? b.bottom : b.top) - L.top}px)`;
+      } else { pulse.hidden = true; tip.hidden = true; }
+    }
+    // Re-measure when the layout moves (content grows, fonts load, resize).
+    let pend = 0;
+    const soon = () => { clearTimeout(pend); pend = setTimeout(measure, 80); };
+    new ResizeObserver(soon).observe(document.body);
+    addEventListener('resize', soon, { passive: true });
+    setInterval(() => { if (S.state === 'tour' && !document.hidden) measure(); }, 1200);
+    return { measure, soon };
+  })();
   const S = { state: 'intro', idx: 0, playing: false, elapsed: 0, dur: 12, note: '' };
   const saved = +store.get('atlas-guide-idx'); if (saved > 0 && saved < TOUR.length) S.idx = saved;
   const gs = store.get('atlas-guide');
@@ -1545,14 +1612,24 @@ const TOUR = [
   LIVE.onChange(() => { if (S.state === 'tour' || S.state === 'intro') render(); });
   const soundBtn = (cls) => h('button', { class: 'g-snd' + (cls ? ' ' + cls : ''), type: 'button', 'aria-pressed': S.audio ? 'true' : 'false', 'aria-label': S.audio ? 'Mute the voice' : 'Turn the voice on', title: S.audio ? 'Mute voice' : 'Voice on', html: S.audio ? ICON.on : ICON.off, onclick: () => toggleSound() });
 
-  function render() {
+  // Atlas sits on the dock while it is open: he is a child of the dock, so he
+  // moves with it for free. Closed, he walks along the bottom of the screen.
+  function placeBear() {
+    if (!bear) return;
+    bear.dockTo(S.state === 'closed' ? null : G);
+    bear.setTalking(S.state === 'tour' && S.playing && S.spoke === 'speaking' && audioOn());
+  }
+  function render() { draw(); placeBear(); HL.measure(); }
+  // replaceChildren() would print a null slot as the text "null"
+  const fill = (...kids) => G.replaceChildren(...kids.filter((k) => k != null && k !== false));
+  function draw() {
     G.dataset.state = S.state;
     if (S.state === 'closed') {
-      G.replaceChildren(h('button', { class: 'g-pill', type: 'button', onclick: () => open() }, h('span', { class: 'g-mark', html: BEAR_FACE }), S.idx > 0 ? `Resume tour · stop ${S.idx + 1} of ${TOUR.length}` : 'Narrated tour'));
-      ring.hidden = true; tip.hidden = true; pulse.hidden = true; return;
+      fill(h('button', { class: 'g-pill', type: 'button', onclick: () => open() }, h('span', { class: 'g-mark', html: BEAR_FACE }), S.idx > 0 ? `Resume tour · stop ${S.idx + 1} of ${TOUR.length}` : 'Narrated tour'));
+      return;
     }
     if (S.state === 'intro') {
-      G.replaceChildren(
+      fill(
         h('div', { class: 'g-top' }, h('span', { class: 'g-mark talk', html: BEAR_FACE }), h('div', { class: 'g-where' }, h('b', null, 'Atlas, your guide'), h('span', null, `${TOUR.length} stops · about 12 minutes`)), soundBtn(), h('button', { class: 'g-x', type: 'button', 'aria-label': 'Close the guide', onclick: () => close() }, '×')),
         h('div', { class: 'g-intro' },
           h('h3', null, "Hi, I'm Atlas. New to AI agents? I'll walk you through."),
@@ -1563,7 +1640,7 @@ const TOUR = [
             h('li', null, "Click around whenever you like: I'll finish my sentence, then wait for you."),
             h('li', null, 'Drag me by my top bar, resize me from the corner, or shrink me to a bar.')),
           h('div', { class: 'btn-row' }, h('button', { class: 'btn primary', type: 'button', onclick: () => start(S.idx > 0 ? S.idx : 0) }, S.idx > 0 ? `Resume at stop ${S.idx + 1}` : 'Start the tour'), S.idx > 0 ? h('button', { class: 'btn', type: 'button', onclick: () => start(0) }, 'Start over') : null, h('button', { class: 'btn', type: 'button', onclick: () => close() }, 'Explore on my own'))));
-      ring.hidden = true; tip.hidden = true; pulse.hidden = true; return;
+      return;
     }
     const st = TOUR[S.idx], ch = CHAPTERS[st.ch - 1], last = S.idx === TOUR.length - 1;
     const playBtn = (cls) => h('button', { class: 'g-play' + (cls ? ' ' + cls : ''), type: 'button', id: 'g-play', 'aria-label': S.playing ? 'Pause the tour' : 'Play the tour', title: S.playing ? 'Pause' : 'Play', html: S.playing ? ICON.pause : ICON.play, onclick: () => toggle() });
@@ -1573,7 +1650,7 @@ const TOUR = [
     const closeBtn = h('button', { class: 'g-x', type: 'button', title: 'Close', 'aria-label': 'Close the guide', onclick: () => close() }, '×');
     G.dataset.size = S.size;
     if (S.size === 'bar') {
-      G.replaceChildren(
+      fill(
         h('div', { class: 'g-barrow' }, playBtn('sm'), soundBtn('sm'),
           h('div', { class: 'g-where g-drag', title: 'Drag to move' }, h('b', null, st.title), h('span', { id: 'g-status' }, '')),
           backBtn('←'), nextBtn('→'), sizeBtn, closeBtn),
@@ -1589,7 +1666,7 @@ const TOUR = [
         h('label', { for: 'g-voice-rate' }, 'Speed'),
         h('select', { id: 'g-voice-rate', onchange: (e) => { NARRATOR.setRate(+e.target.value); LIVE.setRate(+e.target.value); store.set('atlas-rate', e.target.value); } }, [['0.9', 'Relaxed'], ['1', 'Normal'], ['1.1', 'Brisk'], ['1.25', 'Fast']].map(([v, l]) => h('option', { value: v, selected: String(NARRATOR.rate) === v ? true : null }, l))),
         h('p', { class: 'g-hint' }, LIVE.ok ? "Your browser has Microsoft's neural voices, so I speak live in Microsoft's UK voice." : "In Microsoft Edge I speak live in Microsoft's UK voice. Here you hear a recorded voice made with an open-source model.")));
-    G.replaceChildren(
+    fill(
       h('span', { class: 'g-grip', title: 'Drag to resize', 'aria-hidden': 'true' }),
       h('div', { class: 'g-top g-drag', title: 'Drag to move' }, h('span', { class: 'g-mark' + (S.playing ? ' talk' : ''), html: BEAR_FACE }),
         h('div', { class: 'g-where' }, h('b', null, `Chapter ${ch.n} of 8 · ${ch.title}`), h('span', null, `Stop ${S.idx + 1} of ${TOUR.length} · drag to move`)),
@@ -1620,11 +1697,16 @@ const TOUR = [
     if (audioOn() && S.playing) return S.spoke === 'done' ? 1 : S.prog;
     return Math.min(1, S.elapsed / S.dur);
   }
+  // Called often while playing, so it only touches the DOM when something changed.
   function setStatus() {
-    const el = $('#g-status');
-    if (el) el.textContent = S.state === 'tour' && S.size === 'bar' ? `Stop ${S.idx + 1}/${TOUR.length} · ` + (!S.playing ? 'paused' : audioOn() ? 'talking' : `next in ${Math.max(0, Math.ceil(S.dur - S.elapsed))}s`) : status();
-    const bar = $('#g-bar'); if (bar) bar.style.width = (progress() * 100).toFixed(1) + '%';
-    const cc = $('#g-cc'); if (cc) cc.textContent = S.cc ? '“' + S.cc + '”' : '';
+    const el = G.querySelector('#g-status');
+    const txt = S.state === 'tour' && S.size === 'bar' ? `Stop ${S.idx + 1}/${TOUR.length} · ` + (!S.playing ? 'paused' : audioOn() ? 'talking' : `next in ${Math.max(0, Math.ceil(S.dur - S.elapsed))}s`) : status();
+    if (el && el.textContent !== txt) el.textContent = txt;
+    const bar = G.querySelector('#g-bar'), pr = progress().toFixed(3);
+    if (bar && bar.dataset.p !== pr) { bar.dataset.p = pr; bar.style.transform = `scaleX(${pr})`; }
+    const cc = G.querySelector('#g-cc'), ct = S.cc ? '“' + S.cc + '”' : '';
+    if (cc && cc.textContent !== ct) cc.textContent = ct;
+    if (bear) bear.setTalking(S.state === 'tour' && S.playing && S.spoke === 'speaking' && audioOn());
   }
   function speakStep(from = 0) {
     if (!audioOn()) return;
@@ -1677,7 +1759,8 @@ const TOUR = [
     store.set('atlas-guide-idx', String(S.idx));
     try { if (st.act) st.act(); } catch { /* ignore */ }
     render();
-    setTimeout(() => scrollToStop(st), 80);
+    setTimeout(() => { HL.measure(); scrollToStop(st); }, 80);
+    setTimeout(HL.measure, 700); // demos that start on this stop change the layout
     // Start the voice straight away so it stays inside the click that asked for it.
     if (S.playing && audioOn()) speakStep(0);
   }
@@ -1724,32 +1807,13 @@ const TOUR = [
         }
         setStatus();
       }
-      const r = rectOf(st.t);
-      if (r) { ring.hidden = false; const p = 8; Object.assign(ring.style, { left: r.left - p + 'px', top: r.top - p + 'px', width: r.right - r.left + 2 * p + 'px', height: r.bottom - r.top + 2 * p + 'px' }); }
-      else ring.hidden = true;
-      const d = st.doSel && $(st.doSel);
-      const b = d && d.getBoundingClientRect();
-      const hh = headH();
-      if (b && b.width && b.bottom > hh && b.top < innerHeight) {
-        pulse.hidden = false; Object.assign(pulse.style, { left: b.left + 'px', top: b.top + 'px', width: b.width + 'px', height: b.height + 'px' });
-        tip.hidden = false; tip.textContent = st.doLabel || 'Try this';
-        const below = b.top < hh + 44; tip.classList.toggle('below', below);
-        tip.style.left = Math.max(70, Math.min(innerWidth - 70, b.left + Math.min(b.width, 260) / 2)) + 'px';
-        tip.style.top = (below ? b.bottom : b.top) + 'px';
-      } else { pulse.hidden = true; tip.hidden = true; }
     }
     requestAnimationFrame(frame);
   }
   addEventListener('pagehide', () => { NARRATOR.stop(); LIVE.stop(); });
   // Atlas the bear sits on the dock while it is open (and talks with the
   // narration), and strolls along the bottom when it is closed.
-  const bear = mountBuddy({ reduced: REDUCED, mode: 'atlas', avoid: ['.guide'], onActivate: () => { if (S.state === 'closed') open(); else bear.wave(); } });
-  const dockRect = () => { const r = G.getBoundingClientRect(); return S.state === 'closed' || !r.width ? null : r; };
-  (function bearLoop() {
-    bear.dockTo(S.state === 'closed' ? null : dockRect);
-    bear.setTalking(S.state === 'tour' && S.playing && S.spoke === 'speaking' && audioOn());
-    requestAnimationFrame(bearLoop);
-  })();
+  bear = mountBuddy({ reduced: REDUCED, mode: 'atlas', avoid: ['.guide'], onActivate: () => { if (S.state === 'closed') open(); else bear.wave(); } });
   render(); requestAnimationFrame(frame);
   if (fromBear) setTimeout(() => { const b = G.querySelector('.btn.primary'); if (b) b.focus({ preventScroll: true }); }, 1200);
 })();

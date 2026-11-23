@@ -60,7 +60,15 @@ export function mountBuddy({ reduced = false, mode = 'site', href = 'atlas/', av
   const set = (cls, on) => root.classList.toggle(cls, on);
 
   // The strip between the fixed corner buttons that the bear may walk in.
+  // Measuring forces a layout, so it is cached and refreshed twice a second.
+  let bnd = null, bndAt = -1e9;
+  addEventListener('resize', () => { bndAt = -1e9; }, { passive: true });
   function bounds() {
+    const t = performance.now();
+    if (bnd && t - bndAt < 500) return bnd;
+    bndAt = t; bnd = measureBounds(); return bnd;
+  }
+  function measureBounds() {
     let lo = 12, hi = innerWidth - W() - 12;
     for (const sel of avoid) {
       const el = typeof sel === 'string' ? document.querySelector(sel) : sel;
@@ -103,20 +111,13 @@ export function mountBuddy({ reduced = false, mode = 'site', href = 'atlas/', av
   btn.addEventListener('pointerleave', () => { hovering = false; if (card.hidden) idle(rnd(600, 1400)); });
   btn.addEventListener('focus', () => { if (state === 'walk') idle(1e9); });
 
-  let last = performance.now();
+  let last = performance.now(), shown = '';
+  // Sub-pixel translate3d keeps a slow walk smooth (rounding makes it step).
+  const put = (px) => { const v = px.toFixed(2); if (v !== shown) { shown = v; root.style.transform = `translate3d(${v}px, 0, 0)`; } };
   function frame(now) {
     requestAnimationFrame(frame);
     const dt = Math.min(0.05, (now - last) / 1000); last = now;
-    if (document.hidden) return;
-    if (dock) {
-      const r = dock();
-      if (r) {
-        root.style.transform = `translate(${Math.round(r.right - W() - 14)}px, ${Math.round(r.top - innerHeight + 12)}px)`;
-        set('is-docked', true); set('is-walking', false); set('is-left', false);
-        return;
-      }
-    }
-    set('is-docked', false);
+    if (document.hidden || dock) return;
     if (reduced) {
       const [lo, hi] = bounds();
       x = hi; set('is-left', true);
@@ -129,22 +130,36 @@ export function mountBuddy({ reduced = false, mode = 'site', href = 'atlas/', av
     } else if (now > until && !hovering && card.hidden) {
       pickTarget(); state = 'walk';
     }
-    const [lo, hi] = bounds();
+    const [, hi] = bounds();
     if (x > hi + 1 && state !== 'walk') { target = hi; state = 'walk'; }
-    root.style.transform = `translate(${Math.round(x)}px, 0)`;
+    put(x);
   }
   // Fade in somewhere along the walkway once the page has settled.
   setTimeout(() => {
     const [lo, hi] = bounds();
     x = lo + (hi - lo) * (0.15 + Math.random() * 0.3);
-    root.style.transform = `translate(${Math.round(x)}px, 0)`;
+    if (!dock) put(x);
     root.classList.add('is-in'); idle(1200); requestAnimationFrame(frame);
   }, reduced ? 0 : 1600);
 
   return {
     el: root,
     // Sit on top of another element (the tour dock); pass null to walk again.
-    dockTo(fn) { if (fn === dock) return; const was = dock; dock = fn; if (!fn && was) idle(800); },
+    // Docked, the bear becomes a child of that element, so it moves with it
+    // (scroll, drag, resize) with no per-frame work at all.
+    dockTo(el) {
+      if (el) {
+        if (root.parentNode !== el) el.append(root);
+        if (dock === el) return;
+        dock = el; shown = ''; root.style.transform = '';
+        set('is-docked', true); set('is-walking', false); set('is-left', false);
+        if (!card.hidden) closeCard();
+        return;
+      }
+      if (!dock) return;
+      dock = null; set('is-docked', false);
+      document.body.append(root); bndAt = -1e9; put(x); idle(800);
+    },
     setTalking(on) { set('is-talking', !!on); },
     wave,
   };

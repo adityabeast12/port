@@ -14,7 +14,7 @@
   background: none; border: 0; cursor: pointer; border-radius: 14px; -webkit-tap-highlight-color: transparent;
 }
 .buddy__btn:focus-visible { outline: 2px solid var(--scarf); outline-offset: 2px; }
-.buddy__bear { width: 100%; height: 100%; overflow: visible; display: block; filter: drop-shadow(0 3px 6px rgba(0, 0, 0, .28)); }
+.buddy__bear { width: 100%; height: 100%; overflow: visible; display: block; }
 .buddy.is-left .buddy__bear { transform: scaleX(-1); }
 
 /* drawing */
@@ -85,14 +85,13 @@
 .buddy__x { position: absolute; top: 6px; right: 8px; border: 0; background: none; font-size: 18px; line-height: 1; color: #55615b; cursor: pointer; padding: 4px; }
 .buddy__x:hover { color: #000; }
 
-/* sitting on the tour dock */
-.buddy.is-docked { transition: opacity .4s ease; }
+/* sitting on the tour dock: a child of the dock, so it needs no positioning per frame */
+.buddy.is-docked { position: absolute; left: auto; right: 13px; bottom: calc(100% - 1px); transform: none; z-index: 1; transition: opacity .4s ease; }
 .buddy.is-docked .b-shadow { display: none; }
 
 /* one prop per universe */
 html[data-universe="web"] .buddy { --line: #111; --scarf: #cc1420; }
 html[data-universe="web"] .buddy .b-fur, html[data-universe="web"] .buddy .b-torso, html[data-universe="web"] .buddy .b-leg rect { stroke-width: 2.8; }
-html[data-universe="web"] .buddy__bear { filter: drop-shadow(3px 3px 0 #111); }
 html[data-universe="web"] .buddy__card, html[data-universe="web"] .buddy__hi { box-shadow: 4px 4px 0 #111; }
 html[data-universe="sky"] .buddy { --scarf: #ffcf4a; }
 html[data-universe="sky"] .buddy .b-cape { display: inline; fill: #d8202b; stroke: #7a0a10; stroke-width: 1.4; transform-box: fill-box; transform-origin: 100% 20%; animation: b-cape 1.3s ease-in-out infinite alternate; }
