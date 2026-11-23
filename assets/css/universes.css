@@ -464,6 +464,11 @@ html[data-universe="night"] .spot::before {
           mask-image: linear-gradient(0deg, #000 50%, transparent 97%);
 }
 
+/* When the canvas flashlight is running it draws all three layers itself. */
+html[data-universe="night"] .spot.spot--cv { background: none; overflow: hidden; }
+html[data-universe="night"] .spot.spot--cv::before, html[data-universe="night"] .spot.spot--cv::after { display: none; }
+.spot__cv { display: block; position: absolute; inset: 0; width: 100%; height: 100%; }
+
 /* Police tape */
 html[data-universe="night"] .tape {
   display: block; position: relative; z-index: 5; overflow: hidden;

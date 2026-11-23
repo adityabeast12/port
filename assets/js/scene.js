@@ -7,6 +7,7 @@
 //   morph -1 · the name      morph 0 · the agent loop      morph 1 · the trace
 
 import * as THREE from '../vendor/three.module.min.js';
+import { adaptiveResolution } from './perf.js?v=20261115';
 
 const rand = (a = 0, b = 1) => a + Math.random() * (b - a);
 const gauss = () => {
@@ -272,9 +273,10 @@ const fragment = /* glsl */ `
 export function createScene(canvas, { reducedMotion = false, labels = null } = {}) {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: false, alpha: true, powerPreference: 'high-performance' });
   // Render at the screen's real pixel density (up to 3x on phones), otherwise
-  // the browser stretches the canvas and every particle looks blurry.
+  // the browser stretches the canvas and every particle looks blurry; if the
+  // GPU then cannot keep up with a 90 to 120 Hz display, step the density down.
   const dpr = Math.min(window.devicePixelRatio || 1, window.matchMedia('(max-width: 900px)').matches ? 3 : 2);
-  renderer.setPixelRatio(dpr);
+  const res = adaptiveResolution(renderer, { max: dpr, min: Math.min(dpr, 1.25) });
   renderer.setClearColor(0x000000, 0);
 
   const scene = new THREE.Scene();
@@ -421,9 +423,9 @@ export function createScene(canvas, { reducedMotion = false, labels = null } = {
     el.style.opacity = op.toFixed(3);
   }
 
-  function frame() {
+  function frame(now) {
     raf = requestAnimationFrame(frame);
-    if (!running) return;
+    if (!running) { res.skip(); return; }
     const dt = Math.min(clock.getDelta(), 0.05);
     const t = clock.elapsedTime;
     uniforms.uTime.value = reducedMotion ? 4 : t;
@@ -470,6 +472,7 @@ export function createScene(canvas, { reducedMotion = false, labels = null } = {
     }
 
     renderer.render(scene, camera);
+    if (now) res.tick(now);
 
     if (labels && (wL > 0.02 || wR > 0.02 || labels.dataset.on)) {
       labels.dataset.on = wL > 0.02 || wR > 0.02 ? '1' : '';

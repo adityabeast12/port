@@ -1,8 +1,8 @@
 // Bump ?v= in these imports and in index.html on every release so browsers never mix old and new files.
-import { mountChat } from './chat.js?v=20261114';
-import { mountDemo } from './agent-demo.js?v=20261114';
-import { UNIVERSES, applyCopy, loadFont, mountEffects, setEffectsUniverse } from './universes.js?v=20261114';
-import { mountBuddy } from './buddy.js?v=20261114';
+import { mountChat } from './chat.js?v=20261115';
+import { mountDemo } from './agent-demo.js?v=20261115';
+import { UNIVERSES, applyCopy, loadFont, mountEffects, setEffectsUniverse } from './universes.js?v=20261115';
+import { mountBuddy } from './buddy.js?v=20261115';
 
 const root = document.documentElement;
 const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -15,7 +15,11 @@ let gl = null; // the particle scene, once three.js has loaded
 
 /* ---------------- Smooth scroll ---------------- */
 let lenis = null;
-if (!reduced && window.Lenis) {
+// Wheel smoothing only. On phones and tablets Lenis would not smooth touch
+// anyway, but its non-passive touch listeners would make every swipe wait for
+// the main thread; native scrolling there runs at the screen's 90 to 120 Hz.
+const touchFirst = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+if (!reduced && window.Lenis && !touchFirst) {
   lenis = new window.Lenis({
     lerp: 0.1,
     // Let panels that scroll on their own (chat drawer, demo chat and trace,
@@ -32,7 +36,7 @@ $$('a[href^="#"]').forEach((a) => {
     if (target === null) return;
     e.preventDefault();
     if (lenis) lenis.scrollTo(target, { offset: -70, duration: 1.2 });
-    else window.scrollTo({ top: target === 0 ? 0 : target.getBoundingClientRect().top + window.scrollY - 70 });
+    else window.scrollTo({ top: target === 0 ? 0 : target.getBoundingClientRect().top + window.scrollY - 70, behavior: reduced ? 'auto' : 'smooth' });
   });
 });
 
@@ -151,7 +155,7 @@ async function buildName(force = false) {
   });
 }
 
-import('./scene.js?v=20261114')
+import('./scene.js?v=20261115')
   .then(async ({ createScene }) => {
     gl = createScene($('#gl'), { reducedMotion: reduced, labels: $('[data-glabels]') });
     applyScene(universe);
